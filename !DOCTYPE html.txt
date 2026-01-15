@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Move India</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        p { color: #666; font-size: 1.2rem; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Next Move India</h1>
+    <p>Humari website jald hi live hone wali hai!</p>
+    <br>
+    <a href="#" class="btn">Learn More</a>
+</body>
+</html>
