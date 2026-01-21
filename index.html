@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
         .gradient-text {
             background: linear-gradient(to right, #60a5fa, #34d399);
             -webkit-background-clip: text;
@@ -22,11 +22,23 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        /* Custom background pattern for hero */
-        .hero-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            background-size: 30px; /* Adjust size of pattern */
-            background-repeat: repeat;
+        
+        /* Floating Animation for Images */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        
+        /* Image Glow Effect */
+        .img-glow {
+            box-shadow: 0 0 30px rgba(52, 211, 153, 0.2);
+            transition: all 0.5s ease;
+        }
+        .img-glow:hover {
+            box-shadow: 0 0 50px rgba(52, 211, 153, 0.4);
+            transform: scale(1.02);
         }
     </style>
 </head>
@@ -40,87 +52,115 @@
                 <a href="#vision" class="hover:text-emerald-400 transition">Our Vision</a>
                 <a href="#contact" class="hover:text-emerald-400 transition">Contact</a>
             </div>
-            <button id="mobile-menu-button" class="md:hidden text-gray-100 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
-            </div>
-        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-gray-900 bg-opacity-95 z-40 flex flex-col items-center justify-center space-y-8 text-xl">
-            <a href="#home" class="hover:text-emerald-400 transition" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Home</a>
-            <a href="#vision" class="hover:text-emerald-400 transition" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Our Vision</a>
-            <a href="#contact" class="hover:text-emerald-400 transition" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Contact</a>
-            <button class="text-gray-100 absolute top-6 right-6" onclick="document.getElementById('mobile-menu').classList.add('hidden')">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
         </div>
-        </nav>
+    </nav>
 
     <section id="home" class="relative pt-32 pb-20 px-6 overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center hero-pattern opacity-10"></div>
-        <div class="container mx-auto text-center relative z-10">
-            <h1 class="text-5xl md:text-8xl font-extrabold mb-6 gradient-text" data-aos="fade-up" data-aos-duration="1000">
-                Next Move India
-            </h1>
-            <p class="text-xl md:text-3xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
-                Shiksha se badlav ki ek nayi shuruat. We are dedicated to providing quality education to those who need it most.
-            </p>
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 text-center md:text-left z-10">
+                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 gradient-text" data-aos="fade-right">
+                    Next Move India
+                </h1>
+                <p class="text-xl text-gray-400 mb-10 leading-relaxed" data-aos="fade-right" data-aos-delay="200">
+                    Shiksha se badlav ki ek nayi shuruat. We bridge the gap between resources and talent for underprivileged children.
+                </p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
+                   target="_blank" 
+                   class="btn-gradient px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition transform inline-block">
+                   Join Our Mission
+                </a>
+            </div>
             
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
-                target="_blank" 
-                class="btn-gradient px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition transform inline-block"
-                data-aos="zoom-in" data-aos-delay="400" data-aos-duration="1000">
-                Join Our Mission (Contact Form)
-            </a>
-            
-            <div class="mt-20 max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="600" data-aos-duration="1000">
-                 
+            <div class="md:w-1/2 mt-16 md:mt-0 relative flex justify-center" data-aos="zoom-in" data-aos-delay="400">
+                <div class="float-anim">
+                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800" 
+                         alt="Education Impact" 
+                         class="rounded-3xl img-glow w-full max-w-md border border-white/10">
+                </div>
+                <div class="absolute -z-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -top-10 -right-10"></div>
             </div>
         </div>
     </section>
 
-    <section id="vision" class="py-20 bg-gray-800/50">
+    <section id="vision" class="py-20 bg-gray-800/30">
         <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div data-aos="fade-right" data-aos-duration="1000">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="order-2 md:order-1" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800" 
+                         alt="Children Learning" 
+                         class="rounded-3xl shadow-2xl border border-white/5">
+                </div>
+                
+                <div class="order-1 md:order-2" data-aos="fade-left">
                     <h2 class="text-4xl font-bold mb-6 text-white">Our Core Vision</h2>
-                    <p class="text-gray-400 text-lg mb-4 italic">
+                    <p class="text-gray-400 text-lg mb-6 italic border-l-4 border-emerald-500 pl-4">
                         "Humara maksad un bacchon ko shikshit karna hai jo financial resources ki kami ki wajah se peeche reh jate hain."
                     </p>
-                    <p class="text-gray-400 text-lg mb-6">
-                        Education is not a luxury, it's a necessity. Next Move India works at the ground level to bridge the gap between dreams and reality.
-                    </p>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <span class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs">✓</span>
-                            <span>Equal education for all children.</span>
+                    <div class="space-y-6">
+                        <div class="glass p-4 rounded-2xl flex items-start space-x-4">
+                            <div class="bg-emerald-500 p-2 rounded-lg text-white">✓</div>
+                            <div>
+                                <h4 class="font-bold">Equal Opportunities</h4>
+                                <p class="text-sm text-gray-400">Har bacha padhne ka adhikaar rakhta hai.</p>
+                            </div>
                         </div>
-                        <div class="flex items-center space-x-3">
-                            <span class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-xs">✓</span>
-                            <span>Breaking the barriers of poverty.</span>
+                        <div class="glass p-4 rounded-2xl flex items-start space-x-4">
+                            <div class="bg-blue-500 p-2 rounded-lg text-white">✓</div>
+                            <div>
+                                <h4 class="font-bold">Breaking Poverty</h4>
+                                <p class="text-sm text-gray-400">Shiksha hi gareebi se nikalne ka rasta hai.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="glass p-8 rounded-3xl text-center border-emerald-500/20" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
-                    <h3 class="text-2xl font-bold mb-4 gradient-text">How We Help?</h3>
-                    <p class="text-gray-300">Hum un students ko resources, guidance aur support provide karte hain jo padhna chahte hain par rasta nahi milta.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-12" data-aos="fade-down">Why Next Move?</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass p-8 rounded-3xl hover:bg-white/5 transition" data-aos="flip-left" data-aos-delay="100">
+                    <div class="text-4xl mb-4">📚</div>
+                    <h3 class="text-xl font-bold mb-2">Quality Books</h3>
+                    <p class="text-gray-400">Providing the right study material.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl hover:bg-white/5 transition" data-aos="flip-left" data-aos-delay="200">
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-xl font-bold mb-2">Mentorship</h3>
+                    <p class="text-gray-400">Guiding students at every step.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl hover:bg-white/5 transition" data-aos="flip-left" data-aos-delay="300">
+                    <div class="text-4xl mb-4">🚀</div>
+                    <h3 class="text-xl font-bold mb-2">Better Future</h3>
+                    <p class="text-gray-400">Creating leaders for tomorrow.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="contact" class="py-20 px-6">
-        <div class="container mx-auto max-w-4xl glass p-10 rounded-3xl border-white/5 shadow-2xl" data-aos="fade-up" data-aos-duration="1000">
-            <h2 class="text-4xl font-bold text-center mb-12">Get In Touch</h2>
-            <div class="grid md:grid-cols-2 gap-10">
-                <div class="text-center md:text-left">
-                    <h4 class="text-emerald-400 font-bold uppercase tracking-widest mb-4">Contact Details</h4>
-                    <p class="text-2xl font-semibold mb-2">+91 9682420506</p>
-                    <p class="text-xl text-gray-400">info@nextmoveindia.org</p>
+        <div class="container mx-auto max-w-5xl glass p-1 rounded-3xl overflow-hidden shadow-2xl" data-aos="zoom-in">
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 p-10 bg-emerald-500/10">
+                    <h2 class="text-4xl font-bold mb-6">Let's Talk</h2>
+                    <p class="text-gray-400 mb-8">Aapki ek chhoti si madad kisi ka bhavishya badal sakti hai.</p>
+                    <div class="space-y-4">
+                        <p class="flex items-center space-x-3">
+                            <span class="text-emerald-400 font-bold">Call:</span>
+                            <span>+91 9682420506</span>
+                        </p>
+                        <p class="flex items-center space-x-3">
+                            <span class="text-emerald-400 font-bold">Email:</span>
+                            <span>info@nextmoveindia.org</span>
+                        </p>
+                    </div>
                 </div>
-                <div class="flex flex-col justify-center items-center md:items-end">
-                    <p class="text-gray-400 mb-4 text-center md:text-right">Aap niche diye gaye form ko bhar kar bhi humse contact kar sakte hain.</p>
+                <div class="md:w-1/2 p-10 flex items-center justify-center">
                     <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
                         target="_blank" 
-                        class="border border-emerald-500 text-emerald-400 px-6 py-3 rounded-xl hover:bg-emerald-500 hover:text-white transition font-bold">
+                        class="border-2 border-emerald-500 text-emerald-400 px-10 py-4 rounded-xl hover:bg-emerald-500 hover:text-white transition font-bold text-xl text-center w-full">
                         Fill Contact Form
                     </a>
                 </div>
@@ -128,23 +168,17 @@
         </div>
     </section>
 
-    <footer class="py-10 border-t border-white/5 text-center text-gray-500 text-sm" data-aos="fade-up" data-aos-duration="1000">
-        <p>&copy; 2026 Next Move India. Designed for Impact.</p>
-        <p class="mt-2 italic">Empowering the next generation, one step at a time.</p>
+    <footer class="py-10 border-t border-white/5 text-center text-gray-500 text-sm">
+        <p>&copy; 2026 Next Move India. Empowering the next generation.</p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({
-            once: true, // Animation will happen only once
-            duration: 800, // Animation duration in ms
-        });
-
-        // Mobile Menu Toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.remove('hidden');
+            duration: 1000,
+            once: true,
+            offset: 100
         });
     </script>
-
 </body>
 </html>
