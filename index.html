@@ -1,75 +1,112 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Next Move India | Empowering Future</title>
+    <title>Next Move India | Empowering Through Education</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        .hero-bg { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'); background-size: cover; background-position: center; }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .gradient-text {
+            background: linear-gradient(to right, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gradient {
+            background: linear-gradient(to right, #3b82f6, #10b981);
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
-<body class="font-sans bg-gray-50">
+<body class="bg-gray-900 text-gray-100">
 
-    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-blue-700">Next Move India</h1>
-            <div class="hidden md:flex space-x-6 font-medium">
-                <a href="#" class="hover:text-blue-600">Home</a>
-                <a href="#about" class="hover:text-blue-600">About Us</a>
-                <a href="#programs" class="hover:text-blue-600">Our Programs</a>
-                <a href="#" class="bg-orange-500 text-white px-4 py-2 rounded shadow hover:bg-orange-600">Donate Now</a>
+    <nav class="fixed w-full z-50 glass py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="text-2xl font-bold gradient-text">Next Move India</div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
+                <a href="#home" class="hover:text-emerald-400 transition">Home</a>
+                <a href="#vision" class="hover:text-emerald-400 transition">Our Vision</a>
+                <a href="#contact" class="hover:text-emerald-400 transition">Contact</a>
             </div>
         </div>
     </nav>
 
-    <header class="hero-bg h-[500px] flex items-center justify-center text-center text-white px-4">
-        <div>
-            <h2 class="text-4xl md:text-6xl font-extrabold mb-4">Every Child Deserves to Learn</h2>
-            <p class="text-xl mb-8">Humari website jald hi live hone wali hai aur hum taiyar hain desh mein badlav lane ke liye.</p>
-            <a href="#about" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300">Learn More</a>
+    <section id="home" class="pt-32 pb-20 px-6">
+        <div class="container mx-auto text-center">
+            <h1 class="text-5xl md:text-8xl font-extrabold mb-6 gradient-text">
+                Next Move India
+            </h1>
+            <p class="text-xl md:text-3xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+                Shiksha se badlav ki ek nayi shuruat. We are dedicated to providing quality education to those who need it most.
+            </p>
+            
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
+               target="_blank" 
+               class="btn-gradient px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition transform inline-block">
+                Join Our Mission (Contact Form)
+            </a>
         </div>
-    </header>
-
-    <section id="about" class="py-16 container mx-auto px-4 text-center">
-        <h3 class="text-3xl font-bold text-gray-800 mb-6">About Next Move India</h3>
-        <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Pratham ki tarah humara lakshya bhi shiksha aur samajik vikas mein kranti lana hai. Hum grassroot level par kaam karke logon ki zindagi badalne ka prayas kar rahe hain.
-        </p>
     </section>
 
-    <section id="programs" class="bg-gray-100 py-16">
-        <div class="container mx-auto px-4">
-            <h3 class="text-3xl font-bold text-center mb-12">Our Focus Areas</h3>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
-                    <div class="text-blue-600 text-4xl mb-4">📚</div>
-                    <h4 class="text-xl font-bold mb-2">Education</h4>
-                    <p class="text-gray-600">Bacchon ko quality education pradan karna humari प्राथमिकता hai.</p>
+    <section id="vision" class="py-20 bg-gray-800/50">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6 text-white">Our Core Vision</h2>
+                    <p class="text-gray-400 text-lg mb-4 italic">
+                        "Humara maksad un bacchon ko shikshit karna hai jo financial resources ki kami ki wajah se peeche reh jate hain."
+                    </p>
+                    <p class="text-gray-400 text-lg mb-6">
+                        Education is not a luxury, it's a necessity. Next Move India works at the ground level to bridge the gap between dreams and reality.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs">✓</span>
+                            <span>Equal education for all children.</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-xs">✓</span>
+                            <span>Breaking the barriers of poverty.</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
-                    <div class="text-blue-600 text-4xl mb-4">🌱</div>
-                    <h4 class="text-xl font-bold mb-2">Skill Development</h4>
-                    <p class="text-gray-600">Yuvaon ko naye skills sikha kar unhe aatmanirbhar banana.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
-                    <div class="text-blue-600 text-4xl mb-4">🤝</div>
-                    <h4 class="text-xl font-bold mb-2">Community Support</h4>
-                    <p class="text-gray-600">Samaj ke har varg ko upar uthane ke liye milkar kaam karna.</p>
+                <div class="glass p-8 rounded-3xl text-center border-emerald-500/20">
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">How We Help?</h3>
+                    <p class="text-gray-300">Hum un students ko resources, guidance aur support provide karte hain jo padhna chahte hain par rasta nahi milta.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-gray-800 text-white py-10 mt-12">
-        <div class="container mx-auto px-4 text-center">
-            <p class="mb-4">&copy; 2025 Next Move India. All Rights Reserved.</p>
-            <div class="flex justify-center space-x-4">
-                <a href="#" class="hover:underline">Contact</a>
-                <a href="#" class="hover:underline">Privacy Policy</a>
-                <a href="#" class="hover:underline">Support</a>
+    <section id="contact" class="py-20 px-6">
+        <div class="container mx-auto max-w-4xl glass p-10 rounded-3xl border-white/5 shadow-2xl">
+            <h2 class="text-4xl font-bold text-center mb-12">Get In Touch</h2>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="text-center md:text-left">
+                    <h4 class="text-emerald-400 font-bold uppercase tracking-widest mb-4">Contact Details</h4>
+                    <p class="text-2xl font-semibold mb-2">+91 9682420506</p>
+                    <p class="text-xl text-gray-400">info@nextmoveindia.org</p>
+                </div>
+                <div class="flex flex-col justify-center items-center md:items-end">
+                    <p class="text-gray-400 mb-4 text-center md:text-right">Aap niche diye gaye form ko bhar kar bhi humse contact kar sakte hain.</p>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
+                       target="_blank" 
+                       class="border border-emerald-500 text-emerald-400 px-6 py-3 rounded-xl hover:bg-emerald-500 hover:text-white transition font-bold">
+                        Fill Contact Form
+                    </a>
+                </div>
             </div>
         </div>
+    </section>
+
+    <footer class="py-10 border-t border-white/5 text-center text-gray-500 text-sm">
+        <p>&copy; 2026 Next Move India. Designed for Impact.</p>
+        <p class="mt-2 italic">Empowering the next generation, one step at a time.</p>
     </footer>
 
 </body>
