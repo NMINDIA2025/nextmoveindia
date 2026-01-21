@@ -6,6 +6,7 @@
     <title>Next Move India | Empowering Through Education</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         .gradient-text {
@@ -21,6 +22,12 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        /* Custom background pattern for hero */
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-size: 30px; /* Adjust size of pattern */
+            background-repeat: repeat;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100">
@@ -33,30 +40,47 @@
                 <a href="#vision" class="hover:text-emerald-400 transition">Our Vision</a>
                 <a href="#contact" class="hover:text-emerald-400 transition">Contact</a>
             </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-100 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+            </div>
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-gray-900 bg-opacity-95 z-40 flex flex-col items-center justify-center space-y-8 text-xl">
+            <a href="#home" class="hover:text-emerald-400 transition" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Home</a>
+            <a href="#vision" class="hover:text-emerald-400 transition" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Our Vision</a>
+            <a href="#contact" class="hover:text-emerald-400 transition" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Contact</a>
+            <button class="text-gray-100 absolute top-6 right-6" onclick="document.getElementById('mobile-menu').classList.add('hidden')">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
         </div>
-    </nav>
+        </nav>
 
-    <section id="home" class="pt-32 pb-20 px-6">
-        <div class="container mx-auto text-center">
-            <h1 class="text-5xl md:text-8xl font-extrabold mb-6 gradient-text">
+    <section id="home" class="relative pt-32 pb-20 px-6 overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center hero-pattern opacity-10"></div>
+        <div class="container mx-auto text-center relative z-10">
+            <h1 class="text-5xl md:text-8xl font-extrabold mb-6 gradient-text" data-aos="fade-up" data-aos-duration="1000">
                 Next Move India
             </h1>
-            <p class="text-xl md:text-3xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p class="text-xl md:text-3xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
                 Shiksha se badlav ki ek nayi shuruat. We are dedicated to providing quality education to those who need it most.
             </p>
             
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
-               target="_blank" 
-               class="btn-gradient px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition transform inline-block">
+                target="_blank" 
+                class="btn-gradient px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition transform inline-block"
+                data-aos="zoom-in" data-aos-delay="400" data-aos-duration="1000">
                 Join Our Mission (Contact Form)
             </a>
+            
+            <div class="mt-20 max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="600" data-aos-duration="1000">
+                 
+            </div>
         </div>
     </section>
 
     <section id="vision" class="py-20 bg-gray-800/50">
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
+                <div data-aos="fade-right" data-aos-duration="1000">
                     <h2 class="text-4xl font-bold mb-6 text-white">Our Core Vision</h2>
                     <p class="text-gray-400 text-lg mb-4 italic">
                         "Humara maksad un bacchon ko shikshit karna hai jo financial resources ki kami ki wajah se peeche reh jate hain."
@@ -75,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="glass p-8 rounded-3xl text-center border-emerald-500/20">
+                <div class="glass p-8 rounded-3xl text-center border-emerald-500/20" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
                     <h3 class="text-2xl font-bold mb-4 gradient-text">How We Help?</h3>
                     <p class="text-gray-300">Hum un students ko resources, guidance aur support provide karte hain jo padhna chahte hain par rasta nahi milta.</p>
                 </div>
@@ -84,7 +108,7 @@
     </section>
 
     <section id="contact" class="py-20 px-6">
-        <div class="container mx-auto max-w-4xl glass p-10 rounded-3xl border-white/5 shadow-2xl">
+        <div class="container mx-auto max-w-4xl glass p-10 rounded-3xl border-white/5 shadow-2xl" data-aos="fade-up" data-aos-duration="1000">
             <h2 class="text-4xl font-bold text-center mb-12">Get In Touch</h2>
             <div class="grid md:grid-cols-2 gap-10">
                 <div class="text-center md:text-left">
@@ -95,8 +119,8 @@
                 <div class="flex flex-col justify-center items-center md:items-end">
                     <p class="text-gray-400 mb-4 text-center md:text-right">Aap niche diye gaye form ko bhar kar bhi humse contact kar sakte hain.</p>
                     <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
-                       target="_blank" 
-                       class="border border-emerald-500 text-emerald-400 px-6 py-3 rounded-xl hover:bg-emerald-500 hover:text-white transition font-bold">
+                        target="_blank" 
+                        class="border border-emerald-500 text-emerald-400 px-6 py-3 rounded-xl hover:bg-emerald-500 hover:text-white transition font-bold">
                         Fill Contact Form
                     </a>
                 </div>
@@ -104,10 +128,23 @@
         </div>
     </section>
 
-    <footer class="py-10 border-t border-white/5 text-center text-gray-500 text-sm">
+    <footer class="py-10 border-t border-white/5 text-center text-gray-500 text-sm" data-aos="fade-up" data-aos-duration="1000">
         <p>&copy; 2026 Next Move India. Designed for Impact.</p>
         <p class="mt-2 italic">Empowering the next generation, one step at a time.</p>
     </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true, // Animation will happen only once
+            duration: 800, // Animation duration in ms
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.remove('hidden');
+        });
+    </script>
 
 </body>
 </html>
