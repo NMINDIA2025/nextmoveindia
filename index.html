@@ -3,43 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Next Move India | Empowering Through Education</title>
+    <title>Next Move India | Learn & Grow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
-        .gradient-text {
-            background: linear-gradient(to right, #60a5fa, #34d399);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .btn-gradient {
-            background: linear-gradient(to right, #3b82f6, #10b981);
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Floating Animation for Images */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
-        }
+        .gradient-text { background: linear-gradient(to right, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-gradient { background: linear-gradient(to right, #3b82f6, #10b981); }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .float-anim { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
         
-        /* Image Glow Effect */
-        .img-glow {
-            box-shadow: 0 0 30px rgba(52, 211, 153, 0.2);
-            transition: all 0.5s ease;
-        }
-        .img-glow:hover {
-            box-shadow: 0 0 50px rgba(52, 211, 153, 0.4);
-            transform: scale(1.02);
-        }
+        /* Modal Style */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100">
@@ -49,136 +26,152 @@
             <div class="text-2xl font-bold gradient-text">Next Move India</div>
             <div class="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
                 <a href="#home" class="hover:text-emerald-400 transition">Home</a>
-                <a href="#vision" class="hover:text-emerald-400 transition">Our Vision</a>
-                <a href="#contact" class="hover:text-emerald-400 transition">Contact</a>
+                <a href="#test" class="hover:text-emerald-400 transition">Skills Test</a>
+                <a href="#creative" class="hover:text-emerald-400 transition">Creative Corner</a>
+                <a href="javascript:void(0)" onclick="openModal()" class="bg-emerald-500/20 text-emerald-400 px-4 py-2 rounded-lg border border-emerald-500/50 hover:bg-emerald-500 hover:text-white transition">Join as Teacher</a>
             </div>
         </div>
     </nav>
 
-    <section id="home" class="relative pt-32 pb-20 px-6 overflow-hidden">
+    <section id="home" class="relative pt-40 pb-20 px-6">
         <div class="container mx-auto flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 text-center md:text-left z-10">
-                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 gradient-text" data-aos="fade-right">
-                    Next Move India
-                </h1>
-                <p class="text-xl text-gray-400 mb-10 leading-relaxed" data-aos="fade-right" data-aos-delay="200">
-                    Shiksha se badlav ki ek nayi shuruat. We bridge the gap between resources and talent for underprivileged children.
-                </p>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
-                   target="_blank" 
-                   class="btn-gradient px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition transform inline-block">
-                   Join Our Mission
-                </a>
-            </div>
-            
-            <div class="md:w-1/2 mt-16 md:mt-0 relative flex justify-center" data-aos="zoom-in" data-aos-delay="400">
-                <div class="float-anim">
-                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800" 
-                         alt="Education Impact" 
-                         class="rounded-3xl img-glow w-full max-w-md border border-white/10">
+            <div class="md:w-1/2 mb-12 md:mb-0" data-aos="fade-right">
+                <span class="text-emerald-400 font-bold tracking-widest uppercase text-sm">Empowering Tomorrow</span>
+                <h1 class="text-6xl md:text-8xl font-extrabold mb-6 leading-tight">Beyond <br><span class="gradient-text">Textbooks.</span></h1>
+                <p class="text-xl text-gray-400 mb-8 max-w-lg">Next Move India is not just an NGO; it's a launchpad for underprivileged talent to master communication and creativity.</p>
+                <div class="flex space-x-4">
+                    <a href="#test" class="btn-gradient px-8 py-4 rounded-xl font-bold hover:scale-105 transition shadow-lg">Take Free Skill Test</a>
                 </div>
-                <div class="absolute -z-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -top-10 -right-10"></div>
+            </div>
+            <div class="md:w-1/2 float-anim" data-aos="zoom-in">
+                <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=800" alt="Kids Learning" class="rounded-[2rem] shadow-2xl border-4 border-emerald-500/20">
             </div>
         </div>
     </section>
 
-    <section id="vision" class="py-20 bg-gray-800/30">
+    <section id="test" class="py-24 bg-gray-800/50 relative overflow-hidden">
         <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div class="order-2 md:order-1" data-aos="fade-up">
-                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800" 
-                         alt="Children Learning" 
-                         class="rounded-3xl shadow-2xl border border-white/5">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl font-bold mb-4">Communication Skills Assessment</h2>
+                <p class="text-gray-400">Baccho ki bolne ki shamta aur confidence ko check karein.</p>
+            </div>
+            <div class="max-w-3xl mx-auto glass p-8 rounded-3xl border-emerald-500/30 shadow-2xl" data-aos="fade-up">
+                <div id="quiz-container">
+                    <h3 class="text-2xl font-semibold mb-6" id="question">Loading Test...</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="options">
+                        </div>
                 </div>
-                
-                <div class="order-1 md:order-2" data-aos="fade-left">
-                    <h2 class="text-4xl font-bold mb-6 text-white">Our Core Vision</h2>
-                    <p class="text-gray-400 text-lg mb-6 italic border-l-4 border-emerald-500 pl-4">
-                        "Humara maksad un bacchon ko shikshit karna hai jo financial resources ki kami ki wajah se peeche reh jate hain."
-                    </p>
-                    <div class="space-y-6">
-                        <div class="glass p-4 rounded-2xl flex items-start space-x-4">
-                            <div class="bg-emerald-500 p-2 rounded-lg text-white">✓</div>
-                            <div>
-                                <h4 class="font-bold">Equal Opportunities</h4>
-                                <p class="text-sm text-gray-400">Har bacha padhne ka adhikaar rakhta hai.</p>
-                            </div>
-                        </div>
-                        <div class="glass p-4 rounded-2xl flex items-start space-x-4">
-                            <div class="bg-blue-500 p-2 rounded-lg text-white">✓</div>
-                            <div>
-                                <h4 class="font-bold">Breaking Poverty</h4>
-                                <p class="text-sm text-gray-400">Shiksha hi gareebi se nikalne ka rasta hai.</p>
-                            </div>
-                        </div>
-                    </div>
+                <div id="result-container" class="hidden text-center">
+                    <h3 class="text-3xl font-bold text-emerald-400 mb-4">Test Complete!</h3>
+                    <p id="score-text" class="text-xl mb-6"></p>
+                    <button onclick="location.reload()" class="btn-gradient px-6 py-2 rounded-lg">Retake Test</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold mb-12" data-aos="fade-down">Why Next Move?</h2>
+    <section id="creative" class="py-24">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-4xl font-bold mb-2">Creative Corner</h2>
+                    <p class="text-gray-400">Interesting tutorials for young minds.</p>
+                </div>
+                <a href="#" class="text-emerald-400 hover:underline">View All Tutorials →</a>
+            </div>
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass p-8 rounded-3xl hover:bg-white/5 transition" data-aos="flip-left" data-aos-delay="100">
-                    <div class="text-4xl mb-4">📚</div>
-                    <h3 class="text-xl font-bold mb-2">Quality Books</h3>
-                    <p class="text-gray-400">Providing the right study material.</p>
-                </div>
-                <div class="glass p-8 rounded-3xl hover:bg-white/5 transition" data-aos="flip-left" data-aos-delay="200">
-                    <div class="text-4xl mb-4">🤝</div>
-                    <h3 class="text-xl font-bold mb-2">Mentorship</h3>
-                    <p class="text-gray-400">Guiding students at every step.</p>
-                </div>
-                <div class="glass p-8 rounded-3xl hover:bg-white/5 transition" data-aos="flip-left" data-aos-delay="300">
-                    <div class="text-4xl mb-4">🚀</div>
-                    <h3 class="text-xl font-bold mb-2">Better Future</h3>
-                    <p class="text-gray-400">Creating leaders for tomorrow.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="py-20 px-6">
-        <div class="container mx-auto max-w-5xl glass p-1 rounded-3xl overflow-hidden shadow-2xl" data-aos="zoom-in">
-            <div class="flex flex-col md:flex-row">
-                <div class="md:w-1/2 p-10 bg-emerald-500/10">
-                    <h2 class="text-4xl font-bold mb-6">Let's Talk</h2>
-                    <p class="text-gray-400 mb-8">Aapki ek chhoti si madad kisi ka bhavishya badal sakti hai.</p>
-                    <div class="space-y-4">
-                        <p class="flex items-center space-x-3">
-                            <span class="text-emerald-400 font-bold">Call:</span>
-                            <span>+91 9682420506</span>
-                        </p>
-                        <p class="flex items-center space-x-3">
-                            <span class="text-emerald-400 font-bold">Email:</span>
-                            <span>info@nextmoveindia.org</span>
-                        </p>
+                <div class="glass rounded-3xl overflow-hidden hover:bg-white/5 transition group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-48 bg-cover bg-center transition group-hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=400')"></div>
+                    <div class="p-6">
+                        <span class="bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">Art</span>
+                        <h4 class="text-xl font-bold mt-2">Digital Storytelling</h4>
+                        <p class="text-gray-400 text-sm mt-2">Learn how to express your ideas through visuals and voice.</p>
                     </div>
                 </div>
-                <div class="md:w-1/2 p-10 flex items-center justify-center">
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=sf_link" 
-                        target="_blank" 
-                        class="border-2 border-emerald-500 text-emerald-400 px-10 py-4 rounded-xl hover:bg-emerald-500 hover:text-white transition font-bold text-xl text-center w-full">
-                        Fill Contact Form
-                    </a>
+                <div class="glass rounded-3xl overflow-hidden hover:bg-white/5 transition group" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 bg-cover bg-center transition group-hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1496449903678-68ddcb189a24?auto=format&fit=crop&q=80&w=400')"></div>
+                    <div class="p-6">
+                        <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded">Speaking</span>
+                        <h4 class="text-xl font-bold mt-2">The Art of Public Speaking</h4>
+                        <p class="text-gray-400 text-sm mt-2">Tips to overcome stage fear and speak like a pro.</p>
+                    </div>
+                </div>
+                <div class="glass rounded-3xl overflow-hidden hover:bg-white/5 transition group" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-48 bg-cover bg-center transition group-hover:scale-110" style="background-image: url('https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&q=80&w=400')"></div>
+                    <div class="p-6">
+                        <span class="bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">Logic</span>
+                        <h4 class="text-xl font-bold mt-2">Creative Problem Solving</h4>
+                        <p class="text-gray-400 text-sm mt-2">Solving real-world puzzles with simple logic.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-10 border-t border-white/5 text-center text-gray-500 text-sm">
-        <p>&copy; 2026 Next Move India. Empowering the next generation.</p>
+    <div id="teacherModal" class="modal flex items-center justify-center p-6">
+        <div class="bg-gray-800 p-8 rounded-3xl max-w-md w-full relative border border-emerald-500/30">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
+            <h2 class="text-3xl font-bold mb-4 gradient-text text-center">Join Our Mission</h2>
+            <p class="text-gray-400 text-center mb-6">Aap ek teacher ke roop mein bacchon ka bhavishya badal sakte hain.</p>
+            <form action="#" class="space-y-4">
+                <input type="text" placeholder="Full Name" class="w-full bg-gray-900 border border-white/10 p-3 rounded-xl focus:border-emerald-500 outline-none">
+                <input type="email" placeholder="Email Address" class="w-full bg-gray-900 border border-white/10 p-3 rounded-xl focus:border-emerald-500 outline-none">
+                <select class="w-full bg-gray-900 border border-white/10 p-3 rounded-xl focus:border-emerald-500 outline-none">
+                    <option>Communication Mentor</option>
+                    <option>Creative Arts Teacher</option>
+                    <option>Academic Tutor</option>
+                </select>
+                <button type="submit" class="btn-gradient w-full py-3 rounded-xl font-bold">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="py-12 border-t border-white/5 text-center text-gray-500">
+        <p>&copy; 2026 Next Move India. Designed for Massive Impact.</p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({
-            duration: 1000,
-            once: true,
-            offset: 100
-        });
+        AOS.init({ duration: 1000, once: true });
+
+        // Simple Quiz Logic
+        const questions = [
+            { q: "Jab aap kisi naye insaan se milte hain, toh aap kaise start karte hain?", a: ["Neeche dekh kar", "Eye contact aur smile ke saath", "Chup reh kar", "Bhaag kar"], correct: 1 },
+            { q: "Acche listener banne ke liye kya zaroori hai?", a: ["Beech mein bolna", "Dhyan se sunna aur samajhna", "Mobile chalana", "Sona"], correct: 1 },
+            { q: "Stage par bolte waqt agar aap bhool jayein toh kya karein?", a: ["Rone lagein", "Ghabrayein nahi, ek gehri saans lein", "Mic phenk dein", "Wapas baith jayein"], correct: 1 }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        function loadQuiz() {
+            const q = questions[currentQ];
+            document.getElementById('question').innerText = q.q;
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            q.a.forEach((opt, i) => {
+                optionsDiv.innerHTML += `<button onclick="checkAns(${i})" class="p-4 glass rounded-xl hover:bg-emerald-500/20 border border-white/5 text-left transition">${opt}</button>`;
+            });
+        }
+
+        function checkAns(i) {
+            if(i === questions[currentQ].correct) score++;
+            currentQ++;
+            if(currentQ < questions.length) loadQuiz();
+            else showResult();
+        }
+
+        function showResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+            document.getElementById('score-text').innerText = `Your Creativity & Communication Score: ${score}/${questions.length}`;
+        }
+
+        loadQuiz();
+
+        // Modal Functions
+        function openModal() { document.getElementById('teacherModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('teacherModal').style.display = 'none'; }
     </script>
 </body>
 </html>
