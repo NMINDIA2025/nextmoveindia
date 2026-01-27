@@ -3,178 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Next Move India | Learn & Evolve</title>
+    <title>Next Move India | The Science of Habit & Learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: white; overflow-x: hidden; }
-        .gradient-text { background: linear-gradient(90deg, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050810; color: #e2e8f0; scroll-behavior: smooth; }
+        .gradient-text { background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
+        .btn-premium { background: linear-gradient(to right, #2563eb, #10b981); transition: all 0.3s ease; }
+        .btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -10px #10b981; }
         
-        /* Duolingo Style Progress Bar */
-        .progress-container { width: 100%; height: 12px; background: #334155; border-radius: 10px; overflow: hidden; }
-        #progress-fill { width: 0%; height: 100%; background: #10b981; transition: width 0.5s ease; }
-        
-        .option-card { transition: all 0.2s; border: 2px solid transparent; }
-        .option-card:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); transform: translateY(-2px); }
-        .correct { border-color: #10b981 !important; background: rgba(16, 185, 129, 0.2) !important; }
-        .wrong { border-color: #ef4444 !important; background: rgba(239, 68, 68, 0.2) !important; }
+        /* Language Selector custom style */
+        .lang-node { cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .lang-node:hover { background: rgba(255,255,255,0.1); }
+
+        /* Habit Progress Animation */
+        @keyframes grow { from { width: 0%; } to { width: 75%; } }
+        .habit-bar { height: 8px; background: #10b981; border-radius: 4px; animation: grow 3s ease-out; }
     </style>
 </head>
 <body>
 
-    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
-        <div class="text-2xl font-extrabold gradient-text">Next Move India</div>
-        <div class="hidden md:flex space-x-8 text-sm font-semibold uppercase tracking-widest">
-            <a href="#home" class="hover:text-emerald-400">Home</a>
-            <a href="#learn" class="hover:text-emerald-400">Skill Test</a>
-            <a href="#teacher" class="hover:text-emerald-400">Join as Teacher</a>
+    <nav class="fixed w-full z-50 glass-card rounded-none border-t-0 border-x-0 py-4 px-8 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-lg"></div>
+            <span class="text-xl font-bold tracking-tighter uppercase">Next Move <span class="text-emerald-400">India</span></span>
+        </div>
+        
+        <div class="hidden lg:flex items-center space-x-10 text-xs font-bold uppercase tracking-widest">
+            <a href="#about" class="hover:text-emerald-400">Our Mission</a>
+            <a href="#habit" class="hover:text-emerald-400">Habit Science</a>
+            <a href="#vault" class="hover:text-emerald-400">Skill Vault</a>
+            <button onclick="document.getElementById('test-modal').style.display='flex'" class="text-emerald-400 border border-emerald-400/30 px-4 py-2 rounded-full hover:bg-emerald-400 hover:text-black transition">Take Skill Challenge</button>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <select class="bg-transparent border border-white/10 text-[10px] rounded px-2 py-1 outline-none">
+                <option class="bg-gray-900">EN (English)</option>
+                <option class="bg-gray-900">HI (Hindi)</option>
+                <option class="bg-gray-900">FR (French)</option>
+                <option class="bg-gray-900">DE (German)</option>
+                <option class="bg-gray-900">RU (Russian)</option>
+            </select>
         </div>
     </nav>
 
-    <section id="home" class="pt-32 pb-20 px-6 container mx-auto flex flex-col md:flex-row items-center">
-        <div class="md:w-1/2" data-aos="fade-right">
-            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">Seekho wahi jo <span class="gradient-text">Zaroori Hai.</span></h1>
-            <p class="text-xl text-gray-400 mb-8">Hum lekar aaye hain India ke har bacche ke liye ek naya platform, jahan communication aur creativity ek game ki tarah seekhi jati hai.</p>
-            
-            <div class="glass p-4 rounded-2xl inline-flex items-center space-x-4 border-l-4 border-emerald-500">
-                <span class="text-2xl">💡</span>
-                <div>
-                    <p class="text-xs font-bold text-emerald-400 uppercase">Daily Tip</p>
-                    <p class="text-sm italic">"Confidence ke liye hamesha eye-contact banaye rakhein."</p>
-                </div>
+    <section class="pt-40 pb-20 px-8 container mx-auto flex flex-col lg:flex-row items-center gap-12">
+        <div class="lg:w-3/5" data-aos="fade-up">
+            <span class="px-4 py-1 rounded-full border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-6 inline-block">THE FUTURE OF INDIAN YOUTH</span>
+            <h1 class="text-6xl lg:text-8xl font-black mb-8 leading-[0.9]">Habits are <br> <span class="gradient-text">Proportional</span> <br> to Success.</h1>
+            <p class="text-gray-400 text-lg max-w-xl mb-10 leading-relaxed">
+                Next Move India stands at the intersection of psychology and education. Hum sirf padhate nahi, hum seekhne ki 'Habit' build karte hain—un underprivileged Indian talent ke liye jo duniya badalne ka jazba rakhte hain.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <button onclick="document.getElementById('test-modal').style.display='flex'" class="btn-premium px-10 py-4 rounded-2xl font-bold text-black">Start Discovery Test</button>
+                <a href="#about" class="px-10 py-4 rounded-2xl border border-white/10 font-bold hover:bg-white/5 transition">Learn Our Logic</a>
             </div>
         </div>
-        <div class="md:w-1/2 mt-12 md:mt-0" data-aos="zoom-in">
-            <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&q=80&w=800" alt="Indian Student Learning" class="rounded-[40px] shadow-2xl border-2 border-white/10">
+        <div class="lg:w-2/5 relative" data-aos="zoom-in">
+            <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl grayscale hover:grayscale-0 transition duration-700 border border-white/10" alt="Indian Student">
+            <div class="absolute -bottom-6 -left-6 glass-card p-6 animate-bounce">
+                <p class="text-emerald-400 font-bold text-2xl">90%</p>
+                <p class="text-[10px] uppercase text-gray-500">Character Build Rate</p>
+            </div>
         </div>
     </section>
 
-    <section id="learn" class="py-20 bg-gray-900/50">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <div class="text-center mb-10">
-                <h2 class="text-4xl font-bold mb-2">Master Your Communication</h2>
-                <div class="progress-container mt-6">
-                    <div id="progress-fill"></div>
-                </div>
-            </div>
-
-            <div id="quiz-box" class="glass p-8 md:p-12 rounded-[2rem]">
-                <div id="quiz-content">
-                    <p id="quiz-category" class="text-emerald-400 text-sm font-bold mb-2 uppercase tracking-widest">Lesson 1: First Impression</p>
-                    <h3 id="quiz-question" class="text-2xl md:text-3xl font-bold mb-8 italic">"Loading your first challenge..."</h3>
-                    <div id="quiz-options" class="grid grid-cols-1 gap-4">
+    <section id="about" class="py-24 bg-white/5">
+        <div class="container mx-auto px-8">
+            <div class="grid lg:grid-cols-2 gap-20">
+                <div data-aos="fade-right">
+                    <h2 class="text-4xl font-bold mb-8 italic">Kyun Judein Humse?</h2>
+                    <div class="space-y-8">
+                        <div class="flex gap-6">
+                            <div class="text-emerald-400 font-black text-2xl">01</div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">Beyond Syllabus</h4>
+                                <p class="text-gray-500 text-sm">Textbooks boring ho sakti hain, lekin life-skills nahi. Hum baccho ko wahi sikhate hain jo unhe real life mein 'Unstoppable' banaye.</p>
+                            </div>
                         </div>
+                        <div class="flex gap-6">
+                            <div class="text-emerald-400 font-black text-2xl">02</div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">The Habit Multiplier</h4>
+                                <p class="text-gray-500 text-sm">Aapki habits hi aapke life ke outcomes ke proportional hain. Bachpan mein sahi aadat matlab ek safal zindagi ki guarantee.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div id="feedback" class="hidden mt-8 p-4 rounded-xl text-center font-bold"></div>
-                
-                <div id="result-box" class="hidden text-center">
-                    <h3 class="text-5xl font-black gradient-text mb-4">Shabaash! 🏆</h3>
-                    <p class="text-xl mb-8">Aapne naye communication skills seekhe hain.</p>
-                    <button onclick="location.reload()" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-emerald-400 transition">Next Lesson</button>
+                <div class="glass-card p-10" data-aos="fade-left">
+                    <h3 class="text-2xl font-bold mb-6">World Language Vault</h3>
+                    <p class="text-gray-400 mb-8 italic">Inside Next Move, we secretly master languages to bridge global gaps. Spanish? French? English? We cover it all through immersive stories.</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">🇫🇷 French</div>
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">🇪🇸 Spanish</div>
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">🇩🇪 German</div>
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/5">🇬🇧 English</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="teacher" class="py-24 border-t border-white/5">
-        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
-            <div class="md:w-1/2 order-2 md:order-1" data-aos="fade-up">
-                <img src="https://images.unsplash.com/photo-1577896851231-70ef1460018e?auto=format&fit=crop&q=80&w=800" alt="Indian Teacher" class="rounded-3xl shadow-xl">
+    <section id="habit" class="py-24 container mx-auto px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black gradient-text uppercase tracking-tighter">The Science of Early Learning</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="glass-card p-8 hover:bg-emerald-500/10 transition group">
+                <h4 class="text-xl font-bold mb-4">Neural Plasticity</h4>
+                <p class="text-gray-500 text-sm mb-6">Bachpan mein dimag ek sponge ki tarah hota hai. Jo habit tab banti hai, wo DNA ka hissa ban jati hai.</p>
+                <div class="w-full h-1 bg-gray-800 rounded">
+                    <div class="h-1 bg-emerald-400 w-full animate-pulse"></div>
+                </div>
             </div>
-            <div class="md:w-1/2 order-1 md:order-2" data-aos="fade-left">
-                <h2 class="text-4xl font-bold mb-6 italic">Teacher ban kar badlaav layein!</h2>
-                <p class="text-gray-400 mb-8">Agar aapke paas sikhane ka hunar hai aur aap Indian kids ko empower karna chahte hain, toh aaj hi hamari core team ka hissa banein.</p>
-                <form class="space-y-4">
-                    <input type="text" placeholder="Aapka Naam" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-emerald-500">
-                    <input type="email" placeholder="Email Address" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-emerald-500">
-                    <button class="w-full bg-emerald-500 hover:bg-emerald-600 py-4 rounded-xl font-bold text-lg shadow-lg shadow-emerald-500/20">Apply to Teach</button>
-                </form>
+            <div class="glass-card p-8 hover:bg-blue-500/10 transition group">
+                <h4 class="text-xl font-bold mb-4">Linguistic Advantage</h4>
+                <p class="text-gray-500 text-sm mb-6">Multiple languages seekhne se IQ aur Problem-Solving skills 40% tak badh jati hain.</p>
+                <div class="w-full h-1 bg-gray-800 rounded">
+                    <div class="h-1 bg-blue-400 w-3/4 animate-pulse"></div>
+                </div>
+            </div>
+            <div class="glass-card p-8 hover:bg-purple-500/10 transition group">
+                <h4 class="text-xl font-bold mb-4">Creative Habit</h4>
+                <p class="text-gray-500 text-sm mb-6">Creativity koi talent nahi, ek habit hai. Hum ise har roz 1% behtar banate hain.</p>
+                <div class="w-full h-1 bg-gray-800 rounded">
+                    <div class="h-1 bg-purple-400 w-1/2 animate-pulse"></div>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-10 text-center text-gray-600 text-sm border-t border-white/5">
-        <p>&copy; 2026 Next Move India | Growing Every Day.</p>
+    <div id="test-modal" class="fixed inset-0 z-[100] bg-black/90 hidden flex-col items-center justify-center p-6 backdrop-blur-xl">
+        <button onclick="document.getElementById('test-modal').style.display='none'" class="absolute top-10 right-10 text-4xl">&times;</button>
+        <div class="max-w-2xl w-full glass-card p-10 relative overflow-hidden">
+            <div id="quiz-ui">
+                <span class="text-xs text-emerald-400 font-bold mb-2 block uppercase">Quantum Thinking Challenge</span>
+                <h3 id="question-title" class="text-3xl font-black mb-10 leading-snug">Sawal Load Ho Raha Hai...</h3>
+                <div id="options-container" class="grid gap-4"></div>
+            </div>
+            
+            <div id="explanation-box" class="hidden mt-10 p-6 border-t border-emerald-500/20 bg-emerald-500/5 rounded-2xl">
+                <p class="text-emerald-400 font-bold mb-2 uppercase text-xs tracking-widest">Scientific Reality:</p>
+                <p id="explanation-text" class="text-sm text-gray-300 leading-relaxed italic"></p>
+                <div class="mt-4 flex items-center justify-between">
+                    <button onclick="nextQuestion()" class="btn-premium px-6 py-2 rounded-xl text-black font-bold">I Understood. Next Challenge.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="py-24 container mx-auto px-8 text-center border-t border-white/5">
+        <h2 class="text-5xl font-black mb-6">Join the Revolution.</h2>
+        <p class="text-gray-500 mb-10 max-w-2xl mx-auto">Agar aap ek teacher hain aur hamare mission mein contribute karna chahte hain—jahan habits aur languages ki duniya hai—toh humein join karein.</p>
+        <button class="px-12 py-5 border-2 border-emerald-500 text-emerald-400 rounded-full font-black text-xl hover:bg-emerald-500 hover:text-black transition">JOIN AS A MENTOR</button>
+    </section>
+
+    <footer class="py-10 border-t border-white/5 text-center text-xs text-gray-700">
+        &copy; 2026 NEXT MOVE INDIA | BUILDING HABITS, SHAPING DESTINY.
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init();
 
-        const challenges = [
+        const quizData = [
             {
-                cat: "Public Speaking",
-                q: "Situation: Aap stage par khade hain aur log aapko dekh rahe hain. Sabse pehla kaam kya hona chahiye?",
-                opts: [
-                    { t: "Seedhe bolna shuru kar dena", c: false, msg: "Nahi! Thoda rukna zaroori hai." },
-                    { t: "Ek gehri saans lein aur audience ko smile karein", c: true, msg: "Sahi jawab! Isse aap calm aur confident dikhte hain." },
-                    { t: "Apne joote dekhne lagna", c: false, msg: "Nahi! Isse aap nervous lagenge." }
-                ]
+                q: "Agar aap ek 'Idea' ko 1 minute tak bina kisi distraction ke soch sakte hain, toh aapka brain kya kar raha hai?",
+                opts: ["Time waste", "Neural Rewiring", "Bas ek daydream"],
+                correct: 1,
+                exp: "Scientific Reality: Isse 'Deep Work' kehte hain. Jab aap kisi cheez par intense focus karte hain, toh aapka brain 'Myelin' naam ka ek substance create karta hai jo neural pathways ko 10x fast bana deta hai. Isliye focus ek habit hai."
             },
             {
-                cat: "Vocabulary",
-                q: "Agar koi aapki help kare, toh 'Thanks' ke ilawa aur kya keh sakte hain?",
-                opts: [
-                    { t: "I really appreciate it!", c: true, msg: "Excellent! Ye zyada professional lagta hai." },
-                    { t: "Theek hai, jao.", c: false, msg: "Ye thoda rude ho sakta hai." },
-                    { t: "Mujhe pata tha tum karoge.", c: false, msg: "Try something more polite." }
-                ]
+                q: "Life mein Success habits ke 'Proportional' hoti hai. Iska matlab kya hai?",
+                opts: ["Luck decide karta hai", "Choti choti daily habits ka compound effect", "Sirf hardwork"],
+                correct: 1,
+                exp: "Scientific Reality: Life ek 'Lagging Measure' hai aapki habits ka. Agar aap 1% behtar hote hain roz, toh saal ke end mein aap 37 times behtar ho jayenge. Mathematically: (1.01)^365 = 37.78."
             }
         ];
 
-        let step = 0;
-        const progressFill = document.getElementById('progress-fill');
-        const qText = document.getElementById('quiz-question');
-        const qCat = document.getElementById('quiz-category');
-        const qOpts = document.getElementById('quiz-options');
-        const feedback = document.getElementById('feedback');
+        let currentQ = 0;
+        const qTitle = document.getElementById('question-title');
+        const optsBox = document.getElementById('options-container');
+        const expBox = document.getElementById('explanation-box');
+        const expText = document.getElementById('explanation-text');
 
-        function loadChallenge() {
-            if(step >= challenges.length) {
-                document.getElementById('quiz-content').classList.add('hidden');
-                document.getElementById('result-box').classList.remove('hidden');
-                progressFill.style.width = "100%";
+        function loadQuiz() {
+            if(currentQ >= quizData.length) {
+                qTitle.innerText = "Challenge Complete! You are now a 1% Thinker.";
+                optsBox.innerHTML = '';
+                expBox.classList.add('hidden');
                 return;
             }
-            
-            feedback.classList.add('hidden');
-            const data = challenges[step];
-            qCat.innerText = `Lesson ${step + 1}: ${data.cat}`;
-            qText.innerText = data.q;
-            qOpts.innerHTML = '';
-            progressFill.style.width = `${(step / challenges.length) * 100}%`;
-
+            expBox.classList.add('hidden');
+            const data = quizData[currentQ];
+            qTitle.innerText = data.q;
+            optsBox.innerHTML = '';
             data.opts.forEach((o, i) => {
-                const btn = document.createElement('button');
-                btn.className = "option-card glass p-5 rounded-2xl text-left font-medium";
-                btn.innerText = o.t;
-                btn.onclick = () => handleAns(o, btn);
-                qOpts.appendChild(btn);
+                const b = document.createElement('button');
+                b.className = "p-5 glass-card text-left hover:border-emerald-500/50 transition duration-300";
+                b.innerText = o;
+                b.onclick = () => showExp(i);
+                optsBox.appendChild(b);
             });
         }
 
-        function handleAns(opt, btn) {
-            const allBtns = qOpts.querySelectorAll('button');
-            allBtns.forEach(b => b.disabled = true);
-            
-            feedback.classList.remove('hidden');
-            feedback.innerText = opt.msg;
-            
-            if(opt.c) {
-                btn.classList.add('correct');
-                feedback.className = "mt-8 p-4 rounded-xl text-center font-bold bg-emerald-500/20 text-emerald-400";
-                setTimeout(() => { step++; loadChallenge(); }, 2000);
-            } else {
-                btn.classList.add('wrong');
-                feedback.className = "mt-8 p-4 rounded-xl text-center font-bold bg-red-500/20 text-red-400";
-                setTimeout(() => { allBtns.forEach(b => { b.disabled = false; b.classList.remove('wrong'); }); feedback.classList.add('hidden'); }, 2000);
-            }
+        function showExp(index) {
+            const data = quizData[currentQ];
+            expBox.classList.remove('hidden');
+            expText.innerText = data.exp;
+            // Highlight correct/wrong can be added here
         }
 
-        loadChallenge();
+        function nextQuestion() {
+            currentQ++;
+            loadQuiz();
+        }
+
+        loadQuiz();
     </script>
 </body>
 </html>
