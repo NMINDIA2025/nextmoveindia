@@ -3,218 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Next Move India | Habit & Language Science</title>
+    <title>Next Move India | Habits & Personality Science</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050810; color: #e2e8f0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050810; color: #e2e8f0; scroll-behavior: smooth; overflow-x: hidden; }
         .gradient-text { background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; overflow-y: auto; padding: 20px; }
+        .btn-premium { background: linear-gradient(to right, #2563eb, #10b981); transition: all 0.3s ease; border: none; color: white; cursor: pointer; }
+        .btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -10px #10b981; }
         
-        /* Secret Secret Mini-Game Style */
-        .secret-trigger:active { transform: scale(0.9); transition: 0.2s; }
-        .visual-aid { display: none; margin-top: 15px; border-radius: 15px; border: 1px dashed #10b981; padding: 10px; }
+        /* Modal and Scroll Fix */
+        .modal-container { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; overflow-y: auto; padding: 20px; align-items: center; justify-content: center; }
+        .visual-graph { height: 150px; display: flex; align-items: flex-end; gap: 4px; margin-top: 20px; border-bottom: 2px solid #334155; padding-bottom: 5px; }
+        .bar { width: 30px; background: #10b981; border-radius: 4px 4px 0 0; transition: height 1s; }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body>
 
-    <nav class="fixed w-full z-50 glass-card rounded-none border-0 py-4 px-6 md:px-12 flex justify-between items-center">
+    <nav class="fixed w-full z-50 glass-card rounded-none border-x-0 border-t-0 py-4 px-8 flex justify-between items-center">
         <div class="flex items-center space-x-2">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-emerald-400 rounded-xl"></div>
-            <span class="text-xl font-bold tracking-tighter" id="nav-logo">NEXT MOVE INDIA</span>
+            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-lg"></div>
+            <span class="text-xl font-bold tracking-tighter uppercase">Next Move <span class="text-emerald-400">India</span></span>
         </div>
         
-        <div class="hidden lg:flex items-center space-x-8 text-[11px] font-bold uppercase tracking-widest">
-            <a href="#about" class="hover:text-emerald-400" id="nav-mission">Our Mission</a>
-            <a href="#habit" class="hover:text-emerald-400" id="nav-habit">Habit Science</a>
-            <a href="#language" class="hover:text-emerald-400" id="nav-vault">Skill Vault</a>
-            <button onclick="toggleModal('quiz-modal')" class="bg-emerald-500/10 text-emerald-400 border border-emerald-400/30 px-5 py-2 rounded-full hover:bg-emerald-400 hover:text-black transition">CHALLENGE</button>
+        <div class="hidden lg:flex items-center space-x-10 text-xs font-bold uppercase tracking-widest">
+            <a href="#about" class="hover:text-emerald-400 lang-target" data-en="Mission" data-hi="लक्ष्य">Mission</a>
+            <a href="#skills" class="hover:text-emerald-400 lang-target" data-en="Skills" data-hi="हुनर">Skills</a>
+            <a href="#habit" class="hover:text-emerald-400 lang-target" data-en="Habit Science" data-hi="आदत विज्ञान">Habit Science</a>
+            <button onclick="openModal()" class="text-emerald-400 border border-emerald-400/30 px-4 py-2 rounded-full hover:bg-emerald-400 hover:text-black transition lang-target" data-en="Take Challenge" data-hi="चैलेंज लें">Take Challenge</button>
         </div>
 
-        <select id="langSwitcher" onchange="changeLanguage()" class="bg-gray-900 border border-white/20 text-xs rounded-lg px-3 py-2 outline-none">
-            <option value="en">English</option>
-            <option value="hi">हिन्दी (Hindi)</option>
-            <option value="fr">Français</option>
+        <select onchange="updateLanguage(this.value)" class="bg-transparent border border-white/10 text-[10px] rounded px-2 py-1 outline-none">
+            <option value="hinglish" class="bg-gray-900">Hinglish (Default)</option>
+            <option value="hi" class="bg-gray-900">Hindi</option>
+            <option value="en" class="bg-gray-900">English</option>
         </select>
     </nav>
 
-    <section class="pt-40 pb-20 px-6 container mx-auto">
-        <div class="flex flex-col lg:flex-row items-center gap-16">
-            <div class="lg:w-1/2" data-aos="fade-up">
-                <h1 class="text-5xl md:text-8xl font-black mb-8 leading-[0.95]" id="hero-title">
-                    Habits Shape <br> <span class="gradient-text">Destiny.</span>
-                </h1>
-                <p class="text-gray-400 text-lg md:text-xl mb-10 leading-relaxed" id="hero-desc">
-                    Next Move India is building the world's most creative generation. We don't just teach; we install habits that are proportional to lifelong success.
-                </p>
-                <div class="flex flex-wrap gap-5">
-                    <button onclick="toggleModal('quiz-modal')" class="bg-gradient-to-r from-blue-600 to-emerald-500 px-10 py-5 rounded-2xl font-black text-black hover:scale-105 transition shadow-2xl shadow-emerald-500/20">START TEST</button>
-                </div>
+    <section class="pt-48 pb-20 px-8 container mx-auto flex flex-col lg:flex-row items-center gap-12">
+        <div class="lg:w-3/5" data-aos="fade-up">
+            <span class="px-4 py-1 rounded-full border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-6 inline-block lang-target" data-en="THE FUTURE OF INDIAN YOUTH" data-hi="भारतीय युवाओं का भविष्य">THE FUTURE OF INDIAN YOUTH</span>
+            <h1 class="text-6xl lg:text-8xl font-black mb-8 leading-[0.9] lang-target" 
+                data-en="Habits are <br> <span class='gradient-text'>Proportional</span> <br> to Success." 
+                data-hi="Habits Success ke <br> <span class='gradient-text'>Proportional</span> <br> hoti hain.">
+                Habits are <br> <span class="gradient-text">Proportional</span> <br> to Success.
+            </h1>
+            <p class="text-gray-400 text-lg max-w-xl mb-10 leading-relaxed lang-target" 
+               data-en="Next Move India stands at the intersection of psychology and education. We don't just teach; we build habits for underprivileged talent." 
+               data-hi="Next Move India psychology aur education ke beech ka bridge hai. Hum sirf padhate nahi, habit build karte hain.">
+                Next Move India stands at the intersection of psychology and education. Hum sirf padhate nahi, hum seekhne ki 'Habit' build karte hain—un underprivileged Indian talent ke liye jo duniya badalne ka jazba rakhte hain.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <button onclick="openModal()" class="btn-premium px-10 py-4 rounded-2xl font-bold text-white lang-target" data-en="Start Discovery Test" data-hi="टेस्ट शुरू करें">Start Discovery Test</button>
+                <a href="#about" class="px-10 py-4 rounded-2xl border border-white/10 font-bold hover:bg-white/5 transition lang-target" data-en="Our Logic" data-hi="हमारा लॉजिक">Our Logic</a>
             </div>
-            <div class="lg:w-1/2 w-full" data-aos="zoom-in">
-                <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] border border-white/10 shadow-2xl grayscale hover:grayscale-0 transition duration-1000" alt="Indian Kids">
-                    <div class="absolute -bottom-8 -right-4 glass-card p-6 secret-trigger" onclick="alert('Secret Found! Use code NEXTMOVE10 for mentorship.')">
-                        <span class="text-emerald-400 font-bold block">1% BETTER</span>
-                        <span class="text-[10px] text-gray-500">EVERY SINGLE DAY</span>
-                    </div>
-                </div>
+        </div>
+        <div class="lg:w-2/5 relative" data-aos="zoom-in">
+            <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl grayscale hover:grayscale-0 transition duration-700 border border-white/10" alt="Indian Student">
+            <div class="absolute -bottom-6 -left-6 glass-card p-6 animate-bounce">
+                <p class="text-emerald-400 font-bold text-2xl">90%</p>
+                <p class="text-[10px] uppercase text-gray-500 lang-target" data-en="Character Build" data-hi="चरित्र निर्माण">Character Build Rate</p>
             </div>
         </div>
     </section>
 
-    <section id="habit" class="py-24 bg-white/5 px-6">
-        <div class="container mx-auto">
-            <h2 class="text-3xl md:text-5xl font-bold mb-16 text-center" id="habit-head">The Science of Early Habits</h2>
-            <div class="grid md:grid-cols-3 gap-10">
-                <div class="glass-card p-10 hover:border-emerald-500/40 transition">
-                    <div class="text-4xl mb-6">🧠</div>
-                    <h4 class="text-xl font-bold mb-4" id="card1-title">Neural Rewiring</h4>
-                    <p class="text-gray-500 text-sm leading-relaxed" id="card1-desc">Bachpan mein jo seekha jata hai wo dimag mein permanently wire ho jata hai. Hum isi logic se learning ko habit banate hain.</p>
-                </div>
-                <div class="glass-card p-10 hover:border-blue-500/40 transition">
-                    <div class="text-4xl mb-6">📈</div>
-                    <h4 class="text-xl font-bold mb-4" id="card2-title">Compound Growth</h4>
-                    <p class="text-gray-500 text-sm leading-relaxed" id="card2-desc">Small habits result in massive success. Life results are proportional to your daily routine.</p>
-                </div>
-                <div class="glass-card p-10 hover:border-purple-500/40 transition">
-                    <div class="text-4xl mb-6">🌍</div>
-                    <h4 class="text-xl font-bold mb-4" id="card3-title">Global Languages</h4>
-                    <p class="text-gray-500 text-sm leading-relaxed" id="card3-desc">Learning French, Spanish or English increases cognitive flexibility. Hum secretly languages sikhate hain.</p>
-                </div>
+    <section id="skills" class="py-24 px-8 container mx-auto">
+        <h2 class="text-4xl font-bold mb-16 text-center lang-target" data-en="Core Pillars of Personality" data-hi="पर्सनालिटी के मुख्य स्तंभ">Core Pillars of Personality</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-card p-8 hover:bg-white/5 transition" data-aos="fade-up">
+                <div class="text-3xl mb-4">🎤</div>
+                <h4 class="text-xl font-bold mb-2 lang-target" data-en="Public Speaking" data-hi="पब्लिक स्पीकिंग">Public Speaking</h4>
+                <p class="text-gray-500 text-sm lang-target" data-en="Master the art of speaking in front of thousands without fear." data-hi="हजारों के सामने बिना डरे अपनी बात रखने की कला सीखें।">Stage fear ko khatam karke confidence ke saath bolna seekhein.</p>
+            </div>
+            <div class="glass-card p-8 hover:bg-white/5 transition" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-3xl mb-4">🤝</div>
+                <h4 class="text-xl font-bold mb-2 lang-target" data-en="Communication" data-hi="कम्युनिकेशन">Communication</h4>
+                <p class="text-gray-500 text-sm lang-target" data-en="Clear communication is the key to global opportunities." data-hi="साफ और प्रभावी बातचीत ही ग्लोबल मौकों की चाबी है।">Apne ideas ko dusron tak sahi tareeke se pahunchana seekhein.</p>
+            </div>
+            <div class="glass-card p-8 hover:bg-white/5 transition" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-3xl mb-4">✨</div>
+                <h4 class="text-xl font-bold mb-2 lang-target" data-en="Confidence" data-hi="आत्मविश्वास">Confidence</h4>
+                <p class="text-gray-500 text-sm lang-target" data-en="Confidence is not 'they like me', it's 'I am okay if they don't'." data-hi="कॉन्फिडेंस मतलब खुद पर अटूट भरोसा।">Andar se mazboot banein taaki koi bhi rukawat aapko rok na sake.</p>
+            </div>
+            <div class="glass-card p-8 hover:bg-white/5 transition" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-3xl mb-4">🧬</div>
+                <h4 class="text-xl font-bold mb-2 lang-target" data-en="Development" data-hi="व्यक्तित्व विकास">Personality</h4>
+                <p class="text-gray-500 text-sm lang-target" data-en="Your personality is your first impression." data-hi="आपकी पर्सनालिटी ही आपकी पहली पहचान है।">Ek aisi personality jo log dekhte hi impress ho jayein.</p>
             </div>
         </div>
     </section>
 
-    <div id="quiz-modal" class="modal-overlay">
-        <div class="max-w-3xl mx-auto my-10 glass-card p-8 md:p-16 relative">
-            <button onclick="toggleModal('quiz-modal')" class="absolute top-5 right-5 text-3xl">&times;</button>
-            <div id="quiz-body">
-                <h3 id="q-text" class="text-2xl md:text-4xl font-black mb-8 leading-tight">Loading Question...</h3>
-                <div id="q-options" class="grid gap-4 mb-10"></div>
-                
-                <div id="q-explanation" class="hidden glass-card bg-emerald-500/5 p-6 border-emerald-500/30">
-                    <p class="text-emerald-400 font-bold text-xs uppercase mb-3">The Logic Behind This:</p>
-                    <p id="exp-text" class="text-gray-300 italic mb-4"></p>
-                    
-                    <button onclick="toggleVisualAid()" class="text-[10px] underline text-emerald-500 hover:text-white mb-4">SHOW MORE (VISUAL EXPLANATION)</button>
-                    
-                    <div id="visual-aid" class="visual-aid">
-                        <p class="text-xs text-gray-400 mb-4">Aapka dimag aise grow karta hai:</p>
-                        
-                        <div class="h-40 w-full bg-gray-900 rounded-lg flex items-end p-4 gap-2">
-                            <div class="w-1/6 bg-emerald-900 h-4"></div>
-                            <div class="w-1/6 bg-emerald-800 h-8"></div>
-                            <div class="w-1/6 bg-emerald-700 h-16"></div>
-                            <div class="w-1/6 bg-emerald-600 h-24"></div>
-                            <div class="w-1/6 bg-emerald-500 h-full animate-pulse"></div>
+    <section id="habit" class="py-24 bg-white/5">
+        <div class="container mx-auto px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-black gradient-text uppercase lang-target" data-en="The Science of Habits" data-hi="आदतों का विज्ञान">The Science of Early Learning</h2>
+                <p class="text-gray-400 mt-4 lang-target" data-en="Why habits formed in childhood last forever." data-hi="बचपन की आदतें क्यों उम्र भर साथ रहती हैं।">Bachpan ki habits hi life ki building blocks hoti hain.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="glass-card p-10 border-l-4 border-emerald-500" data-aos="fade-right">
+                    <h3 class="text-2xl font-bold mb-6 lang-target" data-en="The Compounding Effect" data-hi="कंपाउंडिंग इफेक्ट">The Compounding Effect</h3>
+                    <p class="text-gray-400 leading-relaxed mb-6 lang-target" 
+                       data-en="If you improve 1% daily, you become 37 times better in a year. This is not magic, it's math." 
+                       data-hi="अगर आप रोज़ 1% बेहतर होते हैं, तो साल के अंत में आप 37 गुना बेहतर बन जाते हैं। ये जादू नहीं, गणित है।">
+                        Success koi ek din ka event nahi hai. Ye un choti-choti habits ka result hai jo hum roz karte hain. $(1.01)^{365} = 37.78$
+                    </p>
+                    <div class="p-6 bg-black/40 rounded-2xl">
+                        <p class="text-xs text-emerald-400 font-bold mb-4 uppercase">Growth Visualization</p>
+                        <div class="visual-graph">
+                            <div class="bar" style="height: 10%;"></div>
+                            <div class="bar" style="height: 20%;"></div>
+                            <div class="bar" style="height: 40%;"></div>
+                            <div class="bar" style="height: 70%;"></div>
+                            <div class="bar" style="height: 100%;"></div>
                         </div>
                     </div>
-
-                    <button onclick="nextQ()" class="w-full bg-emerald-500 text-black py-4 rounded-xl font-bold mt-6">I Understand. Next Move →</button>
                 </div>
+                <div data-aos="fade-left">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=800" class="rounded-3xl shadow-2xl" alt="Education">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="test-modal" class="modal-container">
+        <div class="max-w-2xl w-full glass-card p-10 relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-3xl">&times;</button>
+            <div id="quiz-content">
+                <span class="text-xs text-emerald-400 font-bold mb-2 block uppercase">Skill Assessment</span>
+                <h3 id="question-title" class="text-3xl font-black mb-10 leading-snug">Q: Stage par bolte waqt darr lagna normal hai?</h3>
+                <div id="options-container" class="grid gap-4">
+                    <button class="p-5 glass-card text-left hover:border-emerald-500/50" onclick="showScientificExp()">Ha, bilkul</button>
+                    <button class="p-5 glass-card text-left hover:border-emerald-500/50" onclick="showScientificExp()">Nahi, main darta nahi</button>
+                </div>
+            </div>
+            
+            <div id="explanation-box" class="hidden mt-10 p-6 border-t border-emerald-500/20 bg-emerald-500/5 rounded-2xl">
+                <p class="text-emerald-400 font-bold mb-2 uppercase text-[10px] tracking-widest">Scientific Reality:</p>
+                <p id="explanation-text" class="text-sm text-gray-300 italic mb-6">
+                    Stage fear ek survival mechanism hai jise 'Fight or Flight' response kehte hain. Isse jeetne ka ek hi rasta hai: Exposure Habit.
+                </p>
+                <div id="more-detail" class="hidden mb-6">
+                    <p class="text-xs text-gray-400 border-l-2 border-emerald-500 pl-4 mb-4">
+                        
+
+[Image of Human Brain showing Amygdala]
+ 
+                        Jab hum darrte hain, hamara Amygdala activate ho jata hai. Practice se hum Pre-frontal Cortex ko train karte hain taaki hum calm reh sakein.
+                    </p>
+                    <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 w-3/4"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-2">Neural Pathway Strength: 75%</p>
+                </div>
+                <button onclick="toggleMore()" id="show-more-btn" class="text-xs text-emerald-400 underline mb-4">SHOW MORE VISUALS</button>
+                <button onclick="closeModal()" class="btn-premium w-full py-4 rounded-xl font-bold">I Understood</button>
             </div>
         </div>
     </div>
 
-    <section class="py-24 container mx-auto px-6 text-center">
-        <h2 class="text-4xl font-bold mb-6">Join as a Mentor</h2>
-        <p class="text-gray-500 mb-10 max-w-xl mx-auto">Help us build habits that change the world.</p>
-        <button class="border-2 border-emerald-500 text-emerald-500 px-12 py-4 rounded-full font-bold hover:bg-emerald-500 hover:text-black transition">APPLY NOW</button>
+    <section class="py-24 text-center">
+        <h2 class="text-5xl font-black mb-6 lang-target" data-en="Join the Revolution" data-hi="क्रांति का हिस्सा बनें">Join the Revolution.</h2>
+        <p class="text-gray-500 mb-10 max-w-2xl mx-auto lang-target" data-en="If you have the passion to teach habits and personality, join us." data-hi="अगर आपमें आदतें और व्यक्तित्व सिखाने का जुनून है, तो हमसे जुड़ें।">Aapki ek chhoti si koshish kisi bache ki zindagi badal sakti hai.</p>
+        <button class="px-12 py-5 border-2 border-emerald-500 text-emerald-400 rounded-full font-black text-xl hover:bg-emerald-500 hover:text-black transition">JOIN AS A MENTOR</button>
     </section>
+
+    <footer class="py-12 border-t border-white/5 text-center text-xs text-gray-700">
+        &copy; 2026 NEXT MOVE INDIA | BUILDING HABITS, SHAPING DESTINY.
+    </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 1000, once: true });
+        AOS.init();
 
-        // Multi-Language Content Object
-        const translations = {
-            en: {
-                heroTitle: "Habits Shape Destiny.",
-                heroDesc: "Next Move India is building the world's most creative generation. We don't just teach; we install habits.",
-                mission: "Our Mission",
-                habit: "Habit Science",
-                vault: "Skill Vault"
-            },
-            hi: {
-                heroTitle: "आदतें भविष्य बदलती हैं।",
-                heroDesc: "नेक्स्ट मूव इंडिया दुनिया की सबसे रचनात्मक पीढ़ी तैयार कर रहा है। हम सिर्फ पढ़ाते नहीं, हम अच्छी आदतें सिखाते हैं।",
-                mission: "हमारा लक्ष्य",
-                habit: "आदत विज्ञान",
-                vault: "कौशल भंडार"
-            },
-            fr: {
-                heroTitle: "L'habitude façonne le destin.",
-                heroDesc: "Next Move India construit la génération la plus créative du monde. Nous n'enseignons pas seulement.",
-                mission: "Notre Mission",
-                habit: "Science des Habitudes",
-                vault: "Coffre-fort"
-            }
-        };
-
-        function changeLanguage() {
-            const lang = document.getElementById('langSwitcher').value;
-            const t = translations[lang];
-            
-            document.getElementById('hero-title').innerHTML = t.heroTitle.replace("Destiny.", "<span class='gradient-text'>Destiny.</span>");
-            document.getElementById('hero-desc').innerText = t.heroDesc;
-            document.getElementById('nav-mission').innerText = t.mission;
-            document.getElementById('nav-habit').innerText = t.habit;
-            document.getElementById('nav-vault').innerText = t.vault;
-        }
-
-        // Quiz System
-        const quiz = [
-            {
-                q: "Agar aap roz 1% behtar bante hain, toh saal ke end mein aap kitne guna behtar honge?",
-                opts: ["3 Guna", "37 Guna", "Thoda sa"],
-                correct: 1,
-                exp: "Isse 'Compounding' kehte hain. (1.01)^365 = 37.7. Choti habits ka result exponentially bada hota hai."
-            }
-        ];
-
-        let currentStep = 0;
-
-        function toggleModal(id) {
-            const m = document.getElementById(id);
-            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
-            if(m.style.display === 'flex') loadQuestion();
-        }
-
-        function loadQuestion() {
-            const q = quiz[currentStep];
-            document.getElementById('q-text').innerText = q.q;
-            const optBox = document.getElementById('q-options');
-            optBox.innerHTML = '';
-            document.getElementById('q-explanation').classList.add('hidden');
-
-            q.opts.forEach((o, i) => {
-                const b = document.createElement('button');
-                b.className = "p-5 glass-card text-left hover:border-emerald-500 transition";
-                b.innerText = o;
-                b.onclick = () => showExplanation(i);
-                optBox.appendChild(b);
+        // Multi-language Logic
+        function updateLanguage(lang) {
+            const targets = document.querySelectorAll('.lang-target');
+            targets.forEach(el => {
+                if (lang === 'hi') {
+                    el.innerHTML = el.getAttribute('data-hi');
+                } else if (lang === 'en') {
+                    el.innerHTML = el.getAttribute('data-en');
+                } else {
+                    location.reload(); // Reverts to Hinglish
+                }
             });
         }
 
-        function showExplanation(i) {
-            document.getElementById('exp-text').innerText = quiz[currentStep].exp;
-            document.getElementById('q-explanation').classList.remove('hidden');
+        // Modal Logic
+        function openModal() { document.getElementById('test-modal').style.display = 'flex'; }
+        function closeModal() { 
+            document.getElementById('test-modal').style.display = 'none';
+            document.getElementById('explanation-box').classList.add('hidden');
+            document.getElementById('quiz-content').classList.remove('hidden');
         }
 
-        function toggleVisualAid() {
-            const v = document.getElementById('visual-aid');
-            v.style.display = v.style.display === 'block' ? 'none' : 'block';
+        function showScientificExp() {
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('explanation-box').classList.remove('hidden');
         }
 
-        function nextQ() {
-            currentStep++;
-            if(currentStep < quiz.length) loadQuestion();
-            else toggleModal('quiz-modal');
+        function toggleMore() {
+            const detail = document.getElementById('more-detail');
+            detail.classList.toggle('hidden');
+            document.getElementById('show-more-btn').innerText = detail.classList.contains('hidden') ? "SHOW MORE VISUALS" : "HIDE VISUALS";
         }
-
     </script>
 </body>
 </html>
