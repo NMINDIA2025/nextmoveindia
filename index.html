@@ -15,14 +15,15 @@
         .btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -10px #10b981; }
         
         /* Image Hover: B&W to Color */
-        img { filter: grayscale(100%); transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        img:hover { filter: grayscale(0%); transform: scale(1.03); }
+        img { filter: grayscale(100%); transition: 0.6s ease; cursor: pointer; }
+        img:hover { filter: grayscale(0%); transform: scale(1.02); }
 
         .modal-container { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100; overflow-y: auto; padding: 20px; align-items: start; justify-content: center; }
         #detail-view { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: #050810; z-index: 60; padding-top: 100px; }
         
-        .visual-box { height: 100px; display: flex; align-items: flex-end; gap: 5px; margin: 15px 0; }
-        .bar { width: 25px; background: #10b981; border-radius: 4px; transition: height 1.5s ease-out; }
+        /* Quiz Visuals */
+        .visual-box { height: 120px; display: flex; align-items: flex-end; gap: 8px; margin: 20px 0; border-bottom: 1px solid #334155; }
+        .bar { width: 35px; background: #10b981; border-radius: 4px; transition: height 1.5s ease; }
     </style>
 </head>
 <body>
@@ -39,10 +40,10 @@
             <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="text-emerald-400 border border-emerald-400/30 px-5 py-2 rounded-full hover:bg-emerald-400 hover:text-black transition lang-target" data-en="Enroll Now" data-hi="नामांकन करें">Enroll Now</button>
         </div>
 
-        <select onchange="changeLanguage(this.value)" class="bg-transparent border border-white/10 text-[10px] rounded px-3 py-1 outline-none">
-            <option value="hinglish" class="bg-gray-900">Hinglish</option>
-            <option value="hi" class="bg-gray-900">Hindi (हिंदी)</option>
-            <option value="en" class="bg-gray-900">English</option>
+        <select onchange="changeLanguage(this.value)" id="langSwitcher" class="bg-transparent border border-white/10 text-[10px] rounded px-3 py-1 outline-none">
+            <option value="hinglish">Hinglish</option>
+            <option value="hi">Hindi (हिंदी)</option>
+            <option value="en">English</option>
         </select>
     </nav>
 
@@ -61,50 +62,51 @@
                 </p>
                 <div class="flex flex-wrap gap-4">
                     <button onclick="openModal()" class="btn-premium px-10 py-4 rounded-2xl font-bold lang-target" data-en="Take Science Quiz" data-hi="साइंस क्विज खेलें">Take Science Quiz</button>
+                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="px-10 py-4 rounded-2xl border border-white/10 font-bold hover:bg-white/5 transition lang-target" data-en="Student Enroll" data-hi="छात्र पंजीकरण">Student Enroll</button>
                 </div>
             </div>
             <div class="lg:w-2/5">
-                <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl border border-white/10" alt="Student">
+                <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl border border-white/10" alt="Indian Student">
             </div>
         </section>
 
         <section id="skills" class="py-24 px-8 container mx-auto">
-            <h2 class="text-4xl font-bold mb-16 text-center lang-target" data-en="Pillars of Growth" data-hi="विकास के स्तंभ">Pillars of Growth</h2>
+            <h2 class="text-4xl font-bold mb-16 text-center lang-target" data-en="Core Pillars of Personality" data-hi="पर्सनालिटी के मुख्य स्तंभ">Core Pillars of Personality</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div onclick="showDetails('speaking')" class="glass-card p-8 hover:bg-emerald-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-emerald-500">
                     <div class="text-4xl mb-4">🎤</div>
                     <h4 class="text-xl font-bold mb-2 lang-target" data-en="Public Speaking" data-hi="पब्लिक स्पीकिंग">Public Speaking</h4>
-                    <p class="text-xs text-gray-500 lang-target" data-en="Learn to lead." data-hi="नेतृत्व करना सीखें।">Learn to lead.</p>
+                    <span class="text-emerald-400 text-xs font-bold lang-target" data-en="READ MORE →" data-hi="विस्तार में जानें →">READ MORE →</span>
                 </div>
                 <div onclick="showDetails('communication')" class="glass-card p-8 hover:bg-blue-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-blue-500">
                     <div class="text-4xl mb-4">🤝</div>
                     <h4 class="text-xl font-bold mb-2 lang-target" data-en="Communication" data-hi="कम्युनिकेशन">Communication</h4>
-                    <p class="text-xs text-gray-500 lang-target" data-en="Bridge ideas." data-hi="विचारों को जोड़ें।">Bridge ideas.</p>
+                    <span class="text-blue-400 text-xs font-bold lang-target" data-en="READ MORE →" data-hi="विस्तार में जानें →">READ MORE →</span>
                 </div>
                 <div onclick="showDetails('confidence')" class="glass-card p-8 hover:bg-purple-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-purple-500">
                     <div class="text-4xl mb-4">✨</div>
                     <h4 class="text-xl font-bold mb-2 lang-target" data-en="Confidence" data-hi="आत्मविश्वास">Confidence</h4>
-                    <p class="text-xs text-gray-500 lang-target" data-en="Believe in self." data-hi="स्वयं पर विश्वास करें।">Believe in self.</p>
+                    <span class="text-purple-400 text-xs font-bold lang-target" data-en="READ MORE →" data-hi="विस्तार में जानें →">READ MORE →</span>
                 </div>
                 <div onclick="showDetails('personality')" class="glass-card p-8 hover:bg-red-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-red-500">
                     <div class="text-4xl mb-4">🧬</div>
                     <h4 class="text-xl font-bold mb-2 lang-target" data-en="Personality" data-hi="व्यक्तित्व">Personality</h4>
-                    <p class="text-xs text-gray-500 lang-target" data-en="Build identity." data-hi="पहचान बनाएं।">Build identity.</p>
+                    <span class="text-red-400 text-xs font-bold lang-target" data-en="READ MORE →" data-hi="विस्तार में जानें →">READ MORE →</span>
                 </div>
             </div>
         </section>
 
         <section id="mentor-section" class="py-24 px-8 container mx-auto">
-            <div class="glass-card p-10 grid lg:grid-cols-2 gap-12">
+            <div class="glass-card p-10 grid lg:grid-cols-2 gap-12 items-center">
                 <div>
-                    <h2 class="text-4xl font-bold mb-4 lang-target" data-en="Mentor Application" data-hi="मेंटर आवेदन">Mentor Application</h2>
-                    <p class="text-gray-400 mb-6 lang-target" data-en="Help us shape India's future." data-hi="भारत के भविष्य को संवारने में हमारी मदद करें।">Help us shape India's future.</p>
-                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800" class="rounded-2xl h-64 w-full object-cover">
+                    <h2 class="text-4xl font-bold mb-4 lang-target" data-en="Become a Mentor" data-hi="मेंटर बनें">Become a Mentor</h2>
+                    <p class="text-gray-400 mb-8 lang-target" data-en="Share your knowledge with India's youth." data-hi="भारतीय युवाओं के साथ अपना ज्ञान साझा करें।">Help us build the next generation of leaders.</p>
+                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800" class="rounded-2xl h-64 w-full object-cover">
                 </div>
-                <form onsubmit="event.preventDefault(); alert('Success!');" class="grid gap-4">
+                <form onsubmit="event.preventDefault(); alert('Application Sent!');" class="grid gap-4">
                     <input type="text" placeholder="Full Name" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
                     <input type="url" placeholder="Resume Link (Drive/LinkedIn)" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
-                    <button class="btn-premium py-4 rounded-xl font-bold uppercase lang-target" data-en="Submit Now" data-hi="अभी जमा करें">Submit Now</button>
+                    <button class="btn-premium py-4 rounded-xl font-bold uppercase lang-target" data-en="Submit Application" data-hi="आवेदन भेजें">Submit Application</button>
                 </form>
             </div>
         </section>
@@ -125,16 +127,12 @@
                 <div id="q-opts" class="grid gap-3"></div>
             </div>
             
-            <div id="learning-zone" class="hidden mt-8 p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/20">
+            <div id="learning-zone" class="hidden mt-8 p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/20 text-center">
                 <p id="exp-text" class="text-sm text-gray-300 leading-relaxed mb-4"></p>
-                <button onclick="showVisuals()" id="visual-btn" class="text-xs text-emerald-400 underline mb-4">SHOW VISUAL EXPLANATION</button>
-                
-                <div id="visual-content" class="hidden animate-pulse">
-                    <div class="visual-box" id="graph-bars"></div>
-                    <p class="text-[10px] text-gray-500 italic">Graph: Neural pathway strength vs Repetition</p>
-                </div>
-                
-                <button onclick="nextQuestion()" class="btn-premium w-full py-3 mt-6 rounded-lg font-bold">NEXT QUESTION →</button>
+                <div id="visual-content" class="hidden">
+                    <div id="visual-target" class="my-4"></div> </div>
+                <button onclick="showDeepScience()" id="science-btn" class="text-xs text-emerald-400 underline block mx-auto mb-4">SHOW SCIENCE VISUAL</button>
+                <button onclick="nextQuestion()" class="btn-premium w-full py-3 rounded-lg font-bold">NEXT QUESTION →</button>
             </div>
         </div>
     </div>
@@ -146,16 +144,47 @@
 
         const pillarInfo = {
             speaking: {
-                en: { t: "Public Speaking", d: "Stage fear is just a survival instinct. Master it to lead the world.", p: "Pros: Leadership, Global Pay, Influence", c: "Cons: Hidden Talent, Regret", img: "https://images.unsplash.com/photo-1475721027785-f74dea327912?w=800" },
-                hi: { t: "पब्लिक स्पीकिंग", d: "स्टेज का डर सिर्फ एक उत्तरजीविता वृत्ति (survival instinct) है। दुनिया का नेतृत्व करने के लिए इसमें महारत हासिल करें।", p: "फायदे: नेतृत्व, वैश्विक वेतन, प्रभाव", c: "नुकसान: छिपी हुई प्रतिभा, पछतावा", img: "https://images.unsplash.com/photo-1475721027785-f74dea327912?w=800" },
-                hinglish: { t: "Public Speaking", d: "Stage fear sirf ek brain mechanism hai. Ise master karke aap duniya lead kar sakte hain.", p: "Pros: Leadership, High Salary, Influence", c: "Cons: Talent dab jata hai, Regret hota hai", img: "https://images.unsplash.com/photo-1475721027785-f74dea327912?w=800" }
+                en: { t: "Public Speaking", d: "Public speaking is the #1 fear globally. Master it to command attention.", p: "Pros: Leadership, High Pay", c: "Cons: Missed Opportunities", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" },
+                hi: { t: "पब्लिक स्पीकिंग", d: "पब्लिक स्पीकिंग दुनिया का सबसे बड़ा डर है। ध्यान आकर्षित करने के लिए इसमें महारत हासिल करें।", p: "फायदे: नेतृत्व, उच्च वेतन", c: "नुकसान: छूटे हुए अवसर", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" },
+                hinglish: { t: "Public Speaking", d: "Stage fear brain ka survival mechanism hai. Ise seekhne se leadership aati hai.", p: "Pros: Career Growth, Influence", c: "Cons: Talent dab jata hai", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" }
             },
             communication: {
-                en: { t: "Communication", d: "It's not about English, it's about clarity of thoughts.", p: "Pros: Zero Conflicts, Clarity", c: "Cons: Misunderstanding, Slow Growth", img: "https://images.unsplash.com/photo-1521791136064-7986c2923216?w=800" },
-                hi: { t: "कम्युनिकेशन", d: "यह अंग्रेजी के बारे में नहीं है, यह विचारों की स्पष्टता के बारे में है।", p: "फायदे: शून्य संघर्ष, स्पष्टता", c: "नुकसान: गलतफहमी, धीमी प्रगति", img: "https://images.unsplash.com/photo-1521791136064-7986c2923216?w=800" },
-                hinglish: { t: "Communication", d: "Ye sirf English nahi hai, ye thoughts ko sahi tarah se rakhne ki kala hai.", p: "Pros: Clarity, Relations, Success", c: "Cons: Confusion, Career me rukawat", img: "https://images.unsplash.com/photo-1521791136064-7986c2923216?w=800" }
+                en: { t: "Communication", d: "Clarity in thoughts leads to clarity in life. Learn to express.", p: "Pros: Zero Conflicts, Growth", c: "Cons: Misunderstandings", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" },
+                hi: { t: "कम्युनिकेशन", d: "विचारों में स्पष्टता जीवन में स्पष्टता लाती है। व्यक्त करना सीखें।", p: "फायदे: शून्य संघर्ष, विकास", c: "नुकसान: गलतफहमियां", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" },
+                hinglish: { t: "Communication", d: "Sirf English nahi, apne thoughts ko sahi tarah se batana communication hai.", p: "Pros: Relationships, Clarity", c: "Cons: Confusion, Growth rukna", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" }
+            },
+            confidence: {
+                en: { t: "Confidence", d: "Confidence is built through small actions, not just thinking.", p: "Pros: Risk Taking, Happiness", c: "Cons: Anxiety, Stagnation", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" },
+                hi: { t: "आत्मविश्वास", d: "आत्मविश्वास केवल सोचने से नहीं, बल्कि छोटे कार्यों से बनता है।", p: "फायदे: जोखिम लेना, खुशी", c: "नुकसान: चिंता, ठहराव", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" },
+                hinglish: { t: "Confidence", d: "Confidence actions se aata hai. Jab aap mushkil kaam karte hain, brain relax hota hai.", p: "Pros: Happiness, Risk Taking", c: "Cons: Darr, Self-doubt", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" }
+            },
+            personality: {
+                en: { t: "Personality", d: "Your personality is the compound effect of your daily habits.", p: "Pros: Magnetism, Integrity", c: "Cons: Low Self-Worth", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" },
+                hi: { t: "व्यक्तित्व", d: "आपका व्यक्तित्व आपकी दैनिक आदतों का मिश्रित प्रभाव (compound effect) है।", p: "फायदे: आकर्षण, अखंडता", c: "नुकसान: कम आत्म-सम्मान", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" },
+                hinglish: { t: "Personality", d: "Aapki habits hi aapki personality banti hain. Ise consciously build karein.", p: "Pros: Attractive Identity, Trust", c: "Cons: Identity crisis", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" }
             }
         };
+
+        const quizData = [
+            { 
+                q: "Stage fear brain ke kaunse part se aata hai?", 
+                opts: ["Pre-frontal Cortex", "Amygdala (Fear Center)", "Cerebellum"], 
+                correct: 1, 
+                exp: "Amygdala darr ko trigger karta hai. Ise practice se train kiya ja sakta hai.",
+                visType: 'image',
+                visContent: '<img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=500" class="rounded-xl mx-auto" alt="Brain Amygdala">'
+            },
+            { 
+                q: "1% daily improvement saal bhar mein kitna growth degi?", 
+                opts: ["2 Times", "10 Times", "37 Times"], 
+                correct: 2, 
+                exp: "Compound Interest: (1.01)^365 = 37.7. Choti habits massive results deti hain.",
+                visType: 'graph',
+                visContent: '<div class="visual-box"><div class="bar h-[10%]"></div><div class="bar h-[30%]"></div><div class="bar h-[60%]"></div><div class="bar h-[100%]"></div></div>'
+            }
+        ];
+
+        let curQ = 0;
 
         function changeLanguage(lang) {
             currentLang = lang;
@@ -163,22 +192,23 @@
                 const text = el.getAttribute(`data-${lang}`);
                 if(text) el.innerHTML = text;
             });
-            if(lang === 'hinglish') location.reload();
         }
 
         function showDetails(key) {
             const data = pillarInfo[key][currentLang] || pillarInfo[key]['en'];
+            const enrollBtnText = { en: "Enroll for this Skill", hi: "इस कौशल के लिए नामांकन करें", hinglish: "Enroll for this Skill" }[currentLang];
+            
             document.getElementById('detail-content').innerHTML = `
-                <div>
+                <div data-aos="fade-right">
                     <h1 class="text-6xl font-black gradient-text uppercase mb-6">${data.t}</h1>
                     <p class="text-lg text-gray-400 mb-8">${data.d}</p>
                     <div class="grid grid-cols-2 gap-4 mb-8">
-                        <div class="p-4 glass-card border-l-4 border-emerald-500"><h5 class="text-emerald-400 font-bold">Fayde</h5><p class="text-xs text-gray-500">${data.p}</p></div>
-                        <div class="p-4 glass-card border-l-4 border-red-500"><h5 class="text-red-400 font-bold">Nuksan</h5><p class="text-xs text-gray-500">${data.c}</p></div>
+                        <div class="p-4 glass-card border-l-4 border-emerald-500"><h5 class="text-emerald-400 font-bold">Pros / Fayde</h5><p class="text-xs text-gray-500">${data.p}</p></div>
+                        <div class="p-4 glass-card border-l-4 border-red-500"><h5 class="text-red-400 font-bold">Cons / Nuksan</h5><p class="text-xs text-gray-500">${data.c}</p></div>
                     </div>
-                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="btn-premium px-8 py-3 rounded-xl font-bold">ENROLL NOW</button>
+                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="btn-premium px-8 py-3 rounded-xl font-bold">${enrollBtnText}</button>
                 </div>
-                <img src="${data.img}" class="rounded-3xl shadow-2xl h-96 object-cover">
+                <img src="${data.img}" class="rounded-3xl shadow-2xl h-96 w-full object-cover" alt="${data.t}">
             `;
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('detail-view').style.display = 'block';
@@ -190,16 +220,10 @@
             document.getElementById('main-content').style.display = 'block';
         }
 
-        // --- QUIZ LOGIC ---
-        const quizData = [
-            { q: "Stage par nervousness kyun hoti hai?", opts: ["Kamzori", "Amygdala activation", "Luck"], correct: 1, exp: "Jab aap stage par jate hain, brain ka 'Amygdala' darr signal bhejta hai. Ise master karne ke liye Neural Pathways build karni padti hain." },
-            { q: "1% daily improvement saal bhar mein kitna hoga?", opts: ["2x", "10x", "37x"], correct: 2, exp: "Ye compounding math hai. (1.01)^365 = 37.7. Choti habits ka result proportional aur bada hota hai." }
-        ];
-
-        let curQ = 0;
+        // Quiz Functions
         function openModal() { document.getElementById('test-modal').style.display = 'flex'; loadQuestion(); }
         function closeModal() { document.getElementById('test-modal').style.display = 'none'; curQ = 0; }
-
+        
         function loadQuestion() {
             const d = quizData[curQ];
             document.getElementById('q-text').innerText = d.q;
@@ -209,31 +233,24 @@
                 const btn = document.createElement('button');
                 btn.className = "p-4 glass-card text-left hover:border-emerald-500 transition";
                 btn.innerText = o;
-                btn.onclick = () => showExplanation(i);
+                btn.onclick = () => {
+                    document.getElementById('exp-text').innerText = d.exp;
+                    document.getElementById('learning-zone').classList.remove('hidden');
+                    document.getElementById('visual-content').classList.add('hidden');
+                };
                 box.appendChild(btn);
             });
         }
 
-        function showExplanation(idx) {
-            document.getElementById('exp-text').innerText = quizData[curQ].exp;
-            document.getElementById('learning-zone').classList.remove('hidden');
-            document.getElementById('visual-content').classList.add('hidden');
-        }
-
-        function showVisuals() {
+        function showDeepScience() {
+            const d = quizData[curQ];
+            document.getElementById('visual-target').innerHTML = d.visContent;
             document.getElementById('visual-content').classList.remove('hidden');
-            const bars = document.getElementById('graph-bars');
-            bars.innerHTML = '';
-            for(let i=1; i<=5; i++){
-                const b = document.createElement('div');
-                b.className = "bar"; b.style.height = (i*20) + "%";
-                bars.appendChild(b);
-            }
         }
 
         function nextQuestion() {
             curQ++; if(curQ < quizData.length) loadQuestion();
-            else { document.getElementById('q-text').innerText = "Quiz Complete! You are now 1% better."; document.getElementById('q-opts').innerHTML = ''; document.getElementById('learning-zone').classList.add('hidden'); }
+            else { document.getElementById('q-text').innerText = "Quiz Completed!"; document.getElementById('q-opts').innerHTML = ''; document.getElementById('learning-zone').classList.add('hidden'); }
         }
     </script>
 </body>
