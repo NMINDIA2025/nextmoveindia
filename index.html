@@ -18,12 +18,14 @@
         img { filter: grayscale(100%); transition: 0.6s ease; }
         img:hover { filter: grayscale(0%); transform: scale(1.02); }
 
-        .modal-container { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100; overflow-y: auto; padding: 20px; align-items: start; justify-content: center; }
+        .modal-container { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; overflow-y: auto; padding: 20px; align-items: center; justify-content: center; }
         #detail-view { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: #050810; z-index: 60; padding-top: 100px; }
         
         /* Quiz Visuals */
         .visual-box { min-height: 150px; display: flex; align-items: flex-end; gap: 10px; margin: 20px 0; border-bottom: 2px solid #334155; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; }
-        .bar { width: 40px; background: #10b981; border-radius: 6px; transition: height 1.5s ease-in-out; }
+        .bar { width: 40px; border-radius: 6px; transition: height 1.5s ease-in-out; }
+        .correct-opt { border: 2px solid #10b981 !important; background: rgba(16, 185, 129, 0.1) !important; }
+        .wrong-opt { border: 2px solid #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
     </style>
 </head>
 <body>
@@ -40,10 +42,10 @@
             <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="text-emerald-400 border border-emerald-400/30 px-5 py-2 rounded-full hover:bg-emerald-400 hover:text-black transition lang-target" data-en="Student Enroll" data-hi="नामांकन करें">Student Enroll</button>
         </div>
 
-        <select onchange="changeLanguage(this.value)" class="bg-transparent border border-white/10 text-[10px] rounded px-3 py-1 outline-none">
-            <option value="hinglish">Hinglish</option>
-            <option value="hi">Hindi (हिंदी)</option>
-            <option value="en">English</option>
+        <select onchange="changeLanguage(this.value)" id="langSelect" class="bg-transparent border border-white/10 text-[10px] rounded px-3 py-1 outline-none">
+            <option value="hinglish" class="bg-black">Hinglish</option>
+            <option value="hi" class="bg-black">Hindi (हिंदी)</option>
+            <option value="en" class="bg-black">English</option>
         </select>
     </nav>
 
@@ -65,7 +67,7 @@
                 </div>
             </div>
             <div class="lg:w-2/5">
-                <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&w=800" class="rounded-[3rem] shadow-2xl border border-white/10">
+                <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&w=800" class="rounded-[3rem] shadow-2xl border border-white/10" alt="Student Hero">
             </div>
         </section>
 
@@ -75,22 +77,22 @@
                 <div onclick="showDetails('speaking')" class="glass-card p-8 hover:bg-emerald-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-emerald-500">
                     <div class="text-4xl mb-4">🎤</div>
                     <h4 class="text-xl font-bold mb-2">Public Speaking</h4>
-                    <span class="text-emerald-400 text-xs font-bold uppercase tracking-tighter">Enter Section →</span>
+                    <span class="text-emerald-400 text-xs font-bold uppercase tracking-tighter lang-target" data-en="Enter Section →" data-hi="अंदर जाएँ →">Enter Section →</span>
                 </div>
                 <div onclick="showDetails('communication')" class="glass-card p-8 hover:bg-blue-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-blue-500">
                     <div class="text-4xl mb-4">🤝</div>
                     <h4 class="text-xl font-bold mb-2">Communication</h4>
-                    <span class="text-blue-400 text-xs font-bold uppercase tracking-tighter">Enter Section →</span>
+                    <span class="text-blue-400 text-xs font-bold uppercase tracking-tighter lang-target" data-en="Enter Section →" data-hi="अंदर जाएँ →">Enter Section →</span>
                 </div>
                 <div onclick="showDetails('confidence')" class="glass-card p-8 hover:bg-purple-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-purple-500">
                     <div class="text-4xl mb-4">✨</div>
                     <h4 class="text-xl font-bold mb-2">Confidence</h4>
-                    <span class="text-purple-400 text-xs font-bold uppercase tracking-tighter">Enter Section →</span>
+                    <span class="text-purple-400 text-xs font-bold uppercase tracking-tighter lang-target" data-en="Enter Section →" data-hi="अंदर जाएँ →">Enter Section →</span>
                 </div>
                 <div onclick="showDetails('personality')" class="glass-card p-8 hover:bg-red-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-red-500">
                     <div class="text-4xl mb-4">🧬</div>
                     <h4 class="text-xl font-bold mb-2">Personality</h4>
-                    <span class="text-red-400 text-xs font-bold uppercase tracking-tighter">Enter Section →</span>
+                    <span class="text-red-400 text-xs font-bold uppercase tracking-tighter lang-target" data-en="Enter Section →" data-hi="अंदर जाएँ →">Enter Section →</span>
                 </div>
             </div>
         </section>
@@ -100,12 +102,12 @@
                 <div>
                     <h2 class="text-4xl font-bold mb-4 lang-target" data-en="Teach at Next Move" data-hi="मेंटर बनें">Teach at Next Move</h2>
                     <p class="text-gray-400 mb-6 lang-target" data-en="Help underprivileged talent thrive." data-hi="प्रतिभाशाली बच्चों की मदद करें।">Join us as a Mentor.</p>
-                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800" class="rounded-2xl h-64 w-full object-cover">
+                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800" class="rounded-2xl h-64 w-full object-cover" alt="Teaching">
                 </div>
-                <form onsubmit="event.preventDefault(); alert('Success!');" class="grid gap-4">
-                    <input type="text" placeholder="Name" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
-                    <input type="url" placeholder="Resume Link" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
-                    <button class="btn-premium py-4 rounded-xl font-bold uppercase">Submit Application</button>
+                <form onsubmit="event.preventDefault(); alert('Application Sent!');" class="grid gap-4">
+                    <input type="text" placeholder="Name" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none text-white">
+                    <input type="url" placeholder="Resume Link" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none text-white">
+                    <button class="btn-premium py-4 rounded-xl font-bold uppercase lang-target" data-en="Submit Application" data-hi="आवेदन भेजें">Submit Application</button>
                 </form>
             </div>
         </section>
@@ -122,18 +124,19 @@
         <div class="max-w-2xl w-full glass-card p-10 relative">
             <button onclick="closeModal()" class="absolute top-6 right-6 text-2xl">&times;</button>
             <div id="quiz-area">
-                <div id="q-counter" class="text-xs text-emerald-500 font-bold mb-2">QUESTION 1 OF 4</div>
+                <div id="q-counter" class="text-xs text-emerald-500 font-bold mb-2 tracking-widest">QUESTION 1 OF 4</div>
                 <h3 id="q-text" class="text-2xl font-bold mb-8">Loading...</h3>
                 <div id="q-opts" class="grid gap-3"></div>
             </div>
             
             <div id="learning-zone" class="hidden mt-8 p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/20">
-                <p id="exp-text" class="text-sm text-gray-300 leading-relaxed mb-4 font-semibold"></p>
+                <p id="result-status" class="font-bold text-center mb-2"></p>
+                <p id="exp-text" class="text-sm text-gray-300 leading-relaxed mb-4 text-center"></p>
                 <div id="visual-content" class="hidden">
                     <div id="visual-target" class="my-4"></div>
-                    <p id="visual-desc" class="text-xs text-gray-500 italic text-center"></p>
+                    <p id="visual-desc" class="text-[10px] text-gray-500 italic text-center"></p>
                 </div>
-                <button onclick="showDeepScience()" id="science-btn" class="text-xs text-emerald-400 underline block mx-auto mb-4">SHOW MORE (LEARN WITH VISUALS)</button>
+                <button onclick="showDeepScience()" id="science-btn" class="text-xs text-emerald-400 underline block mx-auto mb-4">SHOW VISUAL EXPLANATION</button>
                 <button onclick="nextQuestion()" class="btn-premium w-full py-3 rounded-lg font-bold">NEXT MOVE →</button>
             </div>
         </div>
@@ -146,59 +149,59 @@
 
         const pillarInfo = {
             speaking: {
-                en: { t: "Public Speaking Mastery", d: "Public speaking is not about the stage, it's about the influence. Our science-backed training focuses on eliminating the Amygdala-driven fear response. We teach you how to modulate your voice, structure stories that stick, and lead people with nothing but your words.", p: "Stage Authority, Leadership Presence, Global Influence", c: "Anxiety, Career Stagnation, Hidden Talent", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=1000" },
-                hi: { t: "पब्लिक स्पीकिंग मास्टरी", d: "पब्लिक स्पीकिंग केवल स्टेज पर खड़े होने के बारे में नहीं है, बल्कि दूसरों को प्रभावित करने के बारे में है। हमारा विज्ञान-आधारित प्रशिक्षण डर को जड़ से खत्म करने पर केंद्रित है। हम आपको सिखाते हैं कि आवाज़ को कैसे नियंत्रित करें और अपनी बातों से लोगों का नेतृत्व कैसे करें।", p: "मंच का अधिकार, नेतृत्व की उपस्थिति, वैश्विक प्रभाव", c: "चिंता, करियर में ठहराव, छिपी हुई प्रतिभा", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=1000" },
-                hinglish: { t: "Public Speaking Mastery", d: "Public speaking ka matlab sirf microphone pe bolna nahi, logon ko influence karna hai. Hum Amygdala-based fear ko khatam karke aapko voice modulation aur storytelling sikhate hain.", p: "Stage Authority, Leader banna, Respect", c: "Career me peeche rehna, Darr", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=1000" }
+                en: { t: "Public Speaking", d: "It is the art of influencing others through speech. Science shows that fear is reduced by habituation.", p: "Stage Presence, Leadership", c: "Anxiety, Career stagnation", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" },
+                hi: { t: "पब्लिक स्पीकिंग", d: "यह भाषण के माध्यम से दूसरों को प्रभावित करने की कला है। विज्ञान कहता है कि अभ्यास से डर कम होता है।", p: "मंच पर उपस्थिति, नेतृत्व", c: "चिंता, करियर में ठहराव", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" },
+                hinglish: { t: "Public Speaking", d: "Public speaking ka matlab hai logon ko influence karna. Practice se stage fear khatam hota hai.", p: "Authority, Leadership", c: "Self-doubt, Growth rukna", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" }
             },
             communication: {
-                en: { t: "Effective Communication", d: "Communication is the bridge between confusion and clarity. We dive into the '7-38-55 Rule' where only 7% is your words, and the rest is body language and tone. Mastery here means you win every negotiation, build deeper relationships, and never feel misunderstood again.", p: "Negotiation Power, Deep Relationships, Professional Success", c: "Broken Bonds, Confusion, Isolation", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000" },
-                hi: { t: "प्रभावी कम्युनिकेशन", d: "कम्युनिकेशन भ्रम और स्पष्टता के बीच का पुल है। हम '7-38-55 नियम' का पालन करते हैं जहाँ केवल 7% आपके शब्द होते हैं, और बाकी आपकी बॉडी लैंग्वेज और टोन होती है। इसमें महारत हासिल करने का मतलब है हर बातचीत में जीत।", p: "सौदेबाजी की शक्ति, गहरे रिश्ते, व्यावसायिक सफलता", c: "टूटते रिश्ते, भ्रम, अलगाव", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000" },
-                hinglish: { t: "Effective Communication", d: "Communication ka matlab clarity hai. Hum 7-38-55 rule sikhate hain jisme body language aur tone words se zyada important hote hain.", p: "Win every negotiation, Good relationships", c: "Misunderstandings, Confusion", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1000" }
+                en: { t: "Communication", d: "The 7-38-55 rule defines how humans perceive messages.", p: "Clarity, Negotiation", c: "Conflicts, Misunderstanding", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" },
+                hi: { t: "कम्युनिकेशन", d: "7-38-55 नियम यह परिभाषित करता है कि मनुष्य संदेशों को कैसे समझते हैं।", p: "स्पष्टता, बातचीत कौशल", c: "संघर्ष, गलतफहमी", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" },
+                hinglish: { t: "Communication", d: "Sirf words nahi, body language aur tone zyada bolti hai. Isse relations sudharte hain.", p: "Better reach, Influence", c: "Silence, Confusion", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" }
             },
             confidence: {
-                en: { t: "Scientific Confidence", d: "Confidence is a muscle, not a trait. It is built by taking repeated small actions that signal 'Safety' to your brain. We use Behavioral Activation to help you stop overthinking and start doing. When you take the first step, your brain produces Dopamine, which builds the second step.", p: "Fearlessness, Rapid Growth, Mental Peace", c: "Self-Doubt, Anxiety, Regret", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000" },
-                hi: { t: "वैज्ञानिक आत्मविश्वास", d: "आत्मविश्वास एक मांसपेशी की तरह है। यह बार-बार छोटे कार्य करने से बनता है। हम आपको ओवरथिंकिंग (ज़्यादा सोचना) रोकने और काम शुरू करने में मदद करते हैं। जब आप पहला कदम उठाते हैं, तो आपका दिमाग डोपामाइन बनाता है, जो आपको आगे बढ़ाता है।", p: "निडरता, तीव्र विकास, मानसिक शांति", c: "आत्म-संदेह, चिंता, पछतावा", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000" },
-                hinglish: { t: "Scientific Confidence", d: "Confidence ek muscle hai. Jab aap bar-bar action lete hain to brain 'Dopamine' release karta hai. Overthinking chod ke action lena hi asli confidence hai.", p: "Darr khatam, Peace of mind", c: "Anxiety, Self-doubt", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000" }
+                en: { t: "Confidence", d: "A skill built through small successes that build neural paths.", p: "Risk taking, Happiness", c: "Depression, Fear of failure", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" },
+                hi: { t: "आत्मविश्वास", d: "छोटी सफलताओं के माध्यम से बनाई गई एक कला जो तंत्रिका पथ (neural paths) बनाती है।", p: "जोखिम लेना, खुशी", c: "अवसाद, विफलता का डर", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" },
+                hinglish: { t: "Confidence", d: "Confidence actions se banta hai. Jab aap mushkil kaam karte ho to neural paths mazboot hote hain.", p: "Respect, Growth", c: "Fear, Shyness", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" }
             },
             personality: {
-                en: { t: "Personality Engineering", d: "Your personality is the sum total of your daily habits. It’s the 'Invisible Resume' that people read within 7 seconds of meeting you. We engineer your traits through Identity-Based Habits, shifting you from who you are to who you want to become.", p: "Magnetism, Unshakable Identity, High Status", c: "Low Self-Worth, Feeling Invisible", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=1000" },
-                hi: { t: "पर्सनालिटी इंजीनियरिंग", d: "आपका व्यक्तित्व आपकी दैनिक आदतों का योग है। यह वह 'अदृश्य रिज्यूमे' है जिसे लोग आपसे मिलने के 7 सेकंड के भीतर पढ़ लेते हैं। हम आपकी पहचान-आधारित आदतों (Identity-Based Habits) के माध्यम से आपको बदलते हैं।", p: "आकर्षण, अडिग पहचान, उच्च सम्मान", c: "कम आत्म-सम्मान, अदृश्य महसूस करना", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=1000" },
-                hinglish: { t: "Personality Engineering", d: "Personality aapka 'Invisible Resume' hai. Log 7 seconds me aapko judge kar lete hain. Hum identity-based habits se aapko ek strong identity dete hain.", p: "Attractive Identity, Respect", c: "Pehchan na hona, Low Self-worth", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=1000" }
+                en: { t: "Personality", d: "The sum of your repetitive behaviors. Identity-based habits are the key.", p: "Magnetic Identity, Integrity", c: "Low self-esteem", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" },
+                hi: { t: "व्यक्तित्व", d: "आपके दोहराव वाले व्यवहारों का योग। पहचान-आधारित आदतें ही इसकी कुंजी हैं।", p: "आकर्षक पहचान, अखंडता", c: "कम आत्म-सम्मान", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" },
+                hinglish: { t: "Personality", d: "Aapka behavior hi aapki personality hai. Habits badlo, personality badal jayegi.", p: "Charm, Trust", c: "Invisible feel karna", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" }
             }
         };
 
         const quizData = [
             { 
-                q: "Public Speaking: Stage par jate hi dil kyun dhadakta hai?", 
-                opts: ["Dil kamzor hai", "Amygdala 'Fight or Flight' mode on karta hai", "Luck kharab hai"], 
+                q: "Public Speaking: Stage fear brain ke kis part se control hota hai?", 
+                opts: ["Cortex", "Amygdala (Fear Center)", "Heart"], 
                 correct: 1, 
-                exp: "Sahi! Hamara brain stage ko 'Khatra' samajhta hai. Amygdala signals bhejta hai.",
+                exp: "Amygdala hamara primitive 'fight or flight' center hai. Isse training se control kiya ja sakta hai.",
                 visContent: '<img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=500" class="rounded-xl mx-auto">',
                 visDesc: "Image: Amygdala in the brain responsible for fear response."
             },
             { 
-                q: "Communication: Baat karte waqt sabse important kya hai?", 
-                opts: ["Videshi English", "Words (Sirf 7%) aur Body Language (93%)", "Badi car"], 
+                q: "Communication: Baat karte waqt sabse bada factor kya hota hai?", 
+                opts: ["Bhasha (English)", "Body Language & Tone (93%)", "Gyaan"], 
                 correct: 1, 
-                exp: "Correct! Mehrabian Rule ke mutabiq, words ka asar sirf 7% hota hai.",
-                visContent: '<div class="visual-box"><div class="bar h-[7%] bg-red-500"></div><div class="bar h-[38%] bg-blue-500"></div><div class="bar h-[55%] bg-emerald-500"></div></div>',
-                visDesc: "Graph: Words (Red) vs Tone (Blue) vs Body Language (Emerald)"
+                exp: "Mehrabian Rule ke mutabiq 93% message body language aur tone se jata hai!",
+                visContent: '<div class="visual-box"><div class="bar h-[7%] bg-red-500"></div><div class="bar h-[38%] bg-blue-500"></div><div class="bar h-[93%] bg-emerald-500"></div></div>',
+                visDesc: "Graph: Words (7%) vs Tone (38%) vs Body Language (55%)"
             },
             { 
-                q: "Confidence: Overthinking ko kaise rokein?", 
-                opts: ["Zada sochein", "5-Second Rule (Action lein)", "Sote rahein"], 
+                q: "Confidence: Neuroplasticity ka kya matlab hai?", 
+                opts: ["Brain ka plastic hona", "Brain ka naye paths banana (Practice)", "Bhul jana"], 
                 correct: 1, 
-                exp: "Awesome! Mel Robbins ka 5-second rule brain ko loop se nikal deta hai.",
-                visContent: '<img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500" class="rounded-xl mx-auto">',
-                visDesc: "Image: Mental clarity achieved through immediate action."
+                exp: "Practice karne se brain neurons ke naye patterns banata hai, jise Neuroplasticity kehte hain.",
+                visContent: '<img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=500" class="rounded-xl mx-auto">',
+                visDesc: "Image: Neural pathways strengthening through habit."
             },
             { 
-                q: "Personality: 1% habit improvement ka result kitna hota hai?", 
-                opts: ["2 Times", "37 Times", "Zero"], 
+                q: "Personality: Habit Loop ke 3 parts kya hain?", 
+                opts: ["Paisa, Fame, Luck", "Trigger, Action, Reward", "Sona, Khana, Bolna"], 
                 correct: 1, 
-                exp: "Exactly! Compounding se 1 saal mein aap 37 times behtar ho jate hain.",
-                visContent: '<div class="visual-box"><div class="bar h-[5%]"></div><div class="bar h-[15%]"></div><div class="bar h-[45%]"></div><div class="bar h-[100%]"></div></div>',
-                visDesc: "Graph: Exponential growth of consistent habits."
+                exp: "Har habit ek 'Trigger' se shuru hoti hai, phir 'Action' aur end mein 'Reward' milta hai.",
+                visContent: '<div class="visual-box"><div class="bar h-[40%] bg-yellow-500"></div><div class="bar h-[80%] bg-orange-500"></div><div class="bar h-[100%] bg-emerald-500"></div></div>',
+                visDesc: "Graph: Trigger -> Action -> Reward Cycle Strength"
             }
         ];
 
@@ -207,31 +210,34 @@
         function changeLanguage(lang) {
             currentLang = lang;
             document.querySelectorAll('.lang-target').forEach(el => {
-                const text = el.getAttribute(`data-${lang}`);
-                if(text) el.innerHTML = text;
+                el.innerHTML = el.getAttribute(`data-${lang}`);
             });
+            // Also update any open details view immediately
+            const activeDetail = document.getElementById('detail-content').dataset.activeKey;
+            if(activeDetail) showDetails(activeDetail);
         }
 
         function showDetails(key) {
-            const data = pillarInfo[key][currentLang] || pillarInfo[key]['en'];
+            const data = pillarInfo[key][currentLang];
+            document.getElementById('detail-content').dataset.activeKey = key;
             document.getElementById('detail-content').innerHTML = `
                 <div data-aos="fade-right">
-                    <h1 class="text-5xl font-black gradient-text uppercase mb-6 leading-tight">${data.t}</h1>
+                    <h1 class="text-5xl font-black gradient-text uppercase mb-6">${data.t}</h1>
                     <p class="text-xl text-gray-300 mb-8 leading-relaxed">${data.d}</p>
-                    <div class="grid gap-4 mb-10">
-                        <div class="p-6 glass-card border-l-8 border-emerald-500">
-                            <h5 class="text-emerald-400 font-bold mb-2">ADVANTAGES / फायदे</h5>
+                    <div class="grid gap-4 mb-8">
+                        <div class="p-6 glass-card border-l-4 border-emerald-500">
+                            <h5 class="text-emerald-400 font-bold mb-1">PROS / फायदे</h5>
                             <p class="text-gray-400">${data.p}</p>
                         </div>
-                        <div class="p-6 glass-card border-l-8 border-red-500">
-                            <h5 class="text-red-400 font-bold mb-2">DISADVANTAGES / नुकसान</h5>
+                        <div class="p-6 glass-card border-l-4 border-red-500">
+                            <h5 class="text-red-400 font-bold mb-1">CONS / नुकसान</h5>
                             <p class="text-gray-400">${data.c}</p>
                         </div>
                     </div>
-                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="btn-premium px-12 py-5 rounded-2xl font-bold text-lg">ENROLL NOW / अभी जुड़ें</button>
+                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="btn-premium px-10 py-4 rounded-2xl font-bold">Enroll for this Skill</button>
                 </div>
-                <div data-aos="fade-left" class="sticky top-24">
-                    <img src="${data.img}" class="rounded-[3rem] shadow-2xl w-full h-[500px] object-cover border border-white/10">
+                <div data-aos="fade-left">
+                    <img src="${data.img}" class="rounded-3xl shadow-2xl w-full h-[400px] object-cover border border-white/10" alt="${data.t}">
                 </div>
             `;
             document.getElementById('main-content').style.display = 'none';
@@ -242,9 +248,10 @@
         function closeDetails() {
             document.getElementById('detail-view').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
+            document.getElementById('detail-content').dataset.activeKey = "";
         }
 
-        // Quiz Logic
+        // --- QUIZ LOGIC ---
         function openModal() { document.getElementById('test-modal').style.display = 'flex'; loadQuestion(); }
         function closeModal() { document.getElementById('test-modal').style.display = 'none'; curQ = 0; }
         
@@ -254,17 +261,39 @@
             document.getElementById('q-text').innerText = d.q;
             document.getElementById('learning-zone').classList.add('hidden');
             const box = document.getElementById('q-opts'); box.innerHTML = '';
+            
             d.opts.forEach((o, i) => {
                 const btn = document.createElement('button');
-                btn.className = "p-5 glass-card text-left hover:border-emerald-500 transition-all duration-300";
+                btn.className = "p-4 glass-card text-left transition-all duration-300 outline-none";
                 btn.innerText = o;
-                btn.onclick = () => {
-                    document.getElementById('exp-text').innerText = d.exp;
-                    document.getElementById('learning-zone').classList.remove('hidden');
-                    document.getElementById('visual-content').classList.add('hidden');
-                };
+                btn.onclick = () => checkAnswer(i, btn);
                 box.appendChild(btn);
             });
+        }
+
+        function checkAnswer(idx, btn) {
+            const d = quizData[curQ];
+            const status = document.getElementById('result-status');
+            const allBtns = document.querySelectorAll('#q-opts button');
+            
+            // Disable all buttons after choice
+            allBtns.forEach(b => b.onclick = null);
+
+            if(idx === d.correct) {
+                btn.classList.add('correct-opt');
+                status.innerText = "✅ CORRECT! Well Done.";
+                status.style.color = "#10b981";
+            } else {
+                btn.classList.add('wrong-opt');
+                allBtns[d.correct].classList.add('correct-opt'); // Highlight correct answer
+                status.innerText = "❌ WRONG! But don't worry, learn below.";
+                status.style.color = "#ef4444";
+            }
+
+            document.getElementById('exp-text').innerText = d.exp;
+            document.getElementById('learning-zone').classList.remove('hidden');
+            document.getElementById('visual-content').classList.add('hidden');
+            document.getElementById('science-btn').style.display = 'block';
         }
 
         function showDeepScience() {
@@ -276,14 +305,11 @@
         }
 
         function nextQuestion() {
-            curQ++; 
-            document.getElementById('science-btn').style.display = 'block';
+            curQ++;
             if(curQ < quizData.length) loadQuestion();
             else { 
-                document.getElementById('q-text').innerText = "Quiz Completed! You're ready to grow."; 
-                document.getElementById('q-opts').innerHTML = ''; 
+                document.getElementById('quiz-area').innerHTML = "<h2 class='text-4xl font-bold text-center gradient-text'>Quiz Complete!</h2><p class='text-center mt-4'>You have taken the first step towards a better personality.</p>";
                 document.getElementById('learning-zone').classList.add('hidden');
-                document.getElementById('q-counter').innerText = "DONE";
             }
         }
     </script>
