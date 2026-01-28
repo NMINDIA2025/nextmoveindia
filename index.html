@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Next Move India | Habits & Personality Science</title>
+    <title>Next Move India | Habits & Science</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -11,19 +11,18 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050810; color: #e2e8f0; scroll-behavior: smooth; overflow-x: hidden; }
         .gradient-text { background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
-        .btn-premium { background: linear-gradient(to right, #2563eb, #10b981); transition: all 0.3s ease; border: none; color: white; cursor: pointer; }
+        .btn-premium { background: linear-gradient(to right, #2563eb, #10b981); transition: 0.4s; border: none; color: white; cursor: pointer; }
         .btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -10px #10b981; }
         
-        /* Image Hover Effect: B&W to Color */
-        img { filter: grayscale(100%); transition: filter 0.5s ease, transform 0.5s ease; }
-        img:hover { filter: grayscale(0%); transform: scale(1.02); }
+        /* Image Hover: B&W to Color */
+        img { filter: grayscale(100%); transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        img:hover { filter: grayscale(0%); transform: scale(1.03); }
 
         .modal-container { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100; overflow-y: auto; padding: 20px; align-items: start; justify-content: center; }
-        .visual-graph { height: 150px; display: flex; align-items: flex-end; gap: 4px; margin-top: 20px; border-bottom: 2px solid #334155; padding-bottom: 5px; }
-        .bar { width: 30px; background: #10b981; border-radius: 4px 4px 0 0; transition: height 1s; }
-        
         #detail-view { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: #050810; z-index: 60; padding-top: 100px; }
-        input, textarea { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        
+        .visual-box { height: 100px; display: flex; align-items: flex-end; gap: 5px; margin: 15px 0; }
+        .bar { width: 25px; background: #10b981; border-radius: 4px; transition: height 1.5s ease-out; }
     </style>
 </head>
 <body>
@@ -34,14 +33,13 @@
             <span class="text-xl font-bold tracking-tighter uppercase">Next Move <span class="text-emerald-400">India</span></span>
         </div>
         
-        <div class="hidden lg:flex items-center space-x-10 text-xs font-bold uppercase tracking-widest">
-            <a href="#about" class="hover:text-emerald-400 lang-target" data-en="Mission" data-hi="लक्ष्य">Mission</a>
-            <a href="#skills" class="hover:text-emerald-400 lang-target" data-en="Skills" data-hi="हुनर">Skills</a>
-            <a href="#mentor-section" class="hover:text-emerald-400 lang-target" data-en="For Mentors" data-hi="मेंटर बनें">For Mentors</a>
-            <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="text-emerald-400 border border-emerald-400/30 px-4 py-2 rounded-full hover:bg-emerald-400 hover:text-black transition lang-target" data-en="Enroll Now" data-hi="अभी जुड़ें">Enroll Now</button>
+        <div class="hidden lg:flex items-center space-x-8 text-[11px] font-bold uppercase tracking-widest">
+            <a href="#skills" class="hover:text-emerald-400 lang-target" data-en="Core Pillars" data-hi="मुख्य स्तंभ">Core Pillars</a>
+            <a href="#mentor-section" class="hover:text-emerald-400 lang-target" data-en="Become Mentor" data-hi="मेंटर बनें">Become Mentor</a>
+            <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="text-emerald-400 border border-emerald-400/30 px-5 py-2 rounded-full hover:bg-emerald-400 hover:text-black transition lang-target" data-en="Enroll Now" data-hi="नामांकन करें">Enroll Now</button>
         </div>
 
-        <select onchange="updateLanguage(this.value)" class="bg-transparent border border-white/10 text-[10px] rounded px-2 py-1 outline-none">
+        <select onchange="changeLanguage(this.value)" class="bg-transparent border border-white/10 text-[10px] rounded px-3 py-1 outline-none">
             <option value="hinglish" class="bg-gray-900">Hinglish</option>
             <option value="hi" class="bg-gray-900">Hindi (हिंदी)</option>
             <option value="en" class="bg-gray-900">English</option>
@@ -51,98 +49,92 @@
     <div id="main-content">
         <section class="pt-48 pb-20 px-8 container mx-auto flex flex-col lg:flex-row items-center gap-12">
             <div class="lg:w-3/5" data-aos="fade-up">
-                <span class="px-4 py-1 rounded-full border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-6 inline-block lang-target" data-en="THE FUTURE OF INDIAN YOUTH" data-hi="भारतीय युवाओं का भविष्य">THE FUTURE OF INDIAN YOUTH</span>
                 <h1 class="text-6xl lg:text-8xl font-black mb-8 leading-[0.9] lang-target" 
                     data-en="Habits are <br> <span class='gradient-text'>Proportional</span> <br> to Success." 
-                    data-hi="Habits Success ke <br> <span class='gradient-text'>Proportional</span> <br> hoti hain.">
+                    data-hi="आदतें सफलता के <br> <span class='gradient-text'>समानुपाती</span> <br> होती हैं।">
                     Habits are <br> <span class="gradient-text">Proportional</span> <br> to Success.
                 </h1>
                 <p class="text-gray-400 text-lg max-w-xl mb-10 leading-relaxed lang-target" 
-                   data-en="Next Move India stands at the intersection of psychology and education. We build habits for underprivileged talent." 
-                   data-hi="Next Move India psychology aur education ke beech ka bridge hai. Hum underprivileged talent ke liye habits build karte hain.">
-                    Next Move India stands at the intersection of psychology and education. Hum sirf padhate nahi, hum seekhne ki 'Habit' build karte hain.
+                   data-en="We use psychology to build lifelong habits for India's talent." 
+                   data-hi="हम भारत की प्रतिभा के लिए आजीवन आदतें बनाने के लिए मनोविज्ञान का उपयोग करते हैं।">
+                    Hum sirf padhate nahi, hum seekhne ki 'Habit' build karte hain.
                 </p>
                 <div class="flex flex-wrap gap-4">
-                    <button onclick="openModal()" class="btn-premium px-10 py-4 rounded-2xl font-bold text-white lang-target" data-en="Start Discovery Test" data-hi="टेस्ट शुरू करें">Start Discovery Test</button>
-                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="px-10 py-4 rounded-2xl border border-white/10 font-bold hover:bg-white/5 transition lang-target" data-en="Student Enrollment" data-hi="छात्र नामांकन">Student Enrollment</button>
+                    <button onclick="openModal()" class="btn-premium px-10 py-4 rounded-2xl font-bold lang-target" data-en="Take Science Quiz" data-hi="साइंस क्विज खेलें">Take Science Quiz</button>
                 </div>
             </div>
-            <div class="lg:w-2/5 relative" data-aos="zoom-in">
-                <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl border border-white/10" alt="Indian Student">
+            <div class="lg:w-2/5">
+                <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&q=80&w=800" class="rounded-[3rem] shadow-2xl border border-white/10" alt="Student">
             </div>
         </section>
 
         <section id="skills" class="py-24 px-8 container mx-auto">
-            <h2 class="text-4xl font-bold mb-16 text-center lang-target" data-en="Core Pillars of Personality" data-hi="पर्सनालिटी के मुख्य स्तंभ">Core Pillars of Personality</h2>
+            <h2 class="text-4xl font-bold mb-16 text-center lang-target" data-en="Pillars of Growth" data-hi="विकास के स्तंभ">Pillars of Growth</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div onclick="showDetails('speaking')" class="glass-card p-8 hover:bg-emerald-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-emerald-500">
-                    <div class="text-3xl mb-4">🎤</div>
+                    <div class="text-4xl mb-4">🎤</div>
                     <h4 class="text-xl font-bold mb-2 lang-target" data-en="Public Speaking" data-hi="पब्लिक स्पीकिंग">Public Speaking</h4>
-                    <span class="text-emerald-400 text-xs font-bold lang-target" data-en="READ MORE →" data-hi="विस्तार में जानें →">READ MORE →</span>
+                    <p class="text-xs text-gray-500 lang-target" data-en="Learn to lead." data-hi="नेतृत्व करना सीखें।">Learn to lead.</p>
                 </div>
                 <div onclick="showDetails('communication')" class="glass-card p-8 hover:bg-blue-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-blue-500">
-                    <div class="text-3xl mb-4">🤝</div>
+                    <div class="text-4xl mb-4">🤝</div>
                     <h4 class="text-xl font-bold mb-2 lang-target" data-en="Communication" data-hi="कम्युनिकेशन">Communication</h4>
-                    <span class="text-blue-400 text-xs font-bold lang-target" data-en="READ MORE →" data-hi="विस्तार में जानें →">READ MORE →</span>
+                    <p class="text-xs text-gray-500 lang-target" data-en="Bridge ideas." data-hi="विचारों को जोड़ें।">Bridge ideas.</p>
                 </div>
                 <div onclick="showDetails('confidence')" class="glass-card p-8 hover:bg-purple-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-purple-500">
-                    <div class="text-3xl mb-4">✨</div>
+                    <div class="text-4xl mb-4">✨</div>
                     <h4 class="text-xl font-bold mb-2 lang-target" data-en="Confidence" data-hi="आत्मविश्वास">Confidence</h4>
-                    <span class="text-purple-400 text-xs font-bold lang-target" data-en="READ MORE →" data-hi="विस्तार में जानें →">READ MORE →</span>
+                    <p class="text-xs text-gray-500 lang-target" data-en="Believe in self." data-hi="स्वयं पर विश्वास करें।">Believe in self.</p>
                 </div>
                 <div onclick="showDetails('personality')" class="glass-card p-8 hover:bg-red-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-red-500">
-                    <div class="text-3xl mb-4">🧬</div>
-                    <h4 class="text-xl font-bold mb-2 lang-target" data-en="Personality" data-hi="व्यक्तित्व विकास">Personality</h4>
-                    <span class="text-red-400 text-xs font-bold lang-target" data-en="READ MORE →" data-hi="विस्तार में जानें →">READ MORE →</span>
+                    <div class="text-4xl mb-4">🧬</div>
+                    <h4 class="text-xl font-bold mb-2 lang-target" data-en="Personality" data-hi="व्यक्तित्व">Personality</h4>
+                    <p class="text-xs text-gray-500 lang-target" data-en="Build identity." data-hi="पहचान बनाएं।">Build identity.</p>
                 </div>
             </div>
         </section>
 
         <section id="mentor-section" class="py-24 px-8 container mx-auto">
-            <div class="glass-card p-12 flex flex-col lg:flex-row gap-12 items-center">
-                <div class="lg:w-1/2">
-                    <h2 class="text-4xl font-black mb-6 lang-target" data-en="Become a Mentor" data-hi="मेंटर बनें">Become a Mentor</h2>
-                    <p class="text-gray-400 mb-8 lang-target" data-en="Join our mission to shape the future of India. Share your skills and experience." data-hi="भारत के भविष्य को संवारने के हमारे मिशन में शामिल हों। अपने कौशल साझा करें।">Aapka ek decision kisi bachhe ki puri life badal sakta hai. Join our elite community of teachers.</p>
-                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800" class="rounded-2xl shadow-xl" alt="Teaching">
+            <div class="glass-card p-10 grid lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-4xl font-bold mb-4 lang-target" data-en="Mentor Application" data-hi="मेंटर आवेदन">Mentor Application</h2>
+                    <p class="text-gray-400 mb-6 lang-target" data-en="Help us shape India's future." data-hi="भारत के भविष्य को संवारने में हमारी मदद करें।">Help us shape India's future.</p>
+                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800" class="rounded-2xl h-64 w-full object-cover">
                 </div>
-                <div class="lg:w-1/2 w-full">
-                    <form onsubmit="event.preventDefault(); alert('Form Submitted Successfully!');" class="grid gap-4">
-                        <input type="text" placeholder="Full Name" class="p-4 rounded-xl outline-none" required>
-                        <input type="email" placeholder="Email Address" class="p-4 rounded-xl outline-none" required>
-                        <select class="p-4 rounded-xl outline-none bg-gray-900 text-white">
-                            <option>Specialization: Public Speaking</option>
-                            <option>Specialization: Communication</option>
-                            <option>Specialization: Child Psychology</option>
-                        </select>
-                        <input type="url" placeholder="Link to Resume (Google Drive/LinkedIn)" class="p-4 rounded-xl outline-none" required>
-                        <textarea placeholder="Why do you want to join Next Move India?" class="p-4 rounded-xl h-32 outline-none"></textarea>
-                        <button type="submit" class="btn-premium py-4 rounded-xl font-bold uppercase tracking-widest lang-target" data-en="Submit Application" data-hi="आवेदन जमा करें">Submit Application</button>
-                    </form>
-                </div>
+                <form onsubmit="event.preventDefault(); alert('Success!');" class="grid gap-4">
+                    <input type="text" placeholder="Full Name" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
+                    <input type="url" placeholder="Resume Link (Drive/LinkedIn)" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none">
+                    <button class="btn-premium py-4 rounded-xl font-bold uppercase lang-target" data-en="Submit Now" data-hi="अभी जमा करें">Submit Now</button>
+                </form>
             </div>
         </section>
     </div>
 
     <div id="detail-view">
         <div class="container mx-auto px-8">
-            <button onclick="closeDetails()" class="text-emerald-400 font-bold mb-8 flex items-center gap-2">← GO BACK</button>
-            <div id="detail-content" class="grid lg:grid-cols-2 gap-16"></div>
+            <button onclick="closeDetails()" class="text-emerald-400 font-bold mb-8">← BACK TO HOME</button>
+            <div id="detail-content" class="grid lg:grid-cols-2 gap-16 items-center"></div>
         </div>
     </div>
 
     <div id="test-modal" class="modal-container">
         <div class="max-w-2xl w-full glass-card p-10 relative">
-            <button onclick="closeModal()" class="absolute top-6 right-6 text-3xl">&times;</button>
-            <div id="quiz-ui">
-                <h3 id="q-title" class="text-3xl font-black mb-8">Loading...</h3>
-                <div id="q-options" class="grid gap-4"></div>
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-2xl">&times;</button>
+            <div id="quiz-area">
+                <h3 id="q-text" class="text-2xl font-bold mb-8">Sawal loading...</h3>
+                <div id="q-opts" class="grid gap-3"></div>
             </div>
-            <div id="exp-box" class="hidden mt-8 p-6 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl text-center">
-                <p id="exp-text" class="text-sm text-gray-300 mb-6"></p>
-                <div id="progress-container" class="h-2 w-full bg-gray-800 rounded-full mb-6 overflow-hidden">
-                    <div id="progress-bar" class="h-full bg-emerald-500 transition-all duration-1000"></div>
+            
+            <div id="learning-zone" class="hidden mt-8 p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/20">
+                <p id="exp-text" class="text-sm text-gray-300 leading-relaxed mb-4"></p>
+                <button onclick="showVisuals()" id="visual-btn" class="text-xs text-emerald-400 underline mb-4">SHOW VISUAL EXPLANATION</button>
+                
+                <div id="visual-content" class="hidden animate-pulse">
+                    <div class="visual-box" id="graph-bars"></div>
+                    <p class="text-[10px] text-gray-500 italic">Graph: Neural pathway strength vs Repetition</p>
                 </div>
-                <button onclick="nextQ()" class="btn-premium w-full py-4 rounded-xl font-bold">NEXT MOVE →</button>
+                
+                <button onclick="nextQuestion()" class="btn-premium w-full py-3 mt-6 rounded-lg font-bold">NEXT QUESTION →</button>
             </div>
         </div>
     </div>
@@ -150,48 +142,44 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init();
+        let currentLang = 'hinglish';
 
-        const pillarData = {
+        const pillarInfo = {
             speaking: {
-                title: "Public Speaking",
-                titleHi: "पब्लिक स्पीकिंग",
-                desc: "Stage fear ko khatam karke leadership qualities build karein. Ye sirf bolna nahi, logon ko influence karna hai.",
-                img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?auto=format&fit=crop&w=800"
+                en: { t: "Public Speaking", d: "Stage fear is just a survival instinct. Master it to lead the world.", p: "Pros: Leadership, Global Pay, Influence", c: "Cons: Hidden Talent, Regret", img: "https://images.unsplash.com/photo-1475721027785-f74dea327912?w=800" },
+                hi: { t: "पब्लिक स्पीकिंग", d: "स्टेज का डर सिर्फ एक उत्तरजीविता वृत्ति (survival instinct) है। दुनिया का नेतृत्व करने के लिए इसमें महारत हासिल करें।", p: "फायदे: नेतृत्व, वैश्विक वेतन, प्रभाव", c: "नुकसान: छिपी हुई प्रतिभा, पछतावा", img: "https://images.unsplash.com/photo-1475721027785-f74dea327912?w=800" },
+                hinglish: { t: "Public Speaking", d: "Stage fear sirf ek brain mechanism hai. Ise master karke aap duniya lead kar sakte hain.", p: "Pros: Leadership, High Salary, Influence", c: "Cons: Talent dab jata hai, Regret hota hai", img: "https://images.unsplash.com/photo-1475721027785-f74dea327912?w=800" }
             },
             communication: {
-                title: "Communication",
-                titleHi: "कम्युनिकेशन",
-                desc: "Effective communication hi success ki neev hai. Sikhein kaise apne thoughts ko sahi tareeke se express karein.",
-                img: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800"
-            },
-            confidence: {
-                title: "Confidence",
-                titleHi: "आत्मविश्वास",
-                desc: "Confidence unka hota hai jo action lete hain. Psychological training se apne darr ko jeetna sikhein.",
-                img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800"
-            },
-            personality: {
-                title: "Personality Development",
-                titleHi: "व्यक्तित्व विकास",
-                desc: "Character building aur daily habits ka science. Apni ek unique aur attractive identity banayein.",
-                img: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800"
+                en: { t: "Communication", d: "It's not about English, it's about clarity of thoughts.", p: "Pros: Zero Conflicts, Clarity", c: "Cons: Misunderstanding, Slow Growth", img: "https://images.unsplash.com/photo-1521791136064-7986c2923216?w=800" },
+                hi: { t: "कम्युनिकेशन", d: "यह अंग्रेजी के बारे में नहीं है, यह विचारों की स्पष्टता के बारे में है।", p: "फायदे: शून्य संघर्ष, स्पष्टता", c: "नुकसान: गलतफहमी, धीमी प्रगति", img: "https://images.unsplash.com/photo-1521791136064-7986c2923216?w=800" },
+                hinglish: { t: "Communication", d: "Ye sirf English nahi hai, ye thoughts ko sahi tarah se rakhne ki kala hai.", p: "Pros: Clarity, Relations, Success", c: "Cons: Confusion, Career me rukawat", img: "https://images.unsplash.com/photo-1521791136064-7986c2923216?w=800" }
             }
         };
 
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-target').forEach(el => {
+                const text = el.getAttribute(`data-${lang}`);
+                if(text) el.innerHTML = text;
+            });
+            if(lang === 'hinglish') location.reload();
+        }
+
         function showDetails(key) {
-            const data = pillarData[key];
-            const isHi = document.querySelector('select').value === 'hi';
-            const content = `
-                <div data-aos="fade-right">
-                    <h1 class="text-6xl font-black mb-6 gradient-text uppercase">${isHi ? data.titleHi : data.title}</h1>
-                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">${data.desc}</p>
-                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="btn-premium px-8 py-3 rounded-xl font-bold">ENROLL FOR THIS SKILL</button>
+            const data = pillarInfo[key][currentLang] || pillarInfo[key]['en'];
+            document.getElementById('detail-content').innerHTML = `
+                <div>
+                    <h1 class="text-6xl font-black gradient-text uppercase mb-6">${data.t}</h1>
+                    <p class="text-lg text-gray-400 mb-8">${data.d}</p>
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="p-4 glass-card border-l-4 border-emerald-500"><h5 class="text-emerald-400 font-bold">Fayde</h5><p class="text-xs text-gray-500">${data.p}</p></div>
+                        <div class="p-4 glass-card border-l-4 border-red-500"><h5 class="text-red-400 font-bold">Nuksan</h5><p class="text-xs text-gray-500">${data.c}</p></div>
+                    </div>
+                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="btn-premium px-8 py-3 rounded-xl font-bold">ENROLL NOW</button>
                 </div>
-                <div data-aos="fade-left">
-                    <img src="${data.img}" class="rounded-[2rem] shadow-2xl border border-white/10 w-full object-cover h-96">
-                </div>
+                <img src="${data.img}" class="rounded-3xl shadow-2xl h-96 object-cover">
             `;
-            document.getElementById('detail-content').innerHTML = content;
             document.getElementById('main-content').style.display = 'none';
             document.getElementById('detail-view').style.display = 'block';
             window.scrollTo(0,0);
@@ -202,42 +190,51 @@
             document.getElementById('main-content').style.display = 'block';
         }
 
-        function updateLanguage(lang) {
-            const targets = document.querySelectorAll('.lang-target');
-            targets.forEach(el => {
-                const text = el.getAttribute(`data-${lang}`);
-                if(text) el.innerHTML = text;
+        // --- QUIZ LOGIC ---
+        const quizData = [
+            { q: "Stage par nervousness kyun hoti hai?", opts: ["Kamzori", "Amygdala activation", "Luck"], correct: 1, exp: "Jab aap stage par jate hain, brain ka 'Amygdala' darr signal bhejta hai. Ise master karne ke liye Neural Pathways build karni padti hain." },
+            { q: "1% daily improvement saal bhar mein kitna hoga?", opts: ["2x", "10x", "37x"], correct: 2, exp: "Ye compounding math hai. (1.01)^365 = 37.7. Choti habits ka result proportional aur bada hota hai." }
+        ];
+
+        let curQ = 0;
+        function openModal() { document.getElementById('test-modal').style.display = 'flex'; loadQuestion(); }
+        function closeModal() { document.getElementById('test-modal').style.display = 'none'; curQ = 0; }
+
+        function loadQuestion() {
+            const d = quizData[curQ];
+            document.getElementById('q-text').innerText = d.q;
+            document.getElementById('learning-zone').classList.add('hidden');
+            const box = document.getElementById('q-opts'); box.innerHTML = '';
+            d.opts.forEach((o, i) => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 glass-card text-left hover:border-emerald-500 transition";
+                btn.innerText = o;
+                btn.onclick = () => showExplanation(i);
+                box.appendChild(btn);
             });
-            if(lang === 'hinglish') location.reload();
         }
 
-        // Quiz Logic
-        const quizData = [
-            { q: "Stage fear brain ke kaunse part se aata hai?", opts: ["Amygdala", "Cortex"], correct: 0, exp: "Amygdala darr ko control karta hai.", vis: "40%" },
-            { q: "1% daily improvement saal bhar mein kitna hoga?", opts: ["37 Times", "2 Times"], correct: 0, exp: "Math: (1.01)^365 = 37.7", vis: "100%" }
-        ];
-        let curQ = 0;
-        function openModal() { document.getElementById('test-modal').style.display = 'flex'; loadQ(); }
-        function closeModal() { document.getElementById('test-modal').style.display = 'none'; curQ = 0; }
-        function loadQ() {
-            const d = quizData[curQ];
-            document.getElementById('q-title').innerText = d.q;
-            document.getElementById('exp-box').classList.add('hidden');
-            const box = document.getElementById('q-options');
-            box.innerHTML = '';
-            d.opts.forEach((o, i) => {
-                const b = document.createElement('button');
-                b.className = "p-5 glass-card text-left hover:border-emerald-500";
-                b.innerText = o;
-                b.onclick = () => {
-                    document.getElementById('exp-text').innerText = d.exp;
-                    document.getElementById('exp-box').classList.remove('hidden');
-                    document.getElementById('progress-bar').style.width = d.vis;
-                };
-                box.appendChild(b);
-            });
+        function showExplanation(idx) {
+            document.getElementById('exp-text').innerText = quizData[curQ].exp;
+            document.getElementById('learning-zone').classList.remove('hidden');
+            document.getElementById('visual-content').classList.add('hidden');
         }
-        function nextQ() { curQ++; if(curQ < quizData.length) loadQ(); else closeModal(); }
+
+        function showVisuals() {
+            document.getElementById('visual-content').classList.remove('hidden');
+            const bars = document.getElementById('graph-bars');
+            bars.innerHTML = '';
+            for(let i=1; i<=5; i++){
+                const b = document.createElement('div');
+                b.className = "bar"; b.style.height = (i*20) + "%";
+                bars.appendChild(b);
+            }
+        }
+
+        function nextQuestion() {
+            curQ++; if(curQ < quizData.length) loadQuestion();
+            else { document.getElementById('q-text').innerText = "Quiz Complete! You are now 1% better."; document.getElementById('q-opts').innerHTML = ''; document.getElementById('learning-zone').classList.add('hidden'); }
+        }
     </script>
 </body>
 </html>
