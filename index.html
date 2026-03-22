@@ -6,13 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <nextmoveindia ready to transform your habits for success? take a free quiz master essential skills and connect with professionals mentors with english speaking public speaking confidence building body languange >
  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2L6BT1500"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+function submitForm(){
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const age = document.getElementById("age").value;
 
-  gtag('config', 'G-V2L6BT1500');
+  if(!name || !phone){
+    alert("Please fill all details");
+    return;
+  }
+
+  fetch("YOUR_GOOGLE_SCRIPT_URL", {
+    method: "POST",
+    body: JSON.stringify({ name, phone, age })
+  })
+  .then(() => {
+
+    // WhatsApp redirect
+    window.open(`https://wa.me/919682420506?text=New Lead:%0AName:${name}%0APhone:${phone}%0AAge:${age}`);
+
+    // Show success message
+    alert("Demo Booked Successfully!");
+    
+    closeModal();
+  });
+}
+</script>
 </script>
       <title>Next Move India | Habits & Personality Science</title>
     <script src="https://cdn.tailwindcss.com"></script>
