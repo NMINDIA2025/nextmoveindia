@@ -350,6 +350,116 @@ font-size:20px;box-shadow:0 5px 15px rgba(0,0,0,0.3);">
                 document.getElementById('learning-zone').classList.add('hidden');
             }
         }
+    <!-- REAL AI CHATBOT -->
+<div id="chatbot" style="position:fixed;bottom:20px;left:20px;width:330px;font-family:Poppins;z-index:9999;">
+
+<div onclick="toggleChat()" style="background:#6C63FF;color:white;padding:12px;border-radius:15px 15px 0 0;cursor:pointer;">
+🤖 Next Move AI Counselor
+</div>
+
+<div id="chat-body" style="display:none;background:white;height:420px;flex-direction:column;border-radius:0 0 15px 15px;box-shadow:0 10px 30px rgba(0,0,0,0.2);overflow:hidden;">
+
+<div id="messages" style="padding:10px;height:320px;overflow-y:auto;"></div>
+
+<input id="userInput" placeholder="Ask anything..." style="padding:10px;width:100%;border:none;border-top:1px solid #ddd;">
+<button onclick="sendMessage()" style="background:#6C63FF;color:white;border:none;padding:10px;width:100%;">Send</button>
+
+</div>
+</div>
+
+<script>
+const API_KEY = "
+
+async function getChatResponse(userMessage) {
+    try {
+        const response = await fetch('/.netlify/functions/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: userMessage }),
+        });
+
+        const data = await response.json();
+        
+        // Agar function se reply aaya hai toh use dikhayein
+        if (data.reply) {
+            displayMessage(data.reply, 'bot');
+        } else {
+            console.error('Error:', data.error);
+            displayMessage("Sorry, kuch galti ho gayi.", 'bot');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}";
+
+function toggleChat(){
+  const chat = document.getElementById("chat-body");
+  chat.style.display = chat.style.display==="flex"?"none":"flex";
+}
+
+function addMessage(text, sender){
+  const msg = document.createElement("div");
+  msg.style.margin="5px";
+  msg.style.padding="8px";
+  msg.style.borderRadius="10px";
+  msg.style.background = sender==="bot"?"#eee":"#6C63FF";
+  msg.style.color = sender==="bot"?"black":"white";
+  msg.innerText = text;
+  document.getElementById("messages").appendChild(msg);
+}
+
+let userData = {};
+
+async function sendMessage(){
+  const input = document.getElementById("userInput");
+  const text = input.value;
+  if(!text) return;
+
+  addMessage(text,"user");
+  input.value="";
+
+  // AI RESPONSE
+  const response = await fetch("https://api.openai.com/v1/chat/completions",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+API_KEY
+    },
+    body: JSON.stringify({
+      model:"gpt-4o-mini",
+      messages:[
+        {
+          role:"system",
+          content:"You are a smart, friendly counselor for Next Move India. Convince parents to book demo. Focus on confidence, speaking, kids growth."
+        },
+        {
+          role:"user",
+          content:text
+        }
+      ]
+    })
+  });
+     https://script.google.com/macros/s/AKfycbxL0NUFXmNwuGhu2kTEFyQWkNClwGB5NwEQhTHZXw98GsJfzrbrtin092xsEJ-BZg71NQ/exec
+
+  const data = await response.json();
+  const reply = data.choices[0].message.content;
+
+  addMessage(reply,"bot");
+
+  // LEAD CAPTURE LOGIC
+  if(text.length > 2 && !userData.name){
+      userData.name = text;
+  } 
+  else if(!userData.phone && /\d{10}/.test(text)){
+      userData.phone = text;
+
+      // Send to WhatsApp
+      window.open(`https://wa.me/919682420506?text=New Lead:%0AName:${userData.name}%0APhone:${userData.phone}`);
+  }
+}
+</script>
     </script>
 </body>
 </html>
