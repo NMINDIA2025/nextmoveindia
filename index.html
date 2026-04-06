@@ -1,465 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <link rel="icon" href="Gemini_Generated_Image_arpqxcqarqpxpng.png" type="image/png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <nextmoveindia ready to transform your habits for success? take a free quiz master essential skills and connect with professionals mentors with english speaking public speaking confidence building body languange >
- <!-- Google tag (gtag.js) -->
-<script>
-function submitForm(){
-  const name = document.getElementById("name").value;
-  const phone = document.getElementById("phone").value;
-  const age = document.getElementById("age").value;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NextMove India | English Speaking for Kids</title>
 
-  if(!name || !phone){
-    alert("Please fill all details");
-    return;
-  }
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  fetch("YOUR_GOOGLE_SCRIPT_URL", {
-    method: "POST",
-    body: JSON.stringify({ name, phone, age })
-  })
-  .then(() => {
-
-    // WhatsApp redirect
-    window.open(`https://wa.me/919682420506?text=New Lead:%0AName:${name}%0APhone:${phone}%0AAge:${age}`);
-
-    // Show success message
-    alert("Demo Booked Successfully!");
-    
-    closeModal();
-  });
-}
-</script>
-</script>
-      <title>Next Move India | Habits & Personality Science</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050810; color: #e2e8f0; scroll-behavior: smooth; overflow-x: hidden; }
-        .gradient-text { background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
-        .btn-premium { background: linear-gradient(to right, #2563eb, #10b981); transition: 0.4s; border: none; color: white; cursor: pointer; }
-        .btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -10px #10b981; }
-        
-        /* Image B&W Effect */
-        img { filter: grayscale(100%); transition: 0.6s ease; }
-        img:hover { filter: grayscale(0%); transform: scale(1.02); }
-
-        .modal-container { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; overflow-y: auto; padding: 20px; align-items: center; justify-content: center; }
-        #detail-view { display: none; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; background: #050810; z-index: 60; padding-top: 100px; }
-        
-        /* Quiz Visuals */
-        .visual-box { min-height: 150px; display: flex; align-items: flex-end; gap: 10px; margin: 20px 0; border-bottom: 2px solid #334155; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 12px; }
-        .bar { width: 40px; border-radius: 6px; transition: height 1.5s ease-in-out; }
-        .correct-opt { border: 2px solid #10b981 !important; background: rgba(16, 185, 129, 0.1) !important; }
-        .wrong-opt { border: 2px solid #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
-    </style>
-</head>
-<a href="https://wa.me/919682420506" target="_blank"
-style="position:fixed;bottom:20px;right:20px;
-background:#25D366;color:white;
-padding:15px 18px;border-radius:50%;
-font-size:20px;box-shadow:0 5px 15px rgba(0,0,0,0.3);">
-💬
-</a>
-   <body>
-
-    <nav class="fixed w-full z-[70] glass-card rounded-none border-x-0 border-t-0 py-4 px-8 flex justify-between items-center">
-        <div class="flex items-center space-x-2 cursor-pointer" onclick="closeDetails()">
-            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-lg"></div>
-            <span class="text-xl font-bold tracking-tighter uppercase">Next Move <span class="text-emerald-400">India</span></span>
-        </div>
-        
-        <div class="hidden lg:flex items-center space-x-8 text-[11px] font-bold uppercase tracking-widest">
-            <a href="#skills" class="hover:text-emerald-400 lang-target" data-en="Our Pillars" data-hi="हमारे स्तंभ">Our Pillars</a>
-            <a href="#mentor-section" class="hover:text-emerald-400 lang-target" data-en="For Mentors" data-hi="मेंटर के लिए">For Mentors</a>
-            <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="text-emerald-400 border border-emerald-400/30 px-5 py-2 rounded-full hover:bg-emerald-400 hover:text-black transition lang-target" data-en="Student Enroll" data-hi="नामांकन करें">Student Enroll</button>
-        </div>
-
-        <select onchange="changeLanguage(this.value)" id="langSelect" class="bg-transparent border border-white/10 text-[10px] rounded px-3 py-1 outline-none">
-            <option value="hinglish" class="bg-black">Hinglish</option>
-            <option value="hi" class="bg-black">Hindi (हिंदी)</option>
-            <option value="en" class="bg-black">English</option>
-        </select>
-    </nav>
-
-    <div id="main-content">
-        <section class="pt-48 pb-20 px-8 container mx-auto flex flex-col lg:flex-row items-center gap-12">
-            <div class="lg:w-3/5" data-aos="fade-up">
-                <h1 class="text-6xl lg:text-8xl font-black mb-8 leading-[0.9] lang-target" 
-                    data-en="Habits are <br> <span class='gradient-text'>Proportional</span> <br> to Success." 
-                    data-hi="आदतें सफलता के <br> <span class='gradient-text'>समानुपाती</span> <br> होती हैं।">
-                    Habits are <br> <span class="gradient-text">Proportional</span> <br> to Success.
-                </h1>
-                <p class="text-gray-400 text-lg max-w-xl mb-10 lang-target" 
-                   data-en="Master the science of personality through habits." 
-                   data-hi="आदतों के माध्यम से व्यक्तित्व के विज्ञान में महारत हासिल करें।">
-                   Har ek habit aapke future ka compound interest hai.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <button onclick="openModal()" class="btn-premium px-10 py-4 rounded-2xl font-bold lang-target" data-en="Start Habit Quiz" data-hi="क्विज शुरू करें">Start Habit Quiz</button>
-                </div>
-            </div>
-            <div class="lg:w-2/5">
-                <img src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?auto=format&fit=crop&w=800" class="rounded-[3rem] shadow-2xl border border-white/10" alt="Student Hero">
-            </div>
-        </section>
-
-        <section id="skills" class="py-24 px-8 container mx-auto">
-            <h2 class="text-4xl font-bold mb-16 text-center lang-target" data-en="Mastery Pillars" data-hi="मास्टरी पिलर्स">Mastery Pillars</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="showDetails('speaking')" class="glass-card p-8 hover:bg-emerald-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-emerald-500">
-                    <div class="text-4xl mb-4">🎤</div>
-                    <h4 class="text-xl font-bold mb-2">Public Speaking</h4>
-                    <span class="text-emerald-400 text-xs font-bold uppercase tracking-tighter lang-target" data-en="Enter Section →" data-hi="अंदर जाएँ →">Enter Section →</span>
-                </div>
-                <div onclick="showDetails('communication')" class="glass-card p-8 hover:bg-blue-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-blue-500">
-                    <div class="text-4xl mb-4">🤝</div>
-                    <h4 class="text-xl font-bold mb-2">Communication</h4>
-                    <span class="text-blue-400 text-xs font-bold uppercase tracking-tighter lang-target" data-en="Enter Section →" data-hi="अंदर जाएँ →">Enter Section →</span>
-                </div>
-                <div onclick="showDetails('confidence')" class="glass-card p-8 hover:bg-purple-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-purple-500">
-                    <div class="text-4xl mb-4">✨</div>
-                    <h4 class="text-xl font-bold mb-2">Confidence</h4>
-                    <span class="text-purple-400 text-xs font-bold uppercase tracking-tighter lang-target" data-en="Enter Section →" data-hi="अंदर जाएँ →">Enter Section →</span>
-                </div>
-                <div onclick="showDetails('personality')" class="glass-card p-8 hover:bg-red-500/5 transition cursor-pointer border-b-2 border-transparent hover:border-red-500">
-                    <div class="text-4xl mb-4">🧬</div>
-                    <h4 class="text-xl font-bold mb-2">Personality</h4>
-                    <span class="text-red-400 text-xs font-bold uppercase tracking-tighter lang-target" data-en="Enter Section →" data-hi="अंदर जाएँ →">Enter Section →</span>
-                </div>
-            </div>
-        </section>
-
-        <section id="mentor-section" class="py-24 px-8 container mx-auto">
-            <div class="glass-card p-10 grid lg:grid-cols-2 gap-12">
-                <div>
-                    <h2 class="text-4xl font-bold mb-4 lang-target" data-en="Teach at Next Move" data-hi="मेंटर बनें">Teach at Next Move</h2>
-                    <p class="text-gray-400 mb-6 lang-target" data-en="Help underprivileged talent thrive." data-hi="प्रतिभाशाली बच्चों की मदद करें।">Join us as a Mentor.</p>
-                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800" class="rounded-2xl h-64 w-full object-cover" alt="Teaching">
-                </div>
-                <form onsubmit="event.preventDefault(); alert('Application Sent!');" class="grid gap-4">
-                    <input type="text" placeholder="Name" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none text-white">
-                    <input type="url" placeholder="Resume Link" class="p-4 rounded-xl bg-white/5 border border-white/10 outline-none text-white">
-                    <button class="btn-premium py-4 rounded-xl font-bold uppercase lang-target" data-en="Submit Application" data-hi="आवेदन भेजें">Submit Application</button>
-                </form>
-            </div>
-        </section>
-    </div>
-
-    <div id="detail-view">
-        <div class="container mx-auto px-8 max-w-6xl">
-            <button onclick="closeDetails()" class="text-emerald-400 font-bold mb-8 flex items-center gap-2">← BACK TO HOME</button>
-            <div id="detail-content" class="grid lg:grid-cols-2 gap-16 items-start pb-20"></div>
-        </div>
-    </div>
-
-    <div id="test-modal" class="modal-container">
-        <div class="max-w-2xl w-full glass-card p-10 relative">
-            <button onclick="closeModal()" class="absolute top-6 right-6 text-2xl">&times;</button>
-            <div id="quiz-area">
-                <div id="q-counter" class="text-xs text-emerald-500 font-bold mb-2 tracking-widest">QUESTION 1 OF 4</div>
-                <h3 id="q-text" class="text-2xl font-bold mb-8">Loading...</h3>
-                <div id="q-opts" class="grid gap-3"></div>
-            </div>
-            
-            <div id="learning-zone" class="hidden mt-8 p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/20">
-                <p id="result-status" class="font-bold text-center mb-2"></p>
-                <p id="exp-text" class="text-sm text-gray-300 leading-relaxed mb-4 text-center"></p>
-                <div id="visual-content" class="hidden">
-                    <div id="visual-target" class="my-4"></div>
-                    <p id="visual-desc" class="text-[10px] text-gray-500 italic text-center"></p>
-                </div>
-                <button onclick="showDeepScience()" id="science-btn" class="text-xs text-emerald-400 underline block mx-auto mb-4">SHOW VISUAL EXPLANATION</button>
-                <button onclick="nextQuestion()" class="btn-premium w-full py-3 rounded-lg font-bold">NEXT MOVE →</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init();
-        let currentLang = 'hinglish';
-
-        const pillarInfo = {
-            speaking: {
-                en: { t: "Public Speaking", d: "It is the art of influencing others through speech. Science shows that fear is reduced by habituation.", p: "Stage Presence, Leadership", c: "Anxiety, Career stagnation", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" },
-                hi: { t: "पब्लिक स्पीकिंग", d: "यह भाषण के माध्यम से दूसरों को प्रभावित करने की कला है। विज्ञान कहता है कि अभ्यास से डर कम होता है।", p: "मंच पर उपस्थिति, नेतृत्व", c: "चिंता, करियर में ठहराव", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" },
-                hinglish: { t: "Public Speaking", d: "Public speaking ka matlab hai logon ko influence karna. Practice se stage fear khatam hota hai.", p: "Authority, Leadership", c: "Self-doubt, Growth rukna", img: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800" }
-            },
-            communication: {
-                en: { t: "Communication", d: "The 7-38-55 rule defines how humans perceive messages.", p: "Clarity, Negotiation", c: "Conflicts, Misunderstanding", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" },
-                hi: { t: "कम्युनिकेशन", d: "7-38-55 नियम यह परिभाषित करता है कि मनुष्य संदेशों को कैसे समझते हैं।", p: "स्पष्टता, बातचीत कौशल", c: "संघर्ष, गलतफहमी", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" },
-                hinglish: { t: "Communication", d: "Sirf words nahi, body language aur tone zyada bolti hai. Isse relations sudharte hain.", p: "Better reach, Influence", c: "Silence, Confusion", img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" }
-            },
-            confidence: {
-                en: { t: "Confidence", d: "A skill built through small successes that build neural paths.", p: "Risk taking, Happiness", c: "Depression, Fear of failure", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" },
-                hi: { t: "आत्मविश्वास", d: "छोटी सफलताओं के माध्यम से बनाई गई एक कला जो तंत्रिका पथ (neural paths) बनाती है।", p: "जोखिम लेना, खुशी", c: "अवसाद, विफलता का डर", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" },
-                hinglish: { t: "Confidence", d: "Confidence actions se banta hai. Jab aap mushkil kaam karte ho to neural paths mazboot hote hain.", p: "Respect, Growth", c: "Fear, Shyness", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" }
-            },
-            personality: {
-                en: { t: "Personality", d: "The sum of your repetitive behaviors. Identity-based habits are the key.", p: "Magnetic Identity, Integrity", c: "Low self-esteem", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" },
-                hi: { t: "व्यक्तित्व", d: "आपके दोहराव वाले व्यवहारों का योग। पहचान-आधारित आदतें ही इसकी कुंजी हैं।", p: "आकर्षक पहचान, अखंडता", c: "कम आत्म-सम्मान", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" },
-                hinglish: { t: "Personality", d: "Aapka behavior hi aapki personality hai. Habits badlo, personality badal jayegi.", p: "Charm, Trust", c: "Invisible feel karna", img: "https://images.unsplash.com/photo-1507537297325-592f9bca7bfa?w=800" }
-            }
-        };
-
-        const quizData = [
-            { 
-                q: "Public Speaking: Stage fear brain ke kis part se control hota hai?", 
-                opts: ["Cortex", "Amygdala (Fear Center)", "Heart"], 
-                correct: 1, 
-                exp: "Amygdala hamara primitive 'fight or flight' center hai. Isse training se control kiya ja sakta hai.",
-                visContent: '<img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=500" class="rounded-xl mx-auto">',
-                visDesc: "Image: Amygdala in the brain responsible for fear response."
-            },
-            { 
-                q: "Communication: Baat karte waqt sabse bada factor kya hota hai?", 
-                opts: ["Bhasha (English)", "Body Language & Tone (93%)", "Gyaan"], 
-                correct: 1, 
-                exp: "Mehrabian Rule ke mutabiq 93% message body language aur tone se jata hai!",
-                visContent: '<div class="visual-box"><div class="bar h-[7%] bg-red-500"></div><div class="bar h-[38%] bg-blue-500"></div><div class="bar h-[93%] bg-emerald-500"></div></div>',
-                visDesc: "Graph: Words (7%) vs Tone (38%) vs Body Language (55%)"
-            },
-            { 
-                q: "Confidence: Neuroplasticity ka kya matlab hai?", 
-                opts: ["Brain ka plastic hona", "Brain ka naye paths banana (Practice)", "Bhul jana"], 
-                correct: 1, 
-                exp: "Practice karne se brain neurons ke naye patterns banata hai, jise Neuroplasticity kehte hain.",
-                visContent: '<img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=500" class="rounded-xl mx-auto">',
-                visDesc: "Image: Neural pathways strengthening through habit."
-            },
-            { 
-                q: "Personality: Habit Loop ke 3 parts kya hain?", 
-                opts: ["Paisa, Fame, Luck", "Trigger, Action, Reward", "Sona, Khana, Bolna"], 
-                correct: 1, 
-                exp: "Har habit ek 'Trigger' se shuru hoti hai, phir 'Action' aur end mein 'Reward' milta hai.",
-                visContent: '<div class="visual-box"><div class="bar h-[40%] bg-yellow-500"></div><div class="bar h-[80%] bg-orange-500"></div><div class="bar h-[100%] bg-emerald-500"></div></div>',
-                visDesc: "Graph: Trigger -> Action -> Reward Cycle Strength"
-            }
-        ];
-
-        let curQ = 0;
-
-        function changeLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-target').forEach(el => {
-                el.innerHTML = el.getAttribute(`data-${lang}`);
-            });
-            // Also update any open details view immediately
-            const activeDetail = document.getElementById('detail-content').dataset.activeKey;
-            if(activeDetail) showDetails(activeDetail);
-        }
-
-        function showDetails(key) {
-            const data = pillarInfo[key][currentLang];
-            document.getElementById('detail-content').dataset.activeKey = key;
-            document.getElementById('detail-content').innerHTML = `
-                <div data-aos="fade-right">
-                    <h1 class="text-5xl font-black gradient-text uppercase mb-6">${data.t}</h1>
-                    <p class="text-xl text-gray-300 mb-8 leading-relaxed">${data.d}</p>
-                    <div class="grid gap-4 mb-8">
-                        <div class="p-6 glass-card border-l-4 border-emerald-500">
-                            <h5 class="text-emerald-400 font-bold mb-1">PROS / फायदे</h5>
-                            <p class="text-gray-400">${data.p}</p>
-                        </div>
-                        <div class="p-6 glass-card border-l-4 border-red-500">
-                            <h5 class="text-red-400 font-bold mb-1">CONS / नुकसान</h5>
-                            <p class="text-gray-400">${data.c}</p>
-                        </div>
-                    </div>
-                    <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdA-QlnhXM0S49u5soDD4LAnNzf5vwlMFH7NpIuua-c0UoyAg/viewform?usp=header')" class="btn-premium px-10 py-4 rounded-2xl font-bold">Enroll for this Skill</button>
-                </div>
-                <div data-aos="fade-left">
-                    <img src="${data.img}" class="rounded-3xl shadow-2xl w-full h-[400px] object-cover border border-white/10" alt="${data.t}">
-                </div>
-            `;
-            document.getElementById('main-content').style.display = 'none';
-            document.getElementById('detail-view').style.display = 'block';
-            window.scrollTo(0,0);
-        }
-
-        function closeDetails() {
-            document.getElementById('detail-view').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-            document.getElementById('detail-content').dataset.activeKey = "";
-        }
-
-        // --- QUIZ LOGIC ---
-        function openModal() { document.getElementById('test-modal').style.display = 'flex'; loadQuestion(); }
-        function closeModal() { document.getElementById('test-modal').style.display = 'none'; curQ = 0; }
-        
-        function loadQuestion() {
-            const d = quizData[curQ];
-            document.getElementById('q-counter').innerText = `QUESTION ${curQ + 1} OF 4`;
-            document.getElementById('q-text').innerText = d.q;
-            document.getElementById('learning-zone').classList.add('hidden');
-            const box = document.getElementById('q-opts'); box.innerHTML = '';
-            
-            d.opts.forEach((o, i) => {
-                const btn = document.createElement('button');
-                btn.className = "p-4 glass-card text-left transition-all duration-300 outline-none";
-                btn.innerText = o;
-                btn.onclick = () => checkAnswer(i, btn);
-                box.appendChild(btn);
-            });
-        }
-
-        function checkAnswer(idx, btn) {
-            const d = quizData[curQ];
-            const status = document.getElementById('result-status');
-            const allBtns = document.querySelectorAll('#q-opts button');
-            
-            // Disable all buttons after choice
-            allBtns.forEach(b => b.onclick = null);
-
-            if(idx === d.correct) {
-                btn.classList.add('correct-opt');
-                status.innerText = "✅ CORRECT! Well Done.";
-                status.style.color = "#10b981";
-            } else {
-                btn.classList.add('wrong-opt');
-                allBtns[d.correct].classList.add('correct-opt'); // Highlight correct answer
-                status.innerText = "❌ WRONG! But don't worry, learn below.";
-                status.style.color = "#ef4444";
-            }
-
-            document.getElementById('exp-text').innerText = d.exp;
-            document.getElementById('learning-zone').classList.remove('hidden');
-            document.getElementById('visual-content').classList.add('hidden');
-            document.getElementById('science-btn').style.display = 'block';
-        }
-
-        function showDeepScience() {
-            const d = quizData[curQ];
-            document.getElementById('visual-target').innerHTML = d.visContent;
-            document.getElementById('visual-desc').innerText = d.visDesc;
-            document.getElementById('visual-content').classList.remove('hidden');
-            document.getElementById('science-btn').style.display = 'none';
-        }
-
-        function nextQuestion() {
-            curQ++;
-            if(curQ < quizData.length) loadQuestion();
-            else { 
-                document.getElementById('quiz-area').innerHTML = "<h2 class='text-4xl font-bold text-center gradient-text'>Quiz Complete!</h2><p class='text-center mt-4'>You have taken the first step towards a better personality.</p>";
-                document.getElementById('learning-zone').classList.add('hidden');
-            }
-        }
-    <!-- REAL AI CHATBOT -->
-<div id="chatbot" style="position:fixed;bottom:20px;left:20px;width:330px;font-family:Poppins;z-index:9999;">
-
-<div onclick="toggleChat()" style="background:#6C63FF;color:white;padding:12px;border-radius:15px 15px 0 0;cursor:pointer;">
-🤖 Next Move AI Counselor
-</div>
-
-<div id="chat-body" style="display:none;background:white;height:420px;flex-direction:column;border-radius:0 0 15px 15px;box-shadow:0 10px 30px rgba(0,0,0,0.2);overflow:hidden;">
-
-<div id="messages" style="padding:10px;height:320px;overflow-y:auto;"></div>
-
-<input id="userInput" placeholder="Ask anything..." style="padding:10px;width:100%;border:none;border-top:1px solid #ddd;">
-<button onclick="sendMessage()" style="background:#6C63FF;color:white;border:none;padding:10px;width:100%;">Send</button>
-
-</div>
-</div>
-
-<script>
-const API_KEY = "
-
-async function getChatResponse(userMessage) {
-    try {
-        const response = await fetch('/.netlify/functions/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message: userMessage }),
-        });
-
-        const data = await response.json();
-        
-        // Agar function se reply aaya hai toh use dikhayein
-        if (data.reply) {
-            displayMessage(data.reply, 'bot');
-        } else {
-            console.error('Error:', data.error);
-            displayMessage("Sorry, kuch galti ho gayi.", 'bot');
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
     }
-}";
 
-function toggleChat(){
-  const chat = document.getElementById("chat-body");
-  chat.style.display = chat.style.display==="flex"?"none":"flex";
-}
+    body {
+      background: #f9fbff;
+      color: #333;
+    }
 
-function addMessage(text, sender){
-  const msg = document.createElement("div");
-  msg.style.margin="5px";
-  msg.style.padding="8px";
-  msg.style.borderRadius="10px";
-  msg.style.background = sender==="bot"?"#eee":"#6C63FF";
-  msg.style.color = sender==="bot"?"black":"white";
-  msg.innerText = text;
-  document.getElementById("messages").appendChild(msg);
-}
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: auto;
+    }
 
-let userData = {};
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+    }
 
-async function sendMessage(){
-  const input = document.getElementById("userInput");
-  const text = input.value;
-  if(!text) return;
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
 
-  addMessage(text,"user");
-  input.value="";
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
 
-  // AI RESPONSE
-  const response = await fetch("https://api.openai.com/v1/chat/completions",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "Authorization":"Bearer "+API_KEY
-    },
-    body: JSON.stringify({
-      model:"gpt-4o-mini",
-      messages:[
-        {
-          role:"system",
-          content:"You are a smart, friendly counselor for Next Move India. Convince parents to book demo. Focus on confidence, speaking, kids growth."
-        },
-        {
-          role:"user",
-          content:text
-        }
-      ]
-    })
-  });
-     https://script.google.com/macros/s/AKfycbxL0NUFXmNwuGhu2kTEFyQWkNClwGB5NwEQhTHZXw98GsJfzrbrtin092xsEJ-BZg71NQ/exec
+    .btn {
+      padding: 12px 20px;
+      border-radius: 30px;
+      text-decoration: none;
+      margin: 10px;
+      display: inline-block;
+      font-weight: 600;
+    }
 
-  const data = await response.json();
-  const reply = data.choices[0].message.content;
+    .btn-primary {
+      background: #ff6b00;
+      color: white;
+    }
 
-  addMessage(reply,"bot");
+    .btn-whatsapp {
+      background: #25d366;
+      color: white;
+    }
 
-  // LEAD CAPTURE LOGIC
-  if(text.length > 2 && !userData.name){
-      userData.name = text;
-  } 
-  else if(!userData.phone && /\d{10}/.test(text)){
-      userData.phone = text;
+    /* SECTION */
+    section {
+      padding: 60px 0;
+      text-align: center;
+    }
 
-      // Send to WhatsApp
-      window.open(`https://wa.me/919682420506?text=New Lead:%0AName:${userData.name}%0APhone:${userData.phone}`);
-  }
-}
-</script>
-    </script>
+    h2 {
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    /* CTA */
+    .cta {
+      background: #4f46e5;
+      color: white;
+      padding: 60px 0;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    /* WHATSAPP FLOAT */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #25d366;
+      color: white;
+      padding: 15px 18px;
+      border-radius: 50%;
+      font-size: 20px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <h1>Make Your Child Speak English Confidently in 30 Days</h1>
+    <p>Live Classes | Age 3–10 | Public Speaking + Personality Development</p>
+    
+    <a href="#" class="btn btn-primary">Book Free Demo</a>
+    <a href="https://wa.me/919682420506" class="btn btn-whatsapp">Chat on WhatsApp</a>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section>
+  <div class="container">
+    <h2>Is Your Child Facing This?</h2>
+    <div class="grid">
+      <div class="card">😔 Hesitates to speak English</div>
+      <div class="card">😔 Feels shy in class</div>
+      <div class="card">😔 Lacks confidence</div>
+      <div class="card">😔 Afraid of public speaking</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section>
+  <div class="container">
+    <h2>How NextMove India Helps</h2>
+    <div class="grid">
+      <div class="card">💬 Daily Speaking Practice</div>
+      <div class="card">🎤 Public Speaking Training</div>
+      <div class="card">👩‍🏫 Expert Teachers</div>
+      <div class="card">🚀 Confidence Building</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="container">
+    <h2>How It Works</h2>
+    <div class="grid">
+      <div class="card">1️⃣ Book Free Demo</div>
+      <div class="card">2️⃣ Attend Live Class</div>
+      <div class="card">3️⃣ Start Confidence Journey</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container">
+    <h2>Give Your Child Confidence Today</h2>
+    <a href="#" class="btn btn-primary">Book Free Demo</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 NextMove India | All Rights Reserved</p>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/919682420506" class="whatsapp-float">💬</a>
+
 </body>
 </html>
