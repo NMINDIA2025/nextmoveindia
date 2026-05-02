@@ -1,0 +1,17 @@
+{
+  "name": "NextMove India",
+  "short_name": "NextMove",
+  "description": "Live English Speaking & Public Speaking Classes for Kids aged 3–10",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FF6B35",
+  "theme_color": "#FF6B35",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
