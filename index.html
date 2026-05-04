@@ -355,6 +355,280 @@
   </a>
 </div>
 <!-- ===== END BANNER ===== -->
+<style>
+  /* ---- Summer Camp Banner Styles ---- */
+  @keyframes nm-fadeSlideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes nm-fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes nm-pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.06); }
+  }
+  @keyframes nm-shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+  @keyframes nm-float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+  }
+  @keyframes nm-badgePop {
+    0%   { transform: scale(0); opacity: 0; }
+    70%  { transform: scale(1.1); }
+    100% { transform: scale(1);   opacity: 1; }
+  }
+  @keyframes nm-glow {
+    0%, 100% { box-shadow: 0 0 12px rgba(37,211,102,0.4); }
+    50%       { box-shadow: 0 0 28px rgba(37,211,102,0.85); }
+  }
+
+  .nm-banner-wrap {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 16px 0;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .nm-banner {
+    background: linear-gradient(135deg, #1a1a6e 0%, #2d2d9e 45%, #0f7c3c 100%);
+    border-radius: 22px;
+    padding: 34px 32px 28px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 36px rgba(26, 26, 110, 0.38);
+  }
+
+  .nm-banner:hover {
+    transform: translateY(-5px) scale(1.012);
+    box-shadow: 0 20px 56px rgba(26, 26, 110, 0.52);
+  }
+
+  .nm-banner:active {
+    transform: translateY(-2px) scale(0.998);
+  }
+
+  /* Soft radial glows on banner bg */
+  .nm-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 18% 55%, rgba(255,220,0,0.09) 0%, transparent 60%),
+      radial-gradient(ellipse at 82% 18%, rgba(255,255,255,0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Shimmering "Limited Seats" badge */
+  .nm-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, #f59e0b, #ef4444, #f59e0b);
+    background-size: 200% auto;
+    animation:
+      nm-shimmer  2.5s linear infinite,
+      nm-badgePop 0.8s ease 0.2s both;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+
+  /* Floating emoji row */
+  .nm-emoji-row {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+    animation: nm-float 3s ease-in-out infinite;
+  }
+
+  /* Main headline */
+  .nm-title {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0 0 6px;
+    animation: nm-fadeSlideDown 0.7s ease 0.3s both;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+  }
+
+  .nm-title span {
+    color: #fde68a; /* warm yellow highlight */
+  }
+
+  /* Sub-headline */
+  .nm-subtitle {
+    color: #bfdbfe;
+    font-size: 14px;
+    margin: 0 0 20px;
+    animation: nm-fadeSlideDown 0.7s ease 0.5s both;
+    line-height: 1.5;
+  }
+
+  /* Feature pill badges */
+  .nm-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+    animation: nm-fadeSlideUp 0.7s ease 0.6s both;
+  }
+
+  .nm-feat {
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #e0f2fe;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 13px;
+    border-radius: 20px;
+  }
+
+  /* CTA row */
+  .nm-cta-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: nm-fadeSlideUp 0.7s ease 0.8s both;
+  }
+
+  /* WhatsApp CTA button */
+  .nm-btn-wa {
+    background: #25D366;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    animation:
+      nm-pulse 2.2s ease-in-out infinite,
+      nm-glow  2.2s ease-in-out infinite;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+
+  .nm-btn-wa:hover { background: #1ebe5d; }
+
+  .nm-wa-icon { font-size: 18px; }
+
+  /* Phone number display */
+  .nm-num {
+    color: #fde68a;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* Decorative background emoji (top-right) */
+  .nm-deco {
+    position: absolute;
+    right: 26px;
+    top: 22px;
+    font-size: 60px;
+    opacity: 0.13;
+    animation: nm-float 4s ease-in-out infinite;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Decorative background emoji (bottom-right) */
+  .nm-deco2 {
+    position: absolute;
+    right: 90px;
+    bottom: 20px;
+    font-size: 38px;
+    opacity: 0.1;
+    animation: nm-float 3.5s ease-in-out infinite 1s;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Tiny tap hint */
+  .nm-tap-hint {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.42);
+    margin-top: 14px;
+    animation: nm-fadeSlideUp 0.7s ease 1s both;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 520px) {
+    .nm-banner { padding: 24px 18px 20px; }
+    .nm-title  { font-size: 19px; }
+    .nm-deco   { font-size: 44px; }
+    .nm-deco2  { display: none; }
+  }
+</style>
+
+<!-- ===== BANNER HTML — paste anywhere inside <body> ===== -->
+<div class="nm-banner-wrap">
+  <a
+    class="nm-banner"
+    href="https://wa.me/919682420506?text=Hi!%20I%20want%20to%20join%20the%20Online%20Summer%20Camp%20for%20Public%20Speaking%20%26%20Spoken%20English!"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Join NextMove India Online Summer Camp on WhatsApp"
+  >
+    <!-- Decorative background emojis -->
+    <span class="nm-deco" aria-hidden="true">☀️</span>
+    <span class="nm-deco2" aria-hidden="true">🎤</span>
+
+    <!-- Shimmering urgency badge -->
+    <div class="nm-badge">🔥 Summer Camp 2025 — Limited Seats!</div>
+
+    <!-- Floating emoji strip -->
+    <span class="nm-emoji-row" aria-hidden="true">☀️ 🎤 🗣️ 🌟 📚</span>
+
+    <!-- Headline -->
+    <h2 class="nm-title">
+      Online Summer Camp:<br>
+      <span>Public Speaking &amp; Spoken English</span>
+    </h2>
+
+    <!-- Sub-headline -->
+    <p class="nm-subtitle">
+      For Kids Age 3–10 &nbsp;·&nbsp; Live Classes &nbsp;·&nbsp; Expert Teachers &nbsp;·&nbsp; Fun &amp; Confidence Building
+    </p>
+
+    <!-- Feature pills -->
+    <div class="nm-features">
+      <span class="nm-feat">✅ Live Online</span>
+      <span class="nm-feat">🎯 Public Speaking</span>
+      <span class="nm-feat">💬 Spoken English</span>
+      <span class="nm-feat">🏅 Certificate</span>
+      <span class="nm-feat">📊 Weekly Parent Reports</span>
+    </div>
+
+    <!-- CTA row -->
+    <div class="nm-cta-row">
+      <span class="nm-btn-wa">
+        <span class="nm-wa-icon">💬</span>
+        Join Our WhatsApp Community
+      </span>
+      <span class="nm-num">+91 96824 20506</span>
+    </div>
+
+    <!-- Subtle tap hint -->
+    <p class="nm-tap-hint">👆 Tap to join — we'll confirm your seat within 2 hours!</p>
+  </a>
+</div>
+<!-- ===== END BANNER ===== -->
       <button class="hamburger" id="hamburger" aria-label="Menu">&#9776;</button>
     </div>
     <div class="mobile-menu" id="mobileMenu">
