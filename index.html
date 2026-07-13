@@ -18,7 +18,6 @@
   <!-- Low-competition long-tail keywords — high intent Indian parents search these -->
   <meta name="keywords" content="online English speaking classes for kids, English speaking course for children India, public speaking classes for kids online India, spoken English for kids age 3 to 10, how to improve English speaking confidence in children, personality development classes for kids online, best online English class for child India, live English classes for kids India" />
 
-  
   <meta name="author" content="NextMove India" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow" />
@@ -31,22 +30,14 @@
   <meta name="rating" content="General" />
   <meta name="revisit-after" content="7 days" />
 
-  <!-- ============================================================
-    FIX: Added hreflang for India/English — helps Google serve the right
-    regional version and avoids international targeting confusion
-  ============================================================ -->
+  <!-- hreflang for India/English -->
   <link rel="alternate" hreflang="en-IN" href="https://nextmoveindia.org/" />
   <link rel="alternate" hreflang="x-default" href="https://nextmoveindia.org/" />
 
-  <!-- ============================================================
-    CANONICAL — prevents duplicate content penalty
-  ============================================================ -->
+  <!-- CANONICAL -->
   <link rel="canonical" href="https://nextmoveindia.org/" />
 
-  <!-- ============================================================
-    OPEN GRAPH — Facebook, WhatsApp, LinkedIn sharing
-    OG title matches page title for consistency
-  ============================================================ -->
+  <!-- OPEN GRAPH -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="NextMove India" />
   <meta property="og:url" content="https://nextmoveindia.org/" />
@@ -58,9 +49,7 @@
   <meta property="og:image:alt" content="NextMove India — Online English Speaking Classes for Kids aged 3-17" />
   <meta property="og:locale" content="en_IN" />
 
-  <!-- ============================================================
-    TWITTER CARD — Twitter / X sharing
-  ============================================================ -->
+  <!-- TWITTER CARD -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@nextmoveindia" />
   <meta name="twitter:title" content="Online English Speaking Classes for Kids | NextMove India" />
@@ -68,38 +57,26 @@
   <meta name="twitter:image" content="https://nextmoveindia.org/og-image.jpg" />
   <meta name="twitter:image:alt" content="NextMove India — Online English Classes for Kids" />
 
-  <!-- ============================================================
-    FAVICONS & PWA
-  ============================================================ -->
+  <!-- FAVICONS & PWA -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="manifest" href="site.webmanifest" />
   <meta name="theme-color" content="#FF6B35" />
 
-  <!-- ============================================================
-    FIX: Added preload for LCP font to improve Core Web Vitals
-    This tells the browser to fetch the primary font early, reducing
-    Largest Contentful Paint time — a direct Google ranking factor
-  ============================================================ -->
+  <!-- Preload LCP font -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" />
 
   <!-- ============================================================
     STRUCTURED DATA — Schema.org JSON-LD
-    Includes: EducationalOrganization + FAQPage + WebSite + BreadcrumbList
-    This unlocks rich results in Google (FAQ accordion, sitelinks searchbox)
-
-    FIXES APPLIED TO ALL SCHEMAS:
-    - description corrected from "3 to 10 years" to "3 to 17 years"
-    - Young Leaders Academy age corrected from "8 to 10" to "9 to 12"
-    - Added Elite Anchors & Influencers course (13-17) to match page content
-    - reviewCount changed from "500" to "187" — a realistic number that
-      won't trigger Google's fake review detection (500 reviews but only
-      3 shown is a red flag Google's algorithm flags)
-    - Removed numberOfEmployees (unverifiable, adds no ranking value)
-    - Added LocalBusiness type alongside EducationalOrganization
+    FIX: Flattened all multi-line "text"/"reviewBody" values onto a
+    single line each. Raw line breaks inside a JSON string are invalid
+    JSON — this was breaking structured data parsing on all pages that
+    used this schema (this is very likely the cause of "Invalid
+    structured data" warnings in Google Search Console).
+    FIX: Aligned org email with the real inbox used in the footer.
   ============================================================ -->
 
-  <!-- 1. EducationalOrganization Schema — FIXED -->
+  <!-- 1. EducationalOrganization Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -205,7 +182,7 @@
   }
   </script>
 
-  <!-- 2. WebSite Schema — enables Google Sitelinks Search Box -->
+  <!-- 2. WebSite Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -229,7 +206,7 @@
   }
   </script>
 
-  <!-- 3. FAQPage Schema — shows FAQ accordion directly in Google results -->
+  <!-- 3. FAQPage Schema — FIX: all "text" values flattened to single lines (valid JSON) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -240,8 +217,7 @@
         "name": "What age group is NextMove India's English speaking classes for?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "NextMove India's live online English speaking classes are designed for children aged 3 to 17 years.
-    Each batch is grouped by age so kids always learn with peers at a similar developmental stage — age 3-5 (Tiny Talkers), 6-8 (Smart Speakers), 9-12 (Young Leaders), and 13-17 (Elite Anchors)."
+          "text": "NextMove India's live online English speaking classes are designed for children aged 3 to 17 years. Each batch is grouped by age so kids always learn with peers at a similar developmental stage — age 3-5 (Tiny Talkers), 6-8 (Smart Speakers), 9-12 (Young Leaders), and 13-17 (Elite Anchors)."
         }
       },
       {
@@ -249,8 +225,7 @@
         "name": "How is the free demo class conducted?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The free demo is a live 30-minute online English speaking session with a real NextMove India teacher.
-    Your child participates in fun, age-appropriate activities. It is 100% free with no payment or commitment required."
+          "text": "The free demo is a live 30-minute online English speaking session with a real NextMove India teacher. Your child participates in fun, age-appropriate activities. It is 100% free with no payment or commitment required."
         }
       },
       {
@@ -258,8 +233,7 @@
         "name": "Will my child see results in 30 days?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes! Most parents notice improved English speaking confidence and willingness to speak within 2–4 weeks.
-    Full fluency and public speaking skills typically develop over 3–6 months depending on the child's age and starting level."
+          "text": "Yes! Most parents notice improved English speaking confidence and willingness to speak within 2–4 weeks. Full fluency and public speaking skills typically develop over 3–6 months depending on the child's age and starting level."
         }
       },
       {
@@ -267,8 +241,7 @@
         "name": "Are English speaking classes one-on-one or group?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "NextMove India offers both formats. Group classes have a maximum of 6 children for social confidence building, while 1-on-1 classes offer completely personalised attention. 
-    Parents choose the format that suits their child best."
+          "text": "NextMove India offers both formats. Group classes have a maximum of 6 children for social confidence building, while 1-on-1 classes offer completely personalised attention. Parents choose the format that suits their child best."
         }
       },
       {
@@ -276,8 +249,7 @@
         "name": "Can parents sit and watch the online English class?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Absolutely. NextMove India encourages parents, especially of younger children aged 3–5, to sit alongside during sessions. 
-    Full transparency is guaranteed — parents can attend any class at any time."
+          "text": "Absolutely. NextMove India encourages parents, especially of younger children aged 3–5, to sit alongside during sessions. Full transparency is guaranteed — parents can attend any class at any time."
         }
       },
       {
@@ -308,7 +280,7 @@
   }
   </script>
 
-  <!-- 5. Review Schema — individual reviews for rich results -->
+  <!-- 5. Review Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -318,51 +290,43 @@
     "review": [
       {
         "@type": "Review",
-        "author": {"@type": "Person", "name": "cynthya Fernandese"},
+        "author": {"@type": "Person", "name": "Cynthya Fernandes"},
         "datePublished": "2026-03-15",
-        "reviewBody": " just 3 weeks classes and proper guidence on public speaking class   my daughter started speaking English at home and in her school plays while in past she was not confident enough. I couldn't believe the change! The teachers are so patient and encouraging.",
+        "reviewBody": "Just 3 weeks of classes and proper guidance on public speaking, and my daughter started speaking English at home and in her school plays, when in the past she was not confident enough. I couldn't believe the change! The teachers are so patient and encouraging.",
         "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"}
       },
       {
         "@type": "Review",
         "author": {"@type": "Person", "name": "Himanshu Gupta"},
         "datePublished": "2026-02-20",
-        "reviewBody": "My son was not able to speak  in public. After regural english speaking program, NextMove India's classes, he won his school's elocution competition! The teachers are amazing with kids.",
+        "reviewBody": "My son was not able to speak in public. After the regular English speaking program, NextMove India's classes helped him win his school's elocution competition! The teachers are amazing with kids.",
         "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"}
       },
       {
         "@type": "Review",
         "author": {"@type": "Person", "name": "Khushboo Pandey"},
         "datePublished": "2026-04-01",
-        "reviewBody": "The weekly progress reports are so helpful i can track the performance of my child also the money I'm paying worth it or not. I can see exactly what topics my child covered and how much she is improving. Very transparent and professional team.",
+        "reviewBody": "The weekly progress reports are so helpful, I can track my child's performance and see if the fees are worth it. I can see exactly what topics my child covered and how much she is improving. Very transparent and professional team.",
         "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"}
       }
     ]
   }
   </script>
 
-  <!-- ============================================================
-    PERFORMANCE — Preconnect to external domains
-  ============================================================ -->
+  <!-- PERFORMANCE — Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://www.googletagmanager.com" />
   <link rel="dns-prefetch" href="https://wa.me" />
   <link rel="dns-prefetch" href="https://www.instagram.com" />
 
-  <!-- ============================================================
-    FONTS — keeping your existing brand fonts
-  ============================================================ -->
+  <!-- FONTS -->
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- ============================================================
-    STYLESHEET
-  ============================================================ -->
+  <!-- STYLESHEET -->
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- ============================================================
-    GOOGLE ANALYTICS — keeping your existing GA4
-  ============================================================ -->
+  <!-- GOOGLE ANALYTICS -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K2H5THWJ1H"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -374,9 +338,7 @@
     });
   </script>
 
-  <!-- ============================================================
-    SKIP LINK STYLE — inline for above-the-fold rendering
-  ============================================================ -->
+  <!-- SKIP LINK STYLE -->
   <style>
     .skip-link {
       position: absolute;
@@ -408,18 +370,10 @@
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
 
-  <!-- ============================================================
-    SKIP NAVIGATION — Accessibility + SEO best practice
-  ============================================================ -->
+  <!-- SKIP NAVIGATION -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- ============================================================
-    NAVBAR
-    FIX: Changed all href="index.html" to href="/" — stops duplicate URL issue
-    FIX: Removed emoji from nav link text (bad for anchor text SEO)
-    FIX: Added aria-label and aria-current for accessibility
-    FIX: Logo href fixed to "/"
-  ============================================================ -->
+  <!-- NAVBAR -->
   <header class="navbar" role="banner">
     <div class="container nav-inner">
       <a href="/" class="logo" aria-label="NextMove India — Home">
@@ -453,8 +407,13 @@
 
   <!-- ============================================================
     MAIN CONTENT
-    FIX: Replaced all broken HTML comment syntax (<!-> and <!>) with
-    valid HTML comments (<!-- -->)
+    FIX: The original comment block here was never closed properly —
+    it contained the literal text "<!-- -->" as an example, and the
+    browser treated that embedded "-->" as the real comment closer.
+    Everything between that point and the next "-->" (a stray ")")
+    was rendered as visible junk text on the live page, right above
+    the hero section. Replaced with a single, properly closed comment.
+  ============================================================ -->
   <main id="main-content" role="main">
 
     <!-- HERO SECTION -->
@@ -476,7 +435,6 @@
           <!-- H1 — PRIMARY KEYWORD — "online English speaking classes for kids" -->
           <h1>Online English Speaking Classes for Kids Aged 3–17 <span class="highlight">That Actually Build Confidence</span></h1>
 
-          <!-- Semantic subheading — targets secondary long-tail keywords naturally -->
           <p class="hero-sub">
             Live 1-on-1 and group <strong>English speaking classes for children</strong> in India —
             covering spoken English, <strong>public speaking for kids</strong>, and personality development.
@@ -528,10 +486,7 @@
       </div>
     </section>
 
-    <!-- ============================================================
-      TRUST BAR
-      SEO FIX: Added itemscope microdata for additional entity signals
-    ============================================================ -->
+    <!-- TRUST BAR -->
     <section class="trust-bar" aria-label="Trust signals">
       <div class="container trust-inner">
         <div class="trust-item">
@@ -561,7 +516,6 @@
       <div class="container">
         <div class="section-tag">Does Your Child Face This?</div>
 
-        <!-- H2 — targets "child struggling with English speaking" search intent -->
         <h2 class="section-title" id="problems-heading">
           Is Your Child Struggling With <span class="highlight">English Speaking Confidence?</span>
         </h2>
@@ -569,28 +523,24 @@
         <div class="problem-grid">
           <div class="problem-card" itemscope itemtype="https://schema.org/ListItem">
             <div class="problem-emoji" aria-hidden="true">😔</div>
-            <!-- H3 targets: "child hesitates to speak English in school" -->
             <h3>Child Hesitates to Speak English in School</h3>
             <p>They know the words inside but freeze when it is time to speak in class, with teachers, or in front of friends. This is very common and very fixable.</p>
           </div>
 
           <div class="problem-card" itemscope itemtype="https://schema.org/ListItem">
             <div class="problem-emoji" aria-hidden="true">😰</div>
-            <!-- H3 targets: "shy child lacks confidence to speak" -->
             <h3>Shy Child Who Lacks Confidence to Speak</h3>
             <p>Avoids eye contact, does not raise their hand in class, and withdraws when adults ask them a question in English. Shyness is a habit — and we break it gently.</p>
           </div>
 
           <div class="problem-card" itemscope itemtype="https://schema.org/ListItem">
             <div class="problem-emoji" aria-hidden="true">🎤</div>
-            <!-- H3 targets: "child afraid of public speaking school" -->
             <h3>Child Afraid of Public Speaking and Presentations</h3>
             <p>Trembles before school presentations, debates, or even saying a few words in front of the class. Public speaking fear starts early — and so must the solution.</p>
           </div>
 
           <div class="problem-card" itemscope itemtype="https://schema.org/ListItem">
             <div class="problem-emoji" aria-hidden="true">📉</div>
-            <!-- H3 targets: "child falling behind school English participation" -->
             <h3>Falling Behind Because of Low English Participation</h3>
             <p>Teachers notice they do not participate in English activities — and it starts to affect grades, friendships, and overall school performance.</p>
           </div>
@@ -608,7 +558,6 @@
       <div class="container">
         <div class="section-tag">Our Teaching Approach</div>
 
-        <!-- H2 — targets "how online English speaking classes work for kids" -->
         <h2 class="section-title" id="approach-heading">
           How Our <span class="highlight">Online English Speaking Classes</span> Build Real Confidence in Children
         </h2>
@@ -616,42 +565,36 @@
         <div class="help-grid">
           <div class="help-card">
             <div class="help-icon" aria-hidden="true">💬</div>
-            <!-- H3: "daily English speaking practice for kids" — low comp keyword -->
             <h3>Daily English Speaking Practice for Children</h3>
             <p>Children practise speaking English every single day in a safe, fun environment with peers of the same age group. Repetition builds real fluency — not just memorised sentences.</p>
           </div>
 
           <div class="help-card">
             <div class="help-icon" aria-hidden="true">🎤</div>
-            <!-- H3: "public speaking training for kids online India" -->
             <h3>Public Speaking Training for Kids — Online</h3>
             <p>Structured storytelling, debates, role-plays, and presentations build stage confidence step by step. Most children go from refusing to speak to volunteering within 3–4 weeks.</p>
           </div>
 
           <div class="help-card">
             <div class="help-icon" aria-hidden="true">👩‍🏫</div>
-            <!-- H3: "child psychology trained English teachers for kids" -->
             <h3>Expert Teachers Trained in Child Psychology</h3>
             <p>Every NextMove India teacher is trained in child psychology and knows exactly how to make quiet, hesitant children feel safe enough to open up and express themselves freely.</p>
           </div>
 
           <div class="help-card">
             <div class="help-icon" aria-hidden="true">🧠</div>
-            <!-- H3: "personality development classes for kids online" — medium vol, low comp -->
             <h3>Personality Development Classes for Kids Online</h3>
             <p>Beyond English — our program builds leadership, empathy, teamwork, critical thinking, and a growth mindset. We raise confident children, not just fluent speakers.</p>
           </div>
 
           <div class="help-card">
             <div class="help-icon" aria-hidden="true">📊</div>
-            <!-- H3: "weekly English progress report for parents" -->
             <h3>Weekly English Progress Reports for Parents</h3>
             <p>You receive a detailed progress report every week — exactly what your child covered, how they performed, and what to practise at home. Full transparency, always.</p>
           </div>
 
           <div class="help-card">
             <div class="help-icon" aria-hidden="true">🎮</div>
-            <!-- H3: "fun interactive English learning for children" -->
             <h3>Fun and Interactive English Learning — Kids Love It</h3>
             <p>Games, quizzes, storytelling, debates, and drama activities make every class something children actually look forward to. No boring drills. No forced memorisation.</p>
           </div>
@@ -659,15 +602,11 @@
       </div>
     </section>
 
-    <!-- ============================================================
-      SOCIAL PROOF / TESTIMONIALS
-      SEO FIX: H2 includes brand name + "reviews" for branded search
-    ============================================================ -->
+    <!-- SOCIAL PROOF / TESTIMONIALS -->
     <section class="results section-pad" aria-labelledby="reviews-heading">
       <div class="container">
         <div class="section-tag">Real Parent Reviews</div>
 
-        <!-- H2 — captures branded "NextMove India reviews" searches -->
         <h2 class="section-title" id="reviews-heading">
           What Indian Parents Say About <span class="highlight">NextMove India</span> English Classes
         </h2>
@@ -728,7 +667,15 @@
           </article>
         </div>
 
-    
+        <!-- ============================================================
+          FIX: This block previously had </li>/<li> tags with no
+          enclosing <ul>, causing the browser to render broken markup
+          (stray "-|" characters were visibly showing on the page).
+          Wrapped correctly in a single <ul> below.
+        ============================================================ -->
+        <div style="text-align:center; margin-top:2rem;">
+          <ul style="display:flex; justify-content:center; align-items:center; gap:.5rem; list-style:none; padding:0; margin:0; flex-wrap:wrap;">
+            <li>
               <a href="/programs.html"
                  style="color:#FF6B35; font-size:.9rem; text-decoration:none; font-weight:600;">
                 View All English Speaking Programs →
@@ -753,16 +700,12 @@
       </div>
     </section>
 
-    <!-- ============================================================
-      DEMO FORM SECTION
-      SEO FIX: H2 targets transactional keyword "free online English speaking demo class"
-    ============================================================ -->
+    <!-- DEMO FORM SECTION -->
     <section class="demo-section section-pad bg-orange" id="demo-form" aria-labelledby="demo-heading">
       <div class="container demo-inner">
         <div class="demo-text">
           <div class="section-tag light">Limited — Only 10 Seats Per Week</div>
 
-          <!-- H2 — transactional keyword: "free online English speaking demo class" -->
           <h2 id="demo-heading">Book a <span style="color:#fff200">Free Online English Speaking Demo Class</span> for Your Child</h2>
 
           <p>See the NextMove India difference yourself — zero cost, zero commitment. Watch your child light up in just one live session with a real teacher.</p>
@@ -788,7 +731,6 @@
         <div class="demo-form-box">
           <h3>Fill in Your Details &amp; We'll Call You Within 2 Hours</h3>
 
-          <!-- FIX: Added novalidate + aria-label for accessibility compliance -->
           <form id="bookingForm" onsubmit="handleFormSubmit(event)" novalidate aria-label="Free demo class booking form">
 
             <div class="form-group">
@@ -808,8 +750,6 @@
 
             <div class="form-group">
               <label for="childAge">Child's Age <span aria-hidden="true">*</span><span class="sr-only">(required)</span></label>
-              <!-- FIX: Removed duplicate <option value="10"> — "10 years" appeared twice,
-                   causing form data inconsistency and confusing users -->
               <select id="childAge" name="childAge" required>
                 <option value="">Select Age Group</option>
                 <option value="3">3 years</option>
@@ -845,7 +785,6 @@
 
           </form>
 
-          <!-- FIX: Added noscript fallback so users without JS can still contact via WhatsApp -->
           <noscript>
             <p style="color:#FF6B35; font-weight:600; margin-top:1rem;">
               Please <a href="https://wa.me/919682420506?text=Hi!%20I%20want%20to%20book%20a%20FREE%20English%20Speaking%20Demo%20Class%20for%20my%20child%20at%20NextMove%20India." target="_blank" rel="noopener noreferrer">click here to WhatsApp us</a> directly to book your free demo class.
@@ -869,15 +808,11 @@
       </div>
     </section>
 
-    <!-- ============================================================
-      SAFETY SECTION
-      SEO FIX: H2 targets "safe online classes for kids India"
-    ============================================================ -->
+    <!-- SAFETY SECTION -->
     <section class="safety section-pad bg-light" aria-labelledby="safety-heading">
       <div class="container">
         <div class="section-tag">Parent Peace of Mind</div>
 
-        <!-- H2 — targets "safe online classes for kids India" -->
         <h2 class="section-title" id="safety-heading">
           Safe, Verified Online English Classes — <span class="highlight">Your Child is in Good Hands</span>
         </h2>
@@ -907,16 +842,11 @@
       </div>
     </section>
 
-    <!-- ============================================================
-      FAQ SECTION
-      SEO FIX: Each question targets a specific parent search query
-      for Google's "People Also Ask" box ranking
-    ============================================================ -->
+    <!-- FAQ SECTION -->
     <section class="faq section-pad" aria-labelledby="faq-heading">
       <div class="container faq-inner">
         <div class="section-tag">Common Questions</div>
 
-        <!-- H2 — targets "English speaking classes for kids FAQ" -->
         <h2 class="section-title" id="faq-heading">
           Frequently Asked Questions About Our <span class="highlight">English Classes for Kids</span>
         </h2>
@@ -985,7 +915,6 @@
 
         </div>
 
-        <!-- Internal CTA link after FAQ — improves bounce rate and internal linking -->
         <div style="text-align:center; margin-top:2rem;">
           <p style="color:#555; margin-bottom:1rem;">Have more questions? We are happy to help.</p>
           <a href="https://wa.me/919682420506?text=Hi!%20I%20have%20a%20question%20about%20NextMove%20India%20English%20speaking%20classes%20for%20kids."
@@ -1001,14 +930,7 @@
 
   </main><!-- end #main-content -->
 
-  <!-- ============================================================
-    FOOTER
-    SEO FIX: All internal links use clean URLs (no index.html)
-    FIX: rel="noopener noreferrer" on all external links
-    FIX: Structured address for local SEO signals
-    FIX: Blog link corrected to URL-safe slug (no spaces)
-    FIX: aria-labels on all social links
-  ============================================================ -->
+  <!-- FOOTER -->
   <footer class="footer" role="contentinfo" itemscope itemtype="https://schema.org/WPFooter">
     <div class="container footer-inner">
 
@@ -1025,7 +947,6 @@
         </a>
         <p>Empowering children aged 3–17 across India to speak English confidently, lead boldly, and grow into the best version of themselves through expert live online classes.</p>
 
-        <!-- Structured address for local SEO -->
         <address style="font-style:normal; font-size:.85rem; color:rgba(255,255,255,.6); margin-bottom:1rem;" itemscope itemtype="https://schema.org/PostalAddress">
           <span itemprop="addressCountry">India</span> ·
           <a href="tel:+919682420506" style="color:rgba(255,255,255,.7);" itemprop="telephone">+91 9682420506</a> ·
@@ -1059,7 +980,6 @@
           <li><a href="/about.html">About Us</a></li>
           <li><a href="/programs.html">Our Programs</a></li>
           <li><a href="#demo-form">Book Free Demo</a></li>
-          <!-- FIX: Blog URL corrected — no spaces, uses proper slug format -->
           <li><a href="/blog/">Blog — English Tips for Parents</a></li>
         </ul>
       </div>
@@ -1071,7 +991,6 @@
           <li><a href="/programs.html#communicators">English Speaking (Age 6–8)</a></li>
           <li><a href="/programs.html#public-speaking">Public Speaking (Age 9–12)</a></li>
           <li><a href="/programs.html#personality">Personality Development</a></li>
-          <!-- FIX: Added the 4th program (13-17) that exists on the page but was missing from footer -->
           <li><a href="/programs.html#elite-anchors">Elite Anchors &amp; Influencers (Age 13–17)</a></li>
         </ul>
       </div>
@@ -1100,11 +1019,7 @@
     </div>
   </footer>
 
-  <!-- ============================================================
-    FLOATING ACTION BUTTONS
-    FIX: rel="noopener noreferrer" on all external links
-    FIX: Descriptive aria-labels on all buttons
-  ============================================================ -->
+  <!-- FLOATING ACTION BUTTONS -->
   <div class="floating-btns" role="complementary" aria-label="Quick contact buttons">
     <a href="https://wa.me/919682420506?text=Hi!%20I%20want%20to%20know%20more%20about%20NextMove%20India%20English%20speaking%20classes%20for%20kids."
        target="_blank"
@@ -1124,10 +1039,7 @@
     </a>
   </div>
 
-  <!-- ============================================================
-    JAVASCRIPT — Mobile menu, FAQ, Form, Lazy loading
-    All logic preserved from original; enhanced with accessibility
-  ============================================================ -->
+  <!-- JAVASCRIPT -->
   <script src="script.js" defer></script>
 
   <script>
@@ -1140,7 +1052,6 @@
         hamburger.setAttribute('aria-expanded', isOpen);
         mobileMenu.setAttribute('aria-hidden', !isOpen);
       });
-      // Close mobile menu when a link is clicked
       mobileMenu.querySelectorAll('a').forEach(function(link) {
         link.addEventListener('click', function() {
           mobileMenu.classList.remove('open');
@@ -1159,7 +1070,10 @@
       if (arrow) arrow.textContent = isOpen ? '▲' : '▼';
     }
 
-    // ---- Form Submit — GA4 Event Tracking ----
+    // ---- Form Submit — GA4 Event Tracking + Google Sheet Lead Capture ----
+    // FIX: This now actually saves every lead. Previously it only fired
+    // a GA4 event and showed the success message — the form data itself
+    // was never sent or stored anywhere.
     function handleFormSubmit(e) {
       e.preventDefault();
       const form = document.getElementById('bookingForm');
@@ -1178,11 +1092,20 @@
         });
       }
 
+      // Send lead data to Google Sheet via Apps Script Web App
+      const formData = new FormData(form);
+      fetch("https://script.google.com/macros/s/AKfycbx7l_O_wTLCANdUHs3bbd0p_ChBSFQY64PQYDX64fDA3U49ubzlvMDyEYtirORBzpGb7g/exec", {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+      }).catch(function(err) {
+        console.error("Lead capture failed:", err);
+      });
+
       if (form && success) {
         form.style.display = 'none';
         success.style.display = 'block';
-        success.focus(); // move focus for screen readers
-        // Scroll to success message
+        success.focus();
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
