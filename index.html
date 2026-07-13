@@ -66,15 +66,6 @@
   <!-- Preload LCP font -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" />
 
-  <!-- ============================================================
-    STRUCTURED DATA — Schema.org JSON-LD
-    FIX: Flattened all multi-line "text"/"reviewBody" values onto a
-    single line each. Raw line breaks inside a JSON string are invalid
-    JSON — this was breaking structured data parsing on all pages that
-    used this schema (this is very likely the cause of "Invalid
-    structured data" warnings in Google Search Console).
-    FIX: Aligned org email with the real inbox used in the footer.
-  ============================================================ -->
 
   <!-- 1. EducationalOrganization Schema -->
   <script type="application/ld+json">
@@ -405,15 +396,6 @@
     </nav>
   </header>
 
-  <!-- ============================================================
-    MAIN CONTENT
-    FIX: The original comment block here was never closed properly —
-    it contained the literal text "<!-- -->" as an example, and the
-    browser treated that embedded "-->" as the real comment closer.
-    Everything between that point and the next "-->" (a stray ")")
-    was rendered as visible junk text on the live page, right above
-    the hero section. Replaced with a single, properly closed comment.
-  ============================================================ -->
   <main id="main-content" role="main">
 
     <!-- HERO SECTION -->
@@ -667,12 +649,6 @@
           </article>
         </div>
 
-        <!-- ============================================================
-          FIX: This block previously had </li>/<li> tags with no
-          enclosing <ul>, causing the browser to render broken markup
-          (stray "-|" characters were visibly showing on the page).
-          Wrapped correctly in a single <ul> below.
-        ============================================================ -->
         <div style="text-align:center; margin-top:2rem;">
           <ul style="display:flex; justify-content:center; align-items:center; gap:.5rem; list-style:none; padding:0; margin:0; flex-wrap:wrap;">
             <li>
@@ -1001,7 +977,7 @@
           <li><span aria-hidden="true">📱</span> <a href="tel:+919682420506">+91 9682420506</a></li>
           <li><span aria-hidden="true">💬</span> <a href="https://wa.me/919682420506" target="_blank" rel="noopener noreferrer">WhatsApp Us Anytime</a></li>
           <li><span aria-hidden="true">📸</span> <a href="https://www.instagram.com/_nextmoveindia_/" target="_blank" rel="noopener noreferrer">@_nextmoveindia_</a></li>
-          <li><span aria-hidden="true">📧</span> <a href="mailto:hello@nextmoveindia.org">hello@nextmoveindia.org</a></li>
+          <li><span aria-hidden="true">📧</span> <a href="mailto:info@nextmoveindia.org">info@nextmoveindia.org</a></li>
           <li><span aria-hidden="true">🕐</span> Mon–Sat: 9am – 7pm IST</li>
         </ul>
       </div>
