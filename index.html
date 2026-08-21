@@ -25,7 +25,7 @@
   <meta name="description" content="Live online English speaking classes for kids aged 3–17 in India. Build real confidence in 30 days. Expert child-friendly teachers. Book your FREE demo class today!" />
 
   <!-- Low-competition long-tail keywords — high intent Indian parents search these -->
-  <meta name="keywords" content="online English speaking classes for kids, English speaking course for children India, public speaking classes for kids online India, spoken English for kids age 3 to 10, how to improve English speaking confidence in children, personality development classes for kids online, best online English class for child India, live English classes for kids India" />
+  <meta name="keywords" content="online English speaking classes for kids, English speaking course for children India, public speaking classes for kids online India, spoken English for kids age 3 to 10, how to improve English speaking confidence in children, personality development classes for kids online, best online English class for child India, live English classes for kids India, online schooling for kids India, Playway to Class 8 online school, online school from home India, child counseling for kids online India, child IQ assessment for kids, career and personality counseling for children, child mentality assessment India" />
 
   <meta name="author" content="NextMove India" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
@@ -169,6 +169,29 @@
             "courseMode": "online",
             "educationalLevel": "Secondary"
           }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Course",
+            "name": "Online Schooling — Playway to Class 8, From Anywhere in India",
+            "description": "Complete live online schooling for children from Playway/Pre-Primary level up to Class 8, taught by expert teachers, with 100% response and support for students learning from anywhere in India.",
+            "provider": {"@type": "Organization", "name": "NextMove India"},
+            "courseMode": "online",
+            "educationalLevel": "Playway to Class 8"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Child Counseling Session",
+          "price": "349",
+          "priceCurrency": "INR",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Child Counseling Session — Mentality, IQ & Career Path Assessment",
+            "description": "One-on-one child counseling session covering an understanding of the child's mentality, an IQ-level assessment, and cross-questioning to help parents choose the right education path for their child's long-term success.",
+            "provider": {"@type": "Organization", "name": "NextMove India"}
+          }
         }
       ]
     },
@@ -258,6 +281,22 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Fees vary based on the program type (group or 1-on-1) and duration. After your free demo class, our counselor shares the complete fee structure with no hidden charges. Plans start from very affordable monthly fees. The first class is 100% free."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does NextMove India offer online schooling for younger children?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. NextMove India offers complete live online schooling for children from Playway/Pre-Primary level up to Class 8, taught by expert teachers. Children can attend from anywhere in India with 100% response and support from our academic team."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the Child Counseling session at NextMove India include?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The ₹349 Child Counseling session includes a detailed understanding of the child's mentality and thinking style, an IQ-level assessment, and a one-on-one cross-questioning session to understand the child's real interests. Based on this, parents receive practical guidance on the right educational path and personality development approach for their child's long-term success."
         }
       }
     ]
@@ -365,6 +404,106 @@
       clip: rect(0,0,0,0);
       border: 0;
     }
+
+    /* ---- Online Schooling Section ---- */
+    .schooling-intro {
+      max-width: 780px;
+      margin: 0 auto 2rem;
+      text-align: center;
+      color: #555;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+    .schooling-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .schooling-pill {
+      background: #fff;
+      border: 2px solid #FFE0D1;
+      border-radius: 999px;
+      padding: .65rem 1.25rem;
+      font-weight: 700;
+      font-size: .95rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .schooling-cta { text-align: center; }
+
+    /* ---- Child Counseling Section ---- */
+    .counseling-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .counseling-inner { grid-template-columns: 1fr; }
+    }
+    .counseling-price-tag {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #FF6B35;
+      margin: .5rem 0 1rem;
+    }
+    .counseling-toggle-btn {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border: 2px solid #FFE0D1;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #333;
+      cursor: pointer;
+      margin: 1rem 0;
+      font-family: inherit;
+      text-align: left;
+    }
+    .counseling-details {
+      display: none;
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .counseling-details.open { display: block; }
+    .counseling-details ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+    .counseling-details li {
+      display: flex;
+      align-items: flex-start;
+      gap: .6rem;
+      font-size: .95rem;
+      line-height: 1.5;
+      color: #444;
+    }
+    .counseling-note {
+      font-size: .9rem;
+      color: #666;
+      font-style: italic;
+    }
+    .counseling-form-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+    .counseling-form-box h3 { margin-top: 0; margin-bottom: 1.25rem; }
   </style>
 
 </head>
@@ -827,6 +966,148 @@
       </div>
     </section>
 
+    <!-- ONLINE SCHOOLING SECTION -->
+    <section class="schooling-section section-pad" id="online-schooling" aria-labelledby="schooling-heading">
+      <div class="container">
+        <div class="section-tag">New at NextMove India</div>
+
+        <h2 class="section-title" id="schooling-heading">
+          Online Schooling for Kids — <span class="highlight">Playway to Class 8, From Anywhere in India</span>
+        </h2>
+
+        <p class="schooling-intro">
+          Complete live <strong>online schooling for kids</strong>, right from Playway/Pre-Primary up to Class 8 — taught by expert, qualified teachers with 100% response and support, so your child never falls behind, no matter where you live in India.
+        </p>
+
+        <div class="schooling-grid">
+          <div class="schooling-pill"><span aria-hidden="true">🏫</span> Playway to Class 8 — Full Curriculum</div>
+          <div class="schooling-pill"><span aria-hidden="true">👩‍🏫</span> Expert, Verified Teachers</div>
+          <div class="schooling-pill"><span aria-hidden="true">📶</span> Attend Live From Anywhere</div>
+          <div class="schooling-pill"><span aria-hidden="true">⚡</span> 100% Response — Every Query Answered</div>
+          <div class="schooling-pill"><span aria-hidden="true">📊</span> Regular Progress Updates for Parents</div>
+          <div class="schooling-pill"><span aria-hidden="true">🎯</span> Personal Attention in Every Class</div>
+        </div>
+
+        <div class="schooling-cta">
+          <a href="https://wa.me/919682420506?text=Hi!%20I%20want%20to%20know%20more%20about%20online%20schooling%20from%20any%20place."
+             target="_blank"
+             rel="noopener noreferrer"
+             class="btn-primary"
+             onclick="if(typeof gtag!=='undefined'){gtag('event','online_schooling_whatsapp_click',{'event_category':'Lead Generation','event_label':'Online Schooling Section'});}"
+             aria-label="Ask about online schooling on WhatsApp">
+            <span aria-hidden="true">💬</span> Ask About Online Schooling on WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHILD COUNSELING SECTION -->
+    <section class="counseling-section section-pad bg-light" id="child-counseling" aria-labelledby="counseling-heading">
+      <div class="container counseling-inner">
+        <div class="counseling-text">
+          <div class="section-tag">New at NextMove India</div>
+
+          <h2 class="section-title" id="counseling-heading">
+            Child Counseling Session — <span class="highlight">Understand Your Child, Guide Their Future</span>
+          </h2>
+
+          <p class="counseling-price-tag">Only ₹349 per session</p>
+
+          <p>
+            Every child is different. Our <strong>child counseling</strong> session helps you understand exactly how your child thinks, what they are naturally good at, and which direction will help them succeed — so you can guide them with confidence instead of guesswork.
+          </p>
+
+          <button type="button" class="counseling-toggle-btn" onclick="toggleCounselingDetails(this)" aria-expanded="false" aria-controls="counselingDetails">
+            <span>What's Included in the Counseling Session?</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
+          </button>
+
+          <div class="counseling-details" id="counselingDetails">
+            <ul>
+              <li><span aria-hidden="true">🧠</span> Detailed understanding of your child's mentality and thinking style</li>
+              <li><span aria-hidden="true">📈</span> IQ-level assessment to identify natural strengths and abilities</li>
+              <li><span aria-hidden="true">❓</span> One-on-one cross-questioning to understand your child's real interests, beyond surface-level answers</li>
+              <li><span aria-hidden="true">🧭</span> A clear, personalised direction — the right subjects, stream, and activities suited to your child</li>
+              <li><span aria-hidden="true">👨‍👩‍👧</span> Practical guidance for parents on how to adjust their approach at home</li>
+              <li><span aria-hidden="true">🎯</span> An actionable plan to help your child stay on the right educational path toward long-term success</li>
+            </ul>
+          </div>
+
+          <p class="counseling-note">
+            <span aria-hidden="true">📩</span> Fill the short form — we'll confirm your ₹349 counseling session on WhatsApp within 2 hours.
+          </p>
+        </div>
+
+        <div class="counseling-form-box">
+          <h3>Book Your Child Counseling Session</h3>
+
+          <form id="counselingForm" onsubmit="handleCounselingSubmit(event)" novalidate aria-label="Child counseling session booking form">
+
+            <div class="form-group">
+              <label for="cParentName">Parent's Full Name <span aria-hidden="true">*</span><span class="sr-only">(required)</span></label>
+              <input type="text" id="cParentName" name="parentName" placeholder="e.g. Priya Sharma" required autocomplete="name" />
+            </div>
+
+            <div class="form-group">
+              <label for="cPhoneNumber">WhatsApp Phone Number <span aria-hidden="true">*</span><span class="sr-only">(required)</span></label>
+              <input type="tel" id="cPhoneNumber" name="phoneNumber" placeholder="+91 XXXXX XXXXX" required autocomplete="tel" pattern="[0-9+\s\-]{10,15}" />
+            </div>
+
+            <div class="form-group">
+              <label for="cChildName">Child's Name <span aria-hidden="true">*</span><span class="sr-only">(required)</span></label>
+              <input type="text" id="cChildName" name="childName" placeholder="e.g. Arjun" required autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+              <label for="cChildAge">Child's Age <span aria-hidden="true">*</span><span class="sr-only">(required)</span></label>
+              <select id="cChildAge" name="childAge" required>
+                <option value="">Select Age Group</option>
+                <option value="3">3 years</option>
+                <option value="4">4 years</option>
+                <option value="5">5 years</option>
+                <option value="6">6 years</option>
+                <option value="7">7 years</option>
+                <option value="8">8 years</option>
+                <option value="9">9 years</option>
+                <option value="10">10 years</option>
+                <option value="11">11 years</option>
+                <option value="12">12 years</option>
+                <option value="13">13 years</option>
+                <option value="14">14 years</option>
+                <option value="15">15 years</option>
+                <option value="16">16 years</option>
+                <option value="17">17 years</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-form-submit" aria-label="Submit form to book child counseling session">
+              <span aria-hidden="true">🧠</span> Book Counseling Session — ₹349
+            </button>
+
+            <p class="form-note">
+              <span aria-hidden="true">🔒</span> Your details are 100% safe. We never share or sell your information. No spam, ever.
+            </p>
+
+          </form>
+
+          <noscript>
+            <p style="color:#FF6B35; font-weight:600; margin-top:1rem;">
+              Please <a href="https://wa.me/919682420506?text=Hi!%20I%20want%20to%20book%20the%20Child%20Counseling%20Session%20(%E2%82%B9349)%20for%20my%20child." target="_blank" rel="noopener noreferrer">click here to WhatsApp us</a> directly to book the Child Counseling session.
+            </p>
+          </noscript>
+
+          <div id="counselingSuccess" class="form-success" style="display:none;" role="alert" aria-live="polite">
+            <div class="success-icon" aria-hidden="true">🎉</div>
+            <h3>Your Counseling Slot Request is In!</h3>
+            <p>We will WhatsApp you within 2 hours to confirm your ₹349 Child Counseling session. Check your WhatsApp!</p>
+            <a href="https://wa.me/919682420506" id="counselingWaLink" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-top:1rem; display:inline-block;" aria-label="Message NextMove India on WhatsApp to confirm your counseling session">
+              Message Us on WhatsApp Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- FAQ SECTION -->
     <section class="faq section-pad" aria-labelledby="faq-heading">
       <div class="container faq-inner">
@@ -898,6 +1179,26 @@
             </div>
           </div>
 
+          <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+              <span itemprop="name">Does NextMove India offer online schooling for younger children?</span>
+              <span class="faq-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+              <p itemprop="text">Yes. NextMove India offers complete <strong>live online schooling</strong> for children from <strong>Playway/Pre-Primary level up to Class 8</strong>, taught by expert teachers. Children can attend from anywhere in India with 100% response and support from our academic team.</p>
+            </div>
+          </div>
+
+          <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+            <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+              <span itemprop="name">What does the Child Counseling session at NextMove India include?</span>
+              <span class="faq-arrow" aria-hidden="true">▼</span>
+            </button>
+            <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+              <p itemprop="text">The <strong>₹349 Child Counseling session</strong> includes a detailed understanding of your child's mentality and thinking style, an <strong>IQ-level assessment</strong>, and a one-on-one cross-questioning session to understand your child's real interests. Based on this, parents receive practical guidance on the right educational path and personality development approach for their child's long-term success.</p>
+            </div>
+          </div>
+
         </div>
 
         <div style="text-align:center; margin-top:2rem;">
@@ -965,6 +1266,8 @@
           <li><a href="/about.html">About Us</a></li>
           <li><a href="/programs.html">Our Programs</a></li>
           <li><a href="#demo-form">Book Free Demo</a></li>
+          <li><a href="#online-schooling">Online Schooling (Playway–Class 8)</a></li>
+          <li><a href="#child-counseling">Child Counseling — ₹349</a></li>
           <li><a href="/blog/">Blog — English Tips for Parents</a></li>
         </ul>
       </div>
@@ -977,6 +1280,8 @@
           <li><a href="/programs.html#public-speaking">Public Speaking (Age 9–12)</a></li>
           <li><a href="/programs.html#personality">Personality Development</a></li>
           <li><a href="/programs.html#elite-anchors">Elite Anchors &amp; Influencers (Age 13–17)</a></li>
+          <li><a href="#online-schooling">Online Schooling (Playway–Class 8)</a></li>
+          <li><a href="#child-counseling">Child Counseling — ₹349</a></li>
         </ul>
       </div>
 
@@ -1079,6 +1384,7 @@
 
       // Send lead data to Google Sheet via Apps Script Web App
       const formData = new FormData(form);
+      formData.append('formType', 'demo');
       fetch("https://script.google.com/macros/s/AKfycbx7l_O_wTLCANdUHs3bbd0p_ChBSFQY64PQYDX64fDA3U49ubzlvMDyEYtirORBzpGb7g/exec", {
         method: "POST",
         mode: "no-cors",
@@ -1086,6 +1392,62 @@
       }).catch(function(err) {
         console.error("Lead capture failed:", err);
       });
+
+      if (form && success) {
+        form.style.display = 'none';
+        success.style.display = 'block';
+        success.focus();
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // ---- Child Counseling: Accordion Toggle ----
+    function toggleCounselingDetails(btn) {
+      const details = document.getElementById('counselingDetails');
+      const isOpen = details.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen);
+      const arrow = btn.querySelector('.faq-arrow');
+      if (arrow) arrow.textContent = isOpen ? '▲' : '▼';
+    }
+
+    // ---- Child Counseling: Form Submit — GA4 + Google Sheet + WhatsApp ----
+    function handleCounselingSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('counselingForm');
+      const success = document.getElementById('counselingSuccess');
+      const parentName = document.getElementById('cParentName').value;
+      const childName = document.getElementById('cChildName').value;
+      const childAge = document.getElementById('cChildAge').value;
+
+      // Fire GA4 conversion event
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'counseling_booked', {
+          'event_category': 'Lead Generation',
+          'event_label': 'Child Counseling Section',
+          'child_age': childAge,
+          'value': 349
+        });
+      }
+
+      // Send lead data to Google Sheet via the same Apps Script Web App,
+      // tagged so it lands in the CounselingLeads tab instead of DemoLeads.
+      const formData = new FormData(form);
+      formData.append('formType', 'counseling');
+      fetch("https://script.google.com/macros/s/AKfycbx7l_O_wTLCANdUHs3bbd0p_ChBSFQY64PQYDX64fDA3U49ubzlvMDyEYtirORBzpGb7g/exec", {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+      }).catch(function(err) {
+        console.error("Counseling lead capture failed:", err);
+      });
+
+      // Build a pre-filled WhatsApp link with the parent's details
+      const waText = encodeURIComponent(
+        "Hi! I want to book the Child Counseling Session (₹349) for my child " +
+        childName + " (age " + childAge + "). My name is " + parentName + "."
+      );
+      const waLink = document.getElementById('counselingWaLink');
+      if (waLink) waLink.href = "https://wa.me/919682420506?text=" + waText;
 
       if (form && success) {
         form.style.display = 'none';
