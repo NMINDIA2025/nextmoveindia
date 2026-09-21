@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://nextmoveindia.org/</loc>
-  </url>
-  <url>
-    <loc>https://nextmoveindia.org/about.html</loc>
-  </url>
-  <url>
-    <loc>https://nextmoveindia.org/programs.html</loc>
-  </url>
+  <url><loc>https://nextmoveindia.org/</loc></url>
+  <url><loc>https://nextmoveindia.org/about.html</loc></url>
+  <url><loc>https://nextmoveindia.org/programs.html</loc></url>
+  <url><loc>https://nextmoveindia.org/spoken-english-classes.html</loc></url>
+  <url><loc>https://nextmoveindia.org/public-speaking-classes.html</loc></url>
+  <url><loc>https://nextmoveindia.org/online-school.html</loc></url>
+  <url><loc>https://nextmoveindia.org/child-counseling.html</loc></url>
+  <url><loc>https://nextmoveindia.org/blog/</loc></url>
 </urlset>
