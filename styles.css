@@ -1252,3 +1252,22 @@ body{background:#fff;}
   .section-pad{padding:4rem 0;}
   .lead-strip-inner{font-size:.9rem;}
 }
+
+
+/* ===== LEAD CONVERSION UI ===== */
+.parent-journey{text-align:center;}
+.journey-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2rem;}
+.journey-card{background:#fff;border:1px solid #E9EDF2;border-radius:18px;padding:2rem 1.4rem;text-align:left;box-shadow:0 8px 28px rgba(16,36,62,.055);position:relative;}
+.journey-card>span{display:inline-flex;width:34px;height:34px;border-radius:50%;align-items:center;justify-content:center;background:var(--orange);color:#fff;font-weight:800;font-size:.82rem;margin-bottom:1rem;}
+.journey-card h3{font-size:1.1rem;color:var(--dark);margin-bottom:.55rem;}
+.journey-card p{font-size:.9rem;color:var(--text-light);}
+.why-nextmove{background:#fff;}
+.why-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:4rem;align-items:center;}
+.why-lead{font-size:1.05rem;color:var(--text-light);max-width:560px;}
+.why-points{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.why-points>div{padding:1.35rem;background:#F8FAFC;border:1px solid #E9EDF2;border-radius:14px;}
+.why-points b{display:block;color:var(--dark);margin-bottom:.35rem;font-family:'Baloo 2',cursive;font-size:1rem;}
+.why-points span{display:block;color:var(--text-light);font-size:.86rem;line-height:1.55;}
+.mobile-lead-bar{display:none;}
+@media(max-width:900px){.journey-grid{grid-template-columns:1fr 1fr}.why-grid{grid-template-columns:1fr;gap:2rem;}}
+@media(max-width:600px){.journey-grid,.why-points{grid-template-columns:1fr}.mobile-lead-bar{position:fixed;left:0;right:0;bottom:0;z-index:998;display:grid;grid-template-columns:1fr 1fr;background:#fff;border-top:1px solid #E5E7EB;box-shadow:0 -8px 28px rgba(16,36,62,.12);padding:max(.55rem,env(safe-area-inset-bottom)) .65rem .55rem;gap:.55rem}.mobile-lead-bar a{display:flex;align-items:center;justify-content:center;padding:.75rem .4rem;border-radius:12px;background:var(--orange);color:#fff;font-weight:800;font-size:.88rem}.mobile-lead-bar a+ a{background:#25D366}.footer{padding-bottom:5rem}.floating-btns{bottom:5.4rem;}}
