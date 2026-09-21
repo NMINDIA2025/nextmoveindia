@@ -39,23 +39,18 @@ function handleFormSubmit(e) {
   e.preventDefault();
   const form = document.getElementById('bookingForm');
   const success = document.getElementById('formSuccess');
-
-  // Get phone for WhatsApp redirect
-  const phone = form.querySelector('input[type=tel]').value || '';
-  const name = form.querySelector('input[type=text]').value || '';
-  const childName = form.querySelectorAll('input[type=text]')[1]?.value || '';
-  const age = form.querySelector('select')?.value || '';
-
-  if (form) form.style.display = 'none';
+  if (!form) return;
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const parentName = document.getElementById('parentName')?.value.trim() || '';
+  const phone = document.getElementById('phoneNumber')?.value.trim() || '';
+  const childName = document.getElementById('childName')?.value.trim() || '';
+  const age = document.getElementById('childAge')?.value || '';
+  const goal = document.getElementById('learningGoal')?.value || 'Not specified';
+  if (typeof gtag === 'function') gtag('event', 'generate_lead', { event_category: 'lead', lead_type: 'free_demo', learning_goal: goal, child_age: age });
+  form.style.display = 'none';
   if (success) success.style.display = 'block';
-
-  // Auto-open WhatsApp after 1 second
-  const msg = encodeURIComponent(
-    `Hi! I just booked a FREE Demo Class on the website.\nParent: ${name}\nChild: ${childName}\nAge: ${age}\nPlease confirm my slot!`
-  );
-  setTimeout(() => {
-    window.open(`https://wa.me/919682420506?text=${msg}`, '_blank');
-  }, 1200);
+  const msg = encodeURIComponent('Hi! I just submitted the NextMove India FREE Demo enquiry.\nParent: ' + parentName + '\nChild: ' + childName + '\nAge: ' + age + '\nGoal: ' + goal + '\nWhatsApp: ' + phone + '\nPlease help me with the next available demo slot.');
+  setTimeout(() => { window.open('https://wa.me/919682420506?text=' + msg, '_blank'); }, 600);
 }
 
 // ===== SCROLL ANIMATIONS =====
@@ -97,3 +92,13 @@ if (navbar) {
     }
   });
 }
+
+
+// ===== LEAD CTA ANALYTICS =====
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a');
+  if (!link || typeof gtag !== 'function') return;
+  const href = link.getAttribute('href') || '';
+  if (href.includes('wa.me')) gtag('event', 'whatsapp_click', { event_category: 'lead', link_text: (link.textContent || '').trim().slice(0,80) });
+  if (href.includes('#demo-form')) gtag('event', 'demo_cta_click', { event_category: 'lead', link_text: (link.textContent || '').trim().slice(0,80) });
+});
