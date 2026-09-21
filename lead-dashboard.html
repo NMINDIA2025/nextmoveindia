@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NextMove India | Lead Dashboard</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--yellow:#ffd21f;--ink:#172033;--muted:#667085;--bg:#f5f7fb;--card:#fff;--line:#e7eaf0;--green:#16834b;--orange:#c96a00;--red:#c0392b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}
+.wrap{max-width:1250px;margin:auto;padding:28px 20px 60px}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+.brand{font-size:25px;font-weight:800}.brand span{display:block;font-size:13px;color:var(--muted);font-weight:500;margin-top:4px}
+.upload{background:var(--yellow);border:0;border-radius:12px;padding:13px 18px;font-weight:800;cursor:pointer}.upload input{display:none}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:24px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}.label{font-size:12px;color:var(--muted);font-weight:700}.num{font-size:30px;font-weight:800;margin-top:8px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;overflow:auto}.bar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:15px}.bar h2{margin:0;font-size:18px}
+input[type=search],select{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+table{width:100%;border-collapse:collapse;min-width:850px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:13px}th{font-size:11px;text-transform:uppercase;color:var(--muted)}
+.status{font-weight:700}.new{color:#1769aa}.contacted{color:var(--orange)}.demo{color:#6842c2}.paid{color:var(--green)}.lost{color:var(--red)}
+.empty{text-align:center;color:var(--muted);padding:45px 10px}.note{margin-top:14px;color:var(--muted);font-size:12px;line-height:1.5}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.cards{grid-template-columns:1fr 1fr}.wrap{padding:20px 12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">NextMove India <span>Lead & Follow-up Dashboard • Private working tool</span></div>
+    <label class="upload">Import Google Sheet CSV <input id="file" type="file" accept=".csv,text/csv"></label>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="label">TOTAL LEADS</div><div class="num" id="total">0</div></div>
+    <div class="card"><div class="label">NEW</div><div class="num" id="new">0</div></div>
+    <div class="card"><div class="label">CONTACTED</div><div class="num" id="contacted">0</div></div>
+    <div class="card"><div class="label">DEMO</div><div class="num" id="demo">0</div></div>
+    <div class="card"><div class="label">PAID</div><div class="num" id="paid">0</div></div>
+  </div>
+  <div class="panel">
+    <div class="bar">
+      <h2>Lead Pipeline</h2>
+      <div><input id="search" type="search" placeholder="Search parent, child, phone..."> <select id="filter"><option>All</option><option>New</option><option>Contacted</option><option>Demo</option><option>Paid</option><option>Lost</option></select></div>
+    </div>
+    <div id="table"><div class="empty">Export your Google Sheet as CSV and import it above.<br>Nothing is uploaded to a server. The file stays in this browser tab.</div></div>
+    <div class="note">This first version is intentionally read-only and does not expose your Google Sheet credentials. The next stage can connect the dashboard directly to your lead sheet and automate follow-ups.</div>
+  </div>
+</div>
+<script>
+let rows=[];
+const clean=s=>String(s??'').trim();
+function parseCSV(t){let a=[],r=[],v='',q=false;for(let i=0;i<t.length;i++){let c=t[i],n=t[i+1];if(c==='"'&&q&&n==='"'){v+='"';i++;continue}if(c==='"'){q=!q;continue}if(c===','&&!q){r.push(v);v='';continue}if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&n==='\n')i++;r.push(v);v='';if(r.some(x=>clean(x)))a.push(r);r=[];continue}v+=c}if(v||r.length){r.push(v);if(r.some(x=>clean(x)))a.push(r)}return a}
+function key(row,names){for(const n of names){let k=Object.keys(row).find(x=>clean(x).toLowerCase()===n||clean(x).toLowerCase().includes(n));if(k)return row[k]}return ''}
+function render(){
+ const s=clean(document.getElementById('search').value).toLowerCase(), f=document.getElementById('filter').value.toLowerCase();
+ const shown=rows.filter(x=>{let hay=Object.values(x).join(' ').toLowerCase();let st=key(x,['status','lead status']).toLowerCase();return(!s||hay.includes(s))&&(f==='all'||st===f)});
+ const counts={new:0,contacted:0,demo:0,paid:0};rows.forEach(x=>{let st=key(x,['status','lead status']).toLowerCase();if(counts[st]!==undefined)counts[st]++});
+ document.getElementById('total').textContent=rows.length;Object.keys(counts).forEach(k=>document.getElementById(k).textContent=counts[k]);
+ if(!shown.length){document.getElementById('table').innerHTML='<div class="empty">No matching leads.</div>';return}
+ const headers=Object.keys(shown[0]);const pick=(x,n)=>clean(key(x,n));
+ document.getElementById('table').innerHTML='<table><thead><tr>'+headers.slice(0,7).map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+shown.map(x=>'<tr>'+headers.slice(0,7).map(h=>'<td>'+clean(x[h]).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+}
+document.getElementById('file').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const a=parseCSV(rd.result);if(a.length<2)return;const h=a[0].map(clean);rows=a.slice(1).map(r=>Object.fromEntries(h.map((x,i)=>[x,r[i]||''])));render()};rd.readAsText(f)});
+document.getElementById('search').addEventListener('input',render);document.getElementById('filter').addEventListener('change',render);
+</script>
+</body>
+</html>
