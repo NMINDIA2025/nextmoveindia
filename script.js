@@ -37,20 +37,67 @@ function toggleFaq(btn) {
 // ===== FORM SUBMIT =====
 function handleFormSubmit(e) {
   e.preventDefault();
+
   const form = document.getElementById('bookingForm');
   const success = document.getElementById('formSuccess');
+
   if (!form) return;
-  if (!form.checkValidity()) { form.reportValidity(); return; }
+
+  // Validate required fields.
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
   const parentName = document.getElementById('parentName')?.value.trim() || '';
   const phone = document.getElementById('phoneNumber')?.value.trim() || '';
   const childName = document.getElementById('childName')?.value.trim() || '';
   const age = document.getElementById('childAge')?.value || '';
+  const city = document.getElementById('cityName')?.value.trim() || '';
   const goal = document.getElementById('learningGoal')?.value || 'Not specified';
-  if (typeof gtag === 'function') gtag('event', 'generate_lead', { event_category: 'lead', lead_type: 'free_demo', learning_goal: goal, child_age: age });
+
+  if (typeof gtag === 'function') {
+    gtag('event', 'generate_lead', {
+      event_category: 'lead',
+      lead_type: 'free_demo',
+      learning_goal: goal,
+      child_age: age,
+      city: city
+    });
+  }
+
+  // Send the lead to the EXISTING Next Move India Apps Script.
+  // no-cors is intentional because the site is hosted separately.
+  const formData = new FormData(form);
+  formData.append('formType', 'demo');
+
+  fetch('https://script.google.com/macros/s/AKfycbx7l_O_wTLCANdUHs3bbd0p_ChBSFQY64PQYDX64fDA3U49ubzlvMDyEYtirORBzpGb7g/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    body: formData
+  }).catch(function(err) {
+    console.error('Lead capture failed:', err);
+  });
+
+  // Show confirmation.
   form.style.display = 'none';
   if (success) success.style.display = 'block';
-  const msg = encodeURIComponent('Hi! I just submitted the NextMove India FREE Demo enquiry.\nParent: ' + parentName + '\nChild: ' + childName + '\nAge: ' + age + '\nGoal: ' + goal + '\nWhatsApp: ' + phone + '\nPlease help me with the next available demo slot.');
-  setTimeout(() => { window.open('https://wa.me/919682420506?text=' + msg, '_blank'); }, 600);
+
+  // Open WhatsApp with the submitted details.
+  const msg = encodeURIComponent(
+    'Hi! I just submitted the NextMove India FREE Demo enquiry.\n' +
+    'Parent: ' + parentName + '\n' +
+    'Child: ' + childName + '\n' +
+    'Age: ' + age + '\n' +
+    'Goal: ' + goal + '\n' +
+    'WhatsApp: ' + phone + '\n' +
+    'Please help me with the next available demo slot.'
+  );
+
+  const waUrl = 'https://wa.me/919682420506?text=' + msg;
+
+  // Open immediately so browser popup blockers are less likely to interfere.
+  window.open(waUrl, '_blank', 'noopener,noreferrer');
 }
 
 // ===== SCROLL ANIMATIONS =====
