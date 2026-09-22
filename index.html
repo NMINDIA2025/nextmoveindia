@@ -1392,43 +1392,7 @@
       if (arrow) arrow.textContent = isOpen ? '▲' : '▼';
     }
 
-    // ---- Form Submit — GA4 Event Tracking + Google Sheet Lead Capture ----
-    function handleFormSubmit(e) {
-      e.preventDefault();
-      const form = document.getElementById('bookingForm');
-      const success = document.getElementById('formSuccess');
-      const childAge = document.getElementById('childAge').value;
-      const cityName = document.getElementById('cityName').value;
-
-      // Fire GA4 conversion event
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'demo_class_booked', {
-          'event_category': 'Lead Generation',
-          'event_label': 'Homepage Demo Form',
-          'child_age': childAge,
-          'city': cityName,
-          'value': 1
-        });
-      }
-
-      // Send lead data to Google Sheet via Apps Script Web App
-      const formData = new FormData(form);
-      formData.append('formType', 'demo');
-      fetch("https://script.google.com/macros/s/AKfycbx7l_O_wTLCANdUHs3bbd0p_ChBSFQY64PQYDX64fDA3U49ubzlvMDyEYtirORBzpGb7g/exec", {
-        method: "POST",
-        mode: "no-cors",
-        body: formData
-      }).catch(function(err) {
-        console.error("Lead capture failed:", err);
-      });
-
-      if (form && success) {
-        form.style.display = 'none';
-        success.style.display = 'block';
-        success.focus();
-        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
+    // Demo form submission is handled by script.js. Keeping one handler prevents duplicate/conflicting submissions.
 
     // ---- Child Counseling: Accordion Toggle ----
     function toggleCounselingDetails(btn) {
