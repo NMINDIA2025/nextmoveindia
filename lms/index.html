@@ -123,21 +123,23 @@ function togglePasteLeads(){
   const box=document.getElementById('pasteLeadBox');
   if(box) box.style.display=box.style.display==='none'?'block':'none';
 }
-async function readSheetClipboard(){
+async function pasteClipboardData(){
   const box=document.getElementById('leadPaste'), status=document.getElementById('pasteReadStatus');
   try{
-    if(!navigator.clipboard || !navigator.clipboard.readText) throw new Error('Clipboard access is not available in this browser');
+    if(!navigator.clipboard || !navigator.clipboard.readText) throw new Error('Clipboard access is not available. Use Ctrl+V in the box below.');
     const text=await navigator.clipboard.readText();
-    if(!text.trim()) throw new Error('Clipboard is empty. Copy the rows from Google Sheets first.');
+    if(!text.trim()) throw new Error('Clipboard is empty. First copy your rows from Google Sheets.');
     box.value=text;
     const rows=text.replace(/\r/g,'').split('\n').filter(x=>x.trim()!=='');
-    status.textContent='✓ Clipboard read: '+rows.length+' row(s). Ready to import.';
-    toast('Google Sheet data read successfully');
+    status.textContent='✓ Clipboard data pasted: '+rows.length+' row(s). Now click Import Pasted Leads.';
+    toast('Clipboard data pasted');
   }catch(e){
-    status.textContent='Clipboard could not be read automatically. Use Ctrl+V inside the box instead.';
-    toast(e.message||'Could not read clipboard');
+    status.textContent='Click inside the box below and press Ctrl+V to paste your Google Sheet data.';
+    toast(e.message||'Could not access clipboard');
+    box.focus();
   }
 }
+
 function captureSheetPaste(e){
   const text=e.clipboardData?.getData('text/plain')||'';
   if(text){
@@ -326,7 +328,7 @@ function adminScreens(){return `
   <div style="font-weight:700;margin-bottom:6px">Paste your Google Sheet rows</div>
   <div class="sub" style="margin-bottom:8px">In Google Sheets, select your header + lead rows, press Ctrl+C, then paste here. No CSV download needed.</div>
   <textarea id="leadPaste" onpaste="captureSheetPaste(event)" rows="7" placeholder="Copy from Google Sheets, then press Ctrl+V here" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #dfe5ee;border-radius:12px;font:inherit;resize:vertical"></textarea>
-  <div class="quick" style="margin-top:8px"><button class="btn primary" onclick="readSheetClipboard()">📥 Read Clipboard</button><button class="btn primary" onclick="importPastedLeads()">Import Pasted Leads</button><button class="btn ghost" onclick="togglePasteLeads()">Close</button></div>
+  <div class="quick" style="margin-top:8px"><button class="btn primary" onclick="pasteClipboardData()">📋 Paste Clipboard Data</button><button class="btn primary" onclick="importPastedLeads()">Import Pasted Leads</button><button class="btn ghost" onclick="togglePasteLeads()">Close</button></div>
   <div id="pasteReadStatus" class="sub" style="margin-top:8px"></div>
 </div>
 <table class="table"><thead><tr><th>Parent</th><th>Child</th><th>Course</th><th>Status</th><th>Demo</th><th>Action</th></tr></thead><tbody id="leadRows"><tr><td colspan="6" style="text-align:center;color:#8793a5">Loading live leads…</td></tr></tbody></table><div class="sub" style="margin-top:10px">Tip: In Google Sheets use <b>File → Download → Comma-separated values (.csv)</b>, then import it here. Existing LMS records are kept.</div></div></section>
