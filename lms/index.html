@@ -17,7 +17,7 @@
   <div class="brand"><div class="logo">N</div><div><b>Next Move India</b><span>LMS • School OS</span></div></div>
   <div class="role">Workspace</div>
   <div class="nav" id="sideNav"></div>
-  <div class="bottom"><button class="switch" onclick="supabaseClient.auth.signOut()">⇄ Switch workspace</button></div>
+  <div class="bottom"><button class="switch" onclick="supabaseClient.auth.signOut()">↪ Sign out</button></div>
 </aside>
 <main class="main">
   <div class="top"><div><div class="eyebrow">NEXT MOVE INDIA • SCHOOL OS</div><div class="title" id="title">Admin Dashboard</div><div class="sub" id="subtitle">Run your school from one clean workspace.</div></div><div class="top-right"><div class="workspace-switch"><button id="rAdmin" class="active" onclick="setRole('admin')">Admin</button><button id="rTeacher" onclick="setRole('teacher')">Teacher</button><button id="rStudent" onclick="setRole('student')">Student</button></div><button class="icon-btn" onclick="toast('Notifications are ready for the live data layer')">🔔</button><div class="avatar" id="user">👤 Admin</div></div></div>
@@ -43,28 +43,109 @@ teacher:{title:'Teacher Dashboard',sub:'Everything you need for today’s teachi
 student:{title:'Student Dashboard',sub:'Learn, practise, play and collect achievements.',icon:'★',nav:[
 ['studentHome','Home'],['mycourse','My Course'],['practice','Practice & Games'],['schedule','My Schedule'],['achievements','Achievements'],['certificates','Certificates']]
 }};
-let role='admin',current='dashboard';
+let role='admin',current='dashboard',authRole='student',currentUser=null;
+
+function escapeHtml(v){
+  return String(v ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+function formatDate(v){
+  if(!v) return 'Not set';
+  const d=new Date(v); if(Number.isNaN(d.getTime())) return escapeHtml(v);
+  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+}
+async function safeCount(table, filter){
+  let q=supabaseClient.from(table).select('*',{count:'exact',head:true});
+  if(filter) q=q.eq(filter[0],filter[1]);
+  const {count,error}=await q;
+  if(error) return null;
+  return count ?? 0;
+}
+async function loadAdminData(){
+  if(authRole!=='admin') return;
+  const [leads,students,teachers,payments,demos,followups]=await Promise.all([
+    safeCount('leads'),
+    safeCount('students'),
+    safeCount('teachers'),
+    safeCount('payments',['status','pending']),
+    safeCount('leads',['status','demo_scheduled']),
+    safeCount('leads',['status','follow_up'])
+  ]);
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v===null?'—':v};
+  set('metricLeads',leads); set('metricStudents',students); set('metricPayments',payments);
+  set('metricDemos',demos); set('metricFollowups',followups);
+  const ps=document.getElementById('metricPaymentsSub'); if(ps&&payments!==null) ps.textContent='Pending records';
+  const ds=document.getElementById('metricDemosSub'); if(ds&&demos!==null) ds.textContent='Scheduled demos';
+
+  const {data:leadData,error:leadError}=await supabaseClient.from('leads').select('*').order('created_at',{ascending:false}).limit(12);
+  const leadRows=document.getElementById('leadRows');
+  if(leadRows){
+    if(leadError){leadRows.innerHTML='<tr><td colspan="6">Could not load leads.</td></tr>'}
+    else if(!leadData?.length){leadRows.innerHTML='<tr><td colspan="6" style="text-align:center;color:#8793a5">No leads yet.</td></tr>'}
+    else leadRows.innerHTML=leadData.map(x=>{
+      const parent=x.parent_name||x.parentName||x.name||'—';
+      const child=x.child_name||x.childName||'—';
+      const age=x.child_age||x.childAge||'';
+      const course=x.course_name||x.course||x.interested_course||'—';
+      const status=x.status||'new';
+      const cls=String(status).toLowerCase().includes('pending')?'warning':String(status).toLowerCase().includes('scheduled')?'':'blue';
+      return '<tr><td>'+escapeHtml(parent)+'</td><td>'+escapeHtml(child+(age?' • '+age:''))+'</td><td>'+escapeHtml(course)+'</td><td><span class="pill '+cls+'">'+escapeHtml(status.replaceAll('_',' '))+'</span></td><td>'+formatDate(x.demo_date||x.demoDate)+'</td><td>View</td></tr>';
+    }).join('');
+  }
+
+  const {data:studentData,error:studentError}=await supabaseClient.from('students').select('*').order('created_at',{ascending:false}).limit(20);
+  const studentRows=document.getElementById('studentRows');
+  if(studentRows){
+    if(studentError){studentRows.innerHTML='<tr><td colspan="5">Could not load students.</td></tr>'}
+    else if(!studentData?.length){studentRows.innerHTML='<tr><td colspan="5" style="text-align:center;color:#8793a5">No students yet.</td></tr>'}
+    else studentRows.innerHTML=studentData.map(x=>{
+      const name=x.full_name||x.name||x.student_name||'—';
+      const course=x.course_name||x.course||'—';
+      const progress=x.progress_percent!=null?x.progress_percent+'%':'—';
+      const status=x.status||'active';
+      return '<tr><td>'+escapeHtml(name)+'</td><td>'+escapeHtml(course)+'</td><td>—</td><td>'+escapeHtml(progress)+'</td><td><span class="pill">'+escapeHtml(status)+'</span></td></tr>';
+    }).join('');
+  }
+
+  const {data:teacherData,error:teacherError}=await supabaseClient.from('teachers').select('*').order('created_at',{ascending:false}).limit(20);
+  const teacherRows=document.getElementById('teacherRows');
+  if(teacherRows){
+    if(teacherError){teacherRows.innerHTML='<tr><td colspan="3">Could not load teachers.</td></tr>'}
+    else if(!teacherData?.length){teacherRows.innerHTML='<tr><td colspan="3" style="text-align:center;color:#8793a5">No teachers yet.</td></tr>'}
+    else teacherRows.innerHTML=teacherData.map(x=>{
+      const name=x.full_name||x.name||x.teacher_name||'—';
+      const email=x.email||'—';
+      const status=x.status||'active';
+      return '<tr><td>'+escapeHtml(name)+'</td><td>'+escapeHtml(email)+'</td><td><span class="pill">'+escapeHtml(status)+'</span></td></tr>';
+    }).join('');
+  }
+}
 function navFor(r){return data[r].nav}
 function renderNav(){const items=navFor(role);document.getElementById('sideNav').innerHTML=items.map(x=>'<button class="'+(x[0]===current?'active':'')+'" onclick="go(\''+x[0]+'\')">'+data[role].icon+' &nbsp; '+x[1]+'</button>').join('');document.getElementById('mobileNav').innerHTML=items.slice(0,5).map(x=>'<button class="'+(x[0]===current?'active':'')+'" onclick="go(\''+x[0]+'\')">'+x[1]+'</button>').join('')}
 function go(id){current=id;renderNav();document.querySelectorAll('.screen').forEach(x=>x.style.display=x.id===id?'block':'none');const item=navFor(role).find(x=>x[0]===id);document.getElementById('title').textContent=item?item[1]:data[role].title;document.getElementById('subtitle').textContent=data[role].sub}
-function setRole(r){role=r;current=data[r].nav[0][0];document.getElementById('user').textContent=r==='admin'?'👤 Admin':r==='teacher'?'👩‍🏫 Teacher':'🎓 Student';['Admin','Teacher','Student'].forEach(x=>{const b=document.getElementById('r'+x);if(b)b.classList.toggle('active',x.toLowerCase()===r)});build();go(current)}
+function setRole(r){
+  if(authRole!=='admin' && r!==authRole) return;
+  role=r; current=data[r].nav[0][0];
+  ['Admin','Teacher','Student'].forEach(x=>{const b=document.getElementById('r'+x);if(b)b.style.display=(authRole==='admin'||x.toLowerCase()===authRole)?'block':'none';if(b)b.classList.toggle('active',x.toLowerCase()===r)});
+  build(); go(current);
+  if(r==='admin') setTimeout(loadAdminData,50);
+}
 function toast(s){const t=document.getElementById('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
 function build(){
 let html='';
 if(role==='admin')html=adminScreens();
 if(role==='teacher')html=teacherScreens();
 if(role==='student')html=studentScreens();
-document.getElementById('views').innerHTML=html;renderNav();go(current)
+document.getElementById('views').innerHTML=html;renderNav();go(current);if(role==='admin')setTimeout(loadAdminData,50)
 }
 function adminScreens(){return `
 <section id="dashboard" class="screen">
 <div class="hero"><div><h2>Good morning 👋</h2><p>Your leads, teachers, classes and students are ready for action.</p></div><button class="btn primary" onclick="go('leads')">Open Lead Center</button></div>
 <div class="grid stats">
-<div class="card metric"><div class="label">NEW LEADS</div><div class="num">12</div><div class="trend">Today</div></div>
-<div class="card metric"><div class="label">DEMOS TODAY</div><div class="num">4</div><div class="trend">2 need confirmation</div></div>
-<div class="card metric"><div class="label">FOLLOW-UPS</div><div class="num">7</div><div class="trend">Action required</div></div>
-<div class="card metric"><div class="label">ACTIVE STUDENTS</div><div class="num">18</div><div class="trend">+3 this month</div></div>
-<div class="card metric"><div class="label">PAYMENTS PENDING</div><div class="num">3</div><div class="trend">₹19,497</div></div></div>
+<div class="card metric"><div class="label">NEW LEADS</div><div class="num" id="metricLeads">—</div><div class="trend">Live from LMS</div></div>
+<div class="card metric"><div class="label">DEMOS TODAY</div><div class="num" id="metricDemos">—</div><div class="trend" id="metricDemosSub">Live from leads</div></div>
+<div class="card metric"><div class="label">FOLLOW-UPS</div><div class="num" id="metricFollowups">—</div><div class="trend">Live from leads</div></div>
+<div class="card metric"><div class="label">ACTIVE STUDENTS</div><div class="num" id="metricStudents">—</div><div class="trend">Live from LMS</div></div>
+<div class="card metric"><div class="label">PAYMENTS PENDING</div><div class="num" id="metricPayments">—</div><div class="trend" id="metricPaymentsSub">Live from LMS</div></div></div>
 <div class="grid two"><div class="card"><div class="section"><h3>Today’s Classes</h3><button class="btn primary" onclick="go('classes')">View all</button></div>
 <div class="class"><b class="time">10:00</b><div class="grow"><b>Smart Speakers Story World</b><span>Tripti • 6 students</span></div><span class="pill">Upcoming</span></div>
 <div class="class"><b class="time">17:00</b><div class="grow"><b>Young Leaders Public Speaking</b><span>NMI Team • 5 students</span></div><span class="pill">Upcoming</span></div>
@@ -73,17 +154,9 @@ function adminScreens(){return `
 <div class="class">☎️<div class="grow"><b>Call new parents</b><span>4 enquiries waiting</span></div></div>
 <div class="class">✓<div class="grow"><b>Confirm demos</b><span>2 parents</span></div></div>
 <div class="class">₹<div class="grow"><b>Payment follow-up</b><span>3 pending</span></div></div></div></div></section>
-<section id="leads" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Lead Command Center</h3><span class="sub">From enquiry to enrollment</span></div><button class="btn primary" onclick="toast('New lead form will connect to your live lead source')">+ New Lead</button></div><table class="table"><thead><tr><th>Parent</th><th>Child</th><th>Course</th><th>Status</th><th>Demo</th><th>Action</th></tr></thead><tbody>
-<tr><td>Ramprasad Rao</td><td>Dhuythi • 12</td><td>Public Speaking</td><td><span class="pill blue">New</span></td><td>Not set</td><td>Call</td></tr>
-<tr><td>P. J. Pahnavani</td><td>Khyathi • 7</td><td>Smart Speakers</td><td><span class="pill blue">New</span></td><td>Not set</td><td>Call</td></tr>
-<tr><td>Ankita Yadav</td><td>Anvika • 10</td><td>Young Leaders</td><td><span class="pill warning">Contacted</span></td><td>Tomorrow</td><td>Confirm</td></tr>
-<tr><td>Sonam Yadav</td><td>Anvika • 10</td><td>Young Leaders</td><td><span class="pill">Demo Scheduled</span></td><td>Today</td><td>Confirm</td></tr>
-</tbody></table></div></section>
-<section id="teachers" class="screen"><div class="grid tiles">
-<div class="tile"><h3>👩‍🏫 Tripti Shukla</h3><p class="sub">Online Tutor • Active</p><div class="big">6</div><span class="sub">assigned students</span></div>
-<div class="tile"><h3>🎤 Public Speaking Team</h3><p class="sub">Active teaching pool</p><div class="big">8</div><span class="sub">assigned students</span></div>
-<div class="tile"><h3>📅 Demo Pool</h3><p class="sub">Ready for new assignments</p><div class="big">4</div><span class="sub">demos this week</span></div></div></section>
-<section id="students" class="screen"><div class="card tablewrap"><div class="section"><h3>Students</h3><button class="btn primary" onclick="toast('Student onboarding will be connected here')">+ Add Student</button></div><table class="table"><thead><tr><th>Student</th><th>Course</th><th>Teacher</th><th>Progress</th><th>Status</th></tr></thead><tbody><tr><td>Aadya</td><td>Smart Speakers</td><td>Tripti</td><td>72%</td><td><span class="pill">Active</span></td></tr><tr><td>Sree</td><td>Young Leaders</td><td>NMI Team</td><td>54%</td><td><span class="pill">Active</span></td></tr><tr><td>Dhuythi</td><td>Public Speaking</td><td>NMI Team</td><td>38%</td><td><span class="pill blue">New</span></td></tr></tbody></table></div></section>
+<section id="leads" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Lead Command Center</h3><span class="sub">From enquiry to enrollment</span></div><button class="btn primary" onclick="toast('New lead form will connect to your live lead source')">+ New Lead</button></div><table class="table"><thead><tr><th>Parent</th><th>Child</th><th>Course</th><th>Status</th><th>Demo</th><th>Action</th></tr></thead><tbody id="leadRows"><tr><td colspan="6" style="text-align:center;color:#8793a5">Loading live leads…</td></tr></tbody></table></div></section>
+<section id="teachers" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Teachers</h3><span class="sub">Live teacher records</span></div><button class="btn primary" onclick="toast('Teacher onboarding will be connected here')">+ Add Teacher</button></div><table class="table"><thead><tr><th>Teacher</th><th>Email</th><th>Status</th></tr></thead><tbody id="teacherRows"><tr><td colspan="3" style="text-align:center;color:#8793a5">Loading live teachers…</td></tr></tbody></table></div></section>
+<section id="students" class="screen"><div class="card tablewrap"><div class="section"><h3>Students</h3><button class="btn primary" onclick="toast('Student onboarding will be connected here')">+ Add Student</button></div><table class="table"><thead><tr><th>Student</th><th>Course</th><th>Teacher</th><th>Progress</th><th>Status</th></tr></thead><tbody id="studentRows"><tr><td colspan="5" style="text-align:center;color:#8793a5">Loading live students…</td></tr></tbody></table></div></section>
 <section id="classes" class="screen"><div class="grid two"><div class="card"><div class="section"><h3>Class Schedule</h3><button class="btn primary" onclick="toast('Class creation will be connected here')">+ Class</button></div><div class="class"><b class="time">10:00</b><div class="grow"><b>Smart Speakers Story World</b><span>Tripti • 6 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div><div class="class"><b class="time">17:00</b><div class="grow"><b>Young Leaders</b><span>NMI Team • 5 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div></div><div class="card"><h3>Class Workspace</h3><p class="sub">Each class will hold its Google Meet, materials, attendance, notes and progress.</p><div class="quick"><button class="btn" onclick="toast('Meet integration')">Meet</button><button class="btn" onclick="toast('Materials')">Materials</button><button class="btn" onclick="toast('Attendance')">Attendance</button></div></div></div></section>
 <section id="payments" class="screen"><div class="card tablewrap"><div class="section"><h3>Payments & Enrollments</h3><span class="pill warning">3 pending</span></div><table class="table"><thead><tr><th>Parent</th><th>Student</th><th>Course</th><th>Amount</th><th>Status</th></tr></thead><tbody><tr><td>Parent A</td><td>Aadya</td><td>Smart Speakers</td><td>₹9,499</td><td><span class="pill warning">Pending</span></td></tr><tr><td>Parent B</td><td>Sree</td><td>Young Leaders</td><td>₹9,999</td><td><span class="pill">Paid</span></td></tr></tbody></table></div></section>
 <section id="materials" class="screen"><div class="grid tiles"><div class="tile"><h3>📚 Course Materials</h3><p class="sub">PPTs, worksheets and activities</p><button class="btn primary" onclick="toast('Materials library')">Open Library</button></div><div class="tile"><h3>🎤 Speaking Activities</h3><p class="sub">Voice, phonics and public speaking</p><button class="btn primary" onclick="toast('Activity library')">Open</button></div><div class="tile"><h3>🎮 Practice Games</h3><p class="sub">Student-ready interactive practice</p><button class="btn primary" onclick="toast('Games library')">Open</button></div></div></section>
@@ -118,8 +191,25 @@ build();
 </div></div>
 <script>
 async function loginLMS(){const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,msg=document.getElementById('authMsg');msg.textContent='Signing in...';const {error}=await supabaseClient.auth.signInWithPassword({email,password});msg.textContent=error?error.message:'';}
-async function signupLMS(){const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,msg=document.getElementById('authMsg');if(!email||password.length<6){msg.textContent='Enter an email and a password of at least 6 characters.';return;}msg.textContent='Creating account...';const {data,error}=await supabaseClient.auth.signUp({email,password});if(error){msg.textContent=error.message;return;}if(data.user){await supabaseClient.from('profiles').upsert({id:data.user.id,full_name:email.split('@')[0],role:'student'});}msg.textContent='Account created. Check your email if confirmation is enabled, then sign in.';}
-async function loadLMSUser(){const {data:{session}}=await supabaseClient.auth.getSession();if(!session){document.getElementById('authGate').style.display='flex';return;}document.getElementById('authGate').style.display='none';const {data:profile}=await supabaseClient.from('profiles').select('full_name,role').eq('id',session.user.id).maybeSingle();const r=profile&&profile.role?profile.role:'student';setRole(r);document.getElementById('user').textContent='👤 '+(profile&&profile.full_name?profile.full_name:session.user.email);}
+async function signupLMS(){
+  const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,msg=document.getElementById('authMsg');
+  if(!email||password.length<6){msg.textContent='Enter an email and a password of at least 6 characters.';return;}
+  msg.textContent='Creating account...';
+  const {data,error}=await supabaseClient.auth.signUp({email,password});
+  if(error){msg.textContent=error.message;return;}
+  msg.textContent=data.session?'Account created. You are signed in.':'Account created. Check your email if confirmation is enabled, then sign in.';
+}
+async function loadLMSUser(){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session){document.getElementById('authGate').style.display='flex';return;}
+  document.getElementById('authGate').style.display='none';
+  currentUser=session.user;
+  const {data:profile}=await supabaseClient.from('profiles').select('full_name,role').eq('id',session.user.id).maybeSingle();
+  authRole=profile&&profile.role?profile.role:'student';
+  role=authRole;
+  document.getElementById('user').textContent='👤 '+(profile&&profile.full_name?profile.full_name:session.user.email);
+  setRole(authRole);
+}
 supabaseClient.auth.onAuthStateChange((_event,session)=>{if(session)loadLMSUser();else document.getElementById('authGate').style.display='flex';});loadLMSUser();
 </script>
 </body>
