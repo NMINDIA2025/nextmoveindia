@@ -124,12 +124,18 @@ function togglePasteLeads(){
   if(box) box.style.display=box.style.display==='none'?'block':'none';
 }
 function sheetRowsToObjects(text){
-  const lines=String(text||'').replace(/\r/g,'').split('\n').filter(x=>x.trim()!=='');
-  if(lines.length<2) return [];
-  const splitLine=line=>line.split('\t');
-  const headers=splitLine(lines[0]).map(x=>x.trim());
-  return lines.slice(1).map(line=>{
-    const vals=splitLine(line);
+  text=String(text||'').replace(/\r/g,'').replace(/^\uFEFF/,'');
+  const lines=text.split('\n').filter(x=>x.trim()!=='');
+  if(!lines.length)return [];
+  const split=line=>line.includes('\t')?line.split('\t'):line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+  let headers=split(lines[0]).map(x=>x.trim().replace(/^"|"$/g,''));
+  const known=headers.map(normHeader);
+  const looksLikeHeader=known.some(x=>['timestamp','parentname','phone','childname','childage','city','status','assignedteacher','demodate'].includes(x));
+  if(!looksLikeHeader){
+    headers=['Timestamp','Parent Name','Phone','Child Name','Child Age','City','Status','Assigned Teacher','Demo Date','Notes'];
+  }
+  return (looksLikeHeader?lines.slice(1):lines).map(line=>{
+    const vals=split(line).map(x=>x.trim().replace(/^"|"$/g,''));
     return Object.fromEntries(headers.map((h,i)=>[h,vals[i]||'']));
   });
 }
@@ -153,7 +159,13 @@ async function importPastedLeads(){
       created_at:timestamp||new Date().toISOString()
     };
   }).filter(x=>x.parent_name||x.phone||x.child_name);
-  if(!payload.length){toast('No usable lead rows found');return}
+  if(!payload.length){
+    const raw=document.getElementById('leadPaste')?.value||'';
+    const sample=raw.split(/\n/).slice(0,2).join(' | ');
+    toast('I could not read the pasted columns. Please paste directly from Google Sheets, including Parent Name and Phone.');
+    console.log('Paste preview:',sample);
+    return;
+  }
   const {data:existing,error:existingError}=await supabaseClient.from('leads').select('phone,created_at').limit(5000);
   if(existingError){toast('Could not check existing leads: '+existingError.message);return}
   const keys=new Set((existing||[]).map(x=>String(x.phone||'')+'|'+String(x.created_at||'')));
