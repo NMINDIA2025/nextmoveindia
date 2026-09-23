@@ -17,7 +17,7 @@
   <div class="brand"><div class="logo">N</div><div><b>Next Move India</b><span>LMS • School OS</span></div></div>
   <div class="role">Workspace</div>
   <div class="nav" id="sideNav"></div>
-  <div class="bottom"><button class="switch" onclick="toast('Role switching will be connected to secure login')">⇄ Switch workspace</button></div>
+  <div class="bottom"><button class="switch" onclick="supabaseClient.auth.signOut()">⇄ Switch workspace</button></div>
 </aside>
 <main class="main">
   <div class="top"><div><div class="eyebrow">NEXT MOVE INDIA • SCHOOL OS</div><div class="title" id="title">Admin Dashboard</div><div class="sub" id="subtitle">Run your school from one clean workspace.</div></div><div class="top-right"><div class="workspace-switch"><button id="rAdmin" class="active" onclick="setRole('admin')">Admin</button><button id="rTeacher" onclick="setRole('teacher')">Teacher</button><button id="rStudent" onclick="setRole('student')">Student</button></div><button class="icon-btn" onclick="toast('Notifications are ready for the live data layer')">🔔</button><div class="avatar" id="user">👤 Admin</div></div></div>
@@ -26,6 +26,12 @@
 </div>
 <div class="mobilebar" id="mobileNav"></div>
 <div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://wbzxhplvygkitsujupex.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_dZ_vHKB9VIJDrh-WgXyZjQ_wwgMKoNL';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+</script>
 <script>
 const data={
 admin:{title:'Admin Dashboard',sub:'Run your school from one clean workspace.',icon:'⌂',nav:[
@@ -97,6 +103,24 @@ function studentScreens(){return `
 <section id="achievements" class="screen"><div class="grid tiles"><div class="tile"><h3>🏅 Brave Speaker</h3><p class="sub">Completed 5 speaking tasks.</p></div><div class="tile"><h3>⭐ Practice Star</h3><p class="sub">Practised 7 days.</p></div><div class="tile"><h3>🔥 Super Learner</h3><p class="sub">Completed 10 lessons.</p></div></div></section>
 <section id="certificates" class="screen"><div class="card"><h3>Certificates</h3><p class="sub">Your earned certificates will appear here.</p><button class="btn primary" onclick="toast('Certificate area ready')">View Certificates</button></div></section>`;}
 build();
+</script>
+<div id="authGate" style="position:fixed;inset:0;background:rgba(7,16,30,.88);backdrop-filter:blur(12px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px">
+<div style="width:min(420px,100%);background:#fff;border-radius:24px;padding:28px;box-shadow:0 30px 90px #0006">
+<div style="font-size:12px;font-weight:900;letter-spacing:.12em;color:#7658ff">NEXT MOVE INDIA LMS</div>
+<h2 style="margin:7px 0 5px;font-size:25px">Welcome back 👋</h2>
+<p style="margin:0 0 20px;color:#7b8799;font-size:13px">Sign in to your secure school workspace.</p>
+<input id="authEmail" type="email" placeholder="Email address" style="width:100%;padding:12px;border:1px solid #e3e8f0;border-radius:11px;margin-bottom:9px;font:inherit">
+<input id="authPassword" type="password" placeholder="Password" style="width:100%;padding:12px;border:1px solid #e3e8f0;border-radius:11px;margin-bottom:12px;font:inherit">
+<button class="btn primary" style="width:100%" onclick="loginLMS()">Sign in</button>
+<button class="btn ghost" style="width:100%;margin-top:8px" onclick="signupLMS()">Create account</button>
+<div id="authMsg" style="font-size:12px;color:#d04a4a;margin-top:12px;min-height:18px"></div>
+<div style="font-size:10px;color:#9aa5b5;margin-top:12px">Your password is handled by Supabase Authentication.</div>
+</div></div>
+<script>
+async function loginLMS(){const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,msg=document.getElementById('authMsg');msg.textContent='Signing in...';const {error}=await supabaseClient.auth.signInWithPassword({email,password});msg.textContent=error?error.message:'';}
+async function signupLMS(){const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,msg=document.getElementById('authMsg');if(!email||password.length<6){msg.textContent='Enter an email and a password of at least 6 characters.';return;}msg.textContent='Creating account...';const {data,error}=await supabaseClient.auth.signUp({email,password});if(error){msg.textContent=error.message;return;}if(data.user){await supabaseClient.from('profiles').upsert({id:data.user.id,full_name:email.split('@')[0],role:'student'});}msg.textContent='Account created. Check your email if confirmation is enabled, then sign in.';}
+async function loadLMSUser(){const {data:{session}}=await supabaseClient.auth.getSession();if(!session){document.getElementById('authGate').style.display='flex';return;}document.getElementById('authGate').style.display='none';const {data:profile}=await supabaseClient.from('profiles').select('full_name,role').eq('id',session.user.id).maybeSingle();const r=profile&&profile.role?profile.role:'student';setRole(r);document.getElementById('user').textContent='👤 '+(profile&&profile.full_name?profile.full_name:session.user.email);}
+supabaseClient.auth.onAuthStateChange((_event,session)=>{if(session)loadLMSUser();else document.getElementById('authGate').style.display='flex';});loadLMSUser();
 </script>
 </body>
 </html>
