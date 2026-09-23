@@ -119,6 +119,57 @@ async function loadAdminData(){
     }).join('');
   }
 }
+function togglePasteLeads(){
+  const box=document.getElementById('pasteLeadBox');
+  if(box) box.style.display=box.style.display==='none'?'block':'none';
+}
+function sheetRowsToObjects(text){
+  const lines=String(text||'').replace(/\r/g,'').split('\n').filter(x=>x.trim()!=='');
+  if(lines.length<2) return [];
+  const splitLine=line=>line.split('\t');
+  const headers=splitLine(lines[0]).map(x=>x.trim());
+  return lines.slice(1).map(line=>{
+    const vals=splitLine(line);
+    return Object.fromEntries(headers.map((h,i)=>[h,vals[i]||'']));
+  });
+}
+async function importPastedLeads(){
+  const text=document.getElementById('leadPaste')?.value||'';
+  const records=sheetRowsToObjects(text);
+  if(records.length<1){toast('Paste the header row and at least one lead row');return}
+  const payload=records.map(x=>{
+    const timestamp=csvField(x,'Timestamp','Created At','created_at');
+    const status=(csvField(x,'Status','Lead Status')||'new').toLowerCase().replace(/\s+/g,'_');
+    return {
+      parent_name:csvField(x,'Parent Name','Parent'),
+      phone:csvField(x,'Phone','Mobile','Phone Number'),
+      child_name:csvField(x,'Child Name','Student Name'),
+      child_age:csvField(x,'Child Age','Age')||null,
+      city:csvField(x,'City','Location'),
+      status,
+      demo_date:csvField(x,'Demo Date','Demo')||null,
+      notes:csvField(x,'Notes','Remark','Remarks')||null,
+      source:'Google Sheet Import',
+      created_at:timestamp||new Date().toISOString()
+    };
+  }).filter(x=>x.parent_name||x.phone||x.child_name);
+  if(!payload.length){toast('No usable lead rows found');return}
+  const {data:existing,error:existingError}=await supabaseClient.from('leads').select('phone,created_at').limit(5000);
+  if(existingError){toast('Could not check existing leads: '+existingError.message);return}
+  const keys=new Set((existing||[]).map(x=>String(x.phone||'')+'|'+String(x.created_at||'')));
+  const fresh=payload.filter(x=>!keys.has(String(x.phone||'')+'|'+String(x.created_at||'')));
+  if(!fresh.length){toast('No new leads found. Existing records were kept safe.');return}
+  let {error}=await supabaseClient.from('leads').insert(fresh);
+  if(error){
+    const fallback=fresh.map(x=>({parent_name:x.parent_name,phone:x.phone,child_name:x.child_name,child_age:x.child_age,city:x.city,status:x.status,demo_date:x.demo_date}));
+    error=(await supabaseClient.from('leads').insert(fallback)).error;
+  }
+  if(error){toast('Import failed: '+error.message);return}
+  toast(fresh.length+' new leads imported');
+  document.getElementById('leadPaste').value='';
+  togglePasteLeads();
+  await refreshLeadCenter();
+}
 function csvParse(text){
   const rows=[]; let row=[]; let cell=''; let quote=false;
   text=String(text||'').replace(/^\uFEFF/,'');
@@ -228,11 +279,18 @@ function adminScreens(){return `
 <div class="class">☎️<div class="grow"><b>Call new parents</b><span>4 enquiries waiting</span></div></div>
 <div class="class">✓<div class="grow"><b>Confirm demos</b><span>2 parents</span></div></div>
 <div class="class">₹<div class="grow"><b>Payment follow-up</b><span>3 pending</span></div></div></div></div></section>
-<section id="leads" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Lead Command Center</h3><span class="sub">From enquiry to enrollment</span></div><div class="quick"><label class="btn ghost" style="cursor:pointer">⬆ Import Google Sheet CSV<input id="leadCsv" type="file" accept=".csv,text/csv" style="display:none" onchange="importLeadCSV(event)"></label><button class="btn primary" onclick="refreshLeadCenter()">↻ Refresh</button><button class="btn ghost" onclick="document.getElementById('leadCsv').click()">Choose CSV File</button></div></div>
+<section id="leads" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Lead Command Center</h3><span class="sub">From enquiry to enrollment</span></div><div class="quick"><label class="btn ghost" style="cursor:pointer">⬆ Import Google Sheet CSV<input id="leadCsv" type="file" accept=".csv,text/csv" style="display:none" onchange="importLeadCSV(event)"></label><button class="btn primary" onclick="refreshLeadCenter()">↻ Refresh</button><button class="btn ghost" onclick="document.getElementById('leadCsv').click()">Choose CSV File</button><button class="btn ghost" onclick="togglePasteLeads()">📋 Paste Sheet Data</button></div></div>
 <div class="quick" style="margin-bottom:12px">
 <input id="leadSearch" oninput="filterLeadRows()" placeholder="Search parent, child, phone or city" style="flex:1;min-width:220px;padding:10px 12px;border:1px solid #e3e8f0;border-radius:11px;font:inherit">
 <select id="leadStatusFilter" onchange="filterLeadRows()" style="padding:10px 12px;border:1px solid #e3e8f0;border-radius:11px;font:inherit"><option value="">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="demo_scheduled">Demo Scheduled</option><option value="demo_completed">Demo Completed</option><option value="follow_up">Follow-up</option><option value="payment_pending">Payment Pending</option><option value="enrolled">Enrolled</option><option value="lost">Lost</option></select>
-</div><table class="table"><thead><tr><th>Parent</th><th>Child</th><th>Course</th><th>Status</th><th>Demo</th><th>Action</th></tr></thead><tbody id="leadRows"><tr><td colspan="6" style="text-align:center;color:#8793a5">Loading live leads…</td></tr></tbody></table><div class="sub" style="margin-top:10px">Tip: In Google Sheets use <b>File → Download → Comma-separated values (.csv)</b>, then import it here. Existing LMS records are kept.</div></div></section>
+</div>
+<div id="pasteLeadBox" style="display:none;margin:0 0 14px;padding:14px;border:1px dashed #d9dee8;border-radius:14px;background:#fafbfd">
+  <div style="font-weight:700;margin-bottom:6px">Paste your Google Sheet rows</div>
+  <div class="sub" style="margin-bottom:8px">In Google Sheets, select your header + lead rows, press Ctrl+C, then paste here. No CSV download needed.</div>
+  <textarea id="leadPaste" rows="7" placeholder="Timestamp&#9;Parent Name&#9;Phone&#9;Child Name&#9;Child Age&#9;City&#9;Status&#9;Assigned Teacher&#9;Demo Date" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #dfe5ee;border-radius:12px;font:inherit;resize:vertical"></textarea>
+  <div class="quick" style="margin-top:8px"><button class="btn primary" onclick="importPastedLeads()">Import Pasted Leads</button><button class="btn ghost" onclick="togglePasteLeads()">Close</button></div>
+</div>
+<table class="table"><thead><tr><th>Parent</th><th>Child</th><th>Course</th><th>Status</th><th>Demo</th><th>Action</th></tr></thead><tbody id="leadRows"><tr><td colspan="6" style="text-align:center;color:#8793a5">Loading live leads…</td></tr></tbody></table><div class="sub" style="margin-top:10px">Tip: In Google Sheets use <b>File → Download → Comma-separated values (.csv)</b>, then import it here. Existing LMS records are kept.</div></div></section>
 <section id="teachers" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Teachers</h3><span class="sub">Live teacher records</span></div><button class="btn primary" onclick="toast('Teacher onboarding will be connected here')">+ Add Teacher</button></div><table class="table"><thead><tr><th>Teacher</th><th>Email</th><th>Status</th></tr></thead><tbody id="teacherRows"><tr><td colspan="3" style="text-align:center;color:#8793a5">Loading live teachers…</td></tr></tbody></table></div></section>
 <section id="students" class="screen"><div class="card tablewrap"><div class="section"><h3>Students</h3><button class="btn primary" onclick="toast('Student onboarding will be connected here')">+ Add Student</button></div><table class="table"><thead><tr><th>Student</th><th>Course</th><th>Teacher</th><th>Progress</th><th>Status</th></tr></thead><tbody id="studentRows"><tr><td colspan="5" style="text-align:center;color:#8793a5">Loading live students…</td></tr></tbody></table></div></section>
 <section id="classes" class="screen"><div class="grid two"><div class="card"><div class="section"><h3>Class Schedule</h3><button class="btn primary" onclick="toast('Class creation will be connected here')">+ Class</button></div><div class="class"><b class="time">10:00</b><div class="grow"><b>Smart Speakers Story World</b><span>Tripti • 6 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div><div class="class"><b class="time">17:00</b><div class="grow"><b>Young Leaders</b><span>NMI Team • 5 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div></div><div class="card"><h3>Class Workspace</h3><p class="sub">Each class will hold its Google Meet, materials, attendance, notes and progress.</p><div class="quick"><button class="btn" onclick="toast('Meet integration')">Meet</button><button class="btn" onclick="toast('Materials')">Materials</button><button class="btn" onclick="toast('Attendance')">Attendance</button></div></div></div></section>
