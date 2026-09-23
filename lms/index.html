@@ -120,14 +120,28 @@ async function loadAdminData(){
   }
 }
 function csvParse(text){
-  const rows=[];let row=[],cell='',quote=false;
-  for(let i=0;i<text.length;i++){const ch=text[i],nx=text[i+1];
-    if(ch==='"'){if(quote&&nx==='"'){cell+='"';i++;}else quote=!quote;}
-    else if(ch===','&&!quote){row.push(cell);cell='';}
-    else if((ch==='\\n'||ch==='\\r')&&!quote){if(ch==='\\r'&&nx==='\\n')i++;row.push(cell);cell='';if(row.some(v=>v.trim()!==''))rows.push(row);row=[];}
-    else cell+=ch;
+  const rows=[]; let row=[]; let cell=''; let quote=false;
+  text=String(text||'').replace(/^\\uFEFF/,'');
+  for(let i=0;i<text.length;i++){
+    const ch=text[i], nx=text[i+1];
+    if(ch==='"'){
+      if(quote && nx==='"'){cell+='"';i++;}
+      else quote=!quote;
+    } else if(ch===',' && !quote){
+      row.push(cell); cell='';
+    } else if((ch==='\\n' || ch==='\\r') && !quote){
+      if(ch==='\\r' && nx==='\\n') i++;
+      row.push(cell); cell='';
+      if(row.some(v=>String(v).trim()!=='')) rows.push(row);
+      row=[];
+    } else {
+      cell+=ch;
+    }
   }
-  if(cell!==''||row.length){row.push(cell);if(row.some(v=>v.trim()!==''))rows.push(row);}
+  if(cell!=='' || row.length){
+    row.push(cell);
+    if(row.some(v=>String(v).trim()!=='')) rows.push(row);
+  }
   return rows;
 }
 function normHeader(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
