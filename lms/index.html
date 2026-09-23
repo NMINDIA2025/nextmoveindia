@@ -88,7 +88,7 @@ async function loadAdminData(){
       const course=x.course_name||x.course||x.interested_course||'—';
       const status=x.status||'new';
       const cls=String(status).toLowerCase().includes('pending')?'warning':String(status).toLowerCase().includes('scheduled')?'':'blue';
-      return '<tr><td>'+escapeHtml(parent)+'</td><td>'+escapeHtml(child+(age?' • '+age:''))+'</td><td>'+escapeHtml(course)+'</td><td><span class="pill '+cls+'">'+escapeHtml(status.replaceAll('_',' '))+'</span></td><td>'+formatDate(x.demo_date||x.demoDate)+'</td><td>View</td></tr>';
+      return '<tr data-status="'+escapeHtml(status)+'"><td>'+escapeHtml(parent)+'</td><td>'+escapeHtml(child+(age?' • '+age:''))+'</td><td>'+escapeHtml(course)+'</td><td><span class="pill '+cls+'">'+escapeHtml(status.replaceAll('_',' '))+'</span></td><td>'+formatDate(x.demo_date||x.demoDate)+'</td><td>View</td></tr>';
     }).join('');
   }
 
@@ -119,6 +119,56 @@ async function loadAdminData(){
     }).join('');
   }
 }
+function csvParse(text){
+  const rows=[];let row=[],cell='',quote=false;
+  for(let i=0;i<text.length;i++){const ch=text[i],nx=text[i+1];
+    if(ch==='"'){if(quote&&nx==='"'){cell+='"';i++;}else quote=!quote;}
+    else if(ch===','&&!quote){row.push(cell);cell='';}
+    else if((ch==='\\n'||ch==='\\r')&&!quote){if(ch==='\\r'&&nx==='\\n')i++;row.push(cell);cell='';if(row.some(v=>v.trim()!==''))rows.push(row);row=[];}
+    else cell+=ch;
+  }
+  if(cell!==''||row.length){row.push(cell);if(row.some(v=>v.trim()!==''))rows.push(row);}
+  return rows;
+}
+function normHeader(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+function csvField(obj,...names){for(const n of names){const k=Object.keys(obj).find(x=>normHeader(x)===normHeader(n));if(k)return obj[k]?.trim()||''}return ''}
+async function importLeadCSV(e){
+  const file=e.target.files?.[0]; if(!file)return;
+  toast('Reading your Google Sheet export…');
+  const rows=csvParse(await file.text()); if(rows.length<2){toast('CSV has no lead rows');return}
+  const headers=rows[0], records=rows.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]||''])));
+  const payload=records.map(x=>{
+    const timestamp=csvField(x,'Timestamp','Created At','created_at');
+    const status=(csvField(x,'Status','Lead Status')||'new').toLowerCase().replace(/\s+/g,'_');
+    return {
+      parent_name:csvField(x,'Parent Name','Parent'),
+      phone:csvField(x,'Phone','Mobile','Phone Number'),
+      child_name:csvField(x,'Child Name','Student Name'),
+      child_age:csvField(x,'Child Age','Age')||null,
+      city:csvField(x,'City','Location'),
+      status,
+      demo_date:csvField(x,'Demo Date','Demo')||null,
+      notes:csvField(x,'Notes','Remark','Remarks')||null,
+      source:'Google Sheet Import',
+      created_at:timestamp||new Date().toISOString()
+    };
+  }).filter(x=>x.parent_name||x.phone||x.child_name);
+  if(!payload.length){toast('No usable lead rows found');return}
+  const {error}=await supabaseClient.from('leads').insert(payload);
+  if(error){console.error(error);toast('Import failed: '+error.message);return}
+  toast(payload.length+' leads imported successfully');
+  await refreshLeadCenter();
+}
+function filterLeadRows(){
+  const q=(document.getElementById('leadSearch')?.value||'').toLowerCase();
+  const s=(document.getElementById('leadStatusFilter')?.value||'').toLowerCase();
+  document.querySelectorAll('#leadRows tr').forEach(tr=>{
+    const text=tr.innerText.toLowerCase();
+    const status=(tr.dataset.status||'').toLowerCase();
+    tr.style.display=(!q||text.includes(q))&&(!s||status===s)?'':'none';
+  });
+}
+async function refreshLeadCenter(){await loadAdminData();filterLeadRows();}
 function navFor(r){return data[r].nav}
 function renderNav(){const items=navFor(role);document.getElementById('sideNav').innerHTML=items.map(x=>'<button class="'+(x[0]===current?'active':'')+'" onclick="go(\''+x[0]+'\')">'+data[role].icon+' &nbsp; '+x[1]+'</button>').join('');document.getElementById('mobileNav').innerHTML=items.slice(0,5).map(x=>'<button class="'+(x[0]===current?'active':'')+'" onclick="go(\''+x[0]+'\')">'+x[1]+'</button>').join('')}
 function go(id){current=id;renderNav();document.querySelectorAll('.screen').forEach(x=>x.style.display=x.id===id?'block':'none');const item=navFor(role).find(x=>x[0]===id);document.getElementById('title').textContent=item?item[1]:data[role].title;document.getElementById('subtitle').textContent=data[role].sub}
@@ -154,7 +204,11 @@ function adminScreens(){return `
 <div class="class">☎️<div class="grow"><b>Call new parents</b><span>4 enquiries waiting</span></div></div>
 <div class="class">✓<div class="grow"><b>Confirm demos</b><span>2 parents</span></div></div>
 <div class="class">₹<div class="grow"><b>Payment follow-up</b><span>3 pending</span></div></div></div></div></section>
-<section id="leads" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Lead Command Center</h3><span class="sub">From enquiry to enrollment</span></div><button class="btn primary" onclick="toast('New lead form will connect to your live lead source')">+ New Lead</button></div><table class="table"><thead><tr><th>Parent</th><th>Child</th><th>Course</th><th>Status</th><th>Demo</th><th>Action</th></tr></thead><tbody id="leadRows"><tr><td colspan="6" style="text-align:center;color:#8793a5">Loading live leads…</td></tr></tbody></table></div></section>
+<section id="leads" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Lead Command Center</h3><span class="sub">From enquiry to enrollment</span></div><div class="quick"><label class="btn ghost" style="cursor:pointer">⬆ Import Sheet CSV<input id="leadCsv" type="file" accept=".csv,text/csv" style="display:none" onchange="importLeadCSV(event)"></label><button class="btn primary" onclick="refreshLeadCenter()">↻ Refresh</button></div></div>
+<div class="quick" style="margin-bottom:12px">
+<input id="leadSearch" oninput="filterLeadRows()" placeholder="Search parent, child, phone or city" style="flex:1;min-width:220px;padding:10px 12px;border:1px solid #e3e8f0;border-radius:11px;font:inherit">
+<select id="leadStatusFilter" onchange="filterLeadRows()" style="padding:10px 12px;border:1px solid #e3e8f0;border-radius:11px;font:inherit"><option value="">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="demo_scheduled">Demo Scheduled</option><option value="demo_completed">Demo Completed</option><option value="follow_up">Follow-up</option><option value="payment_pending">Payment Pending</option><option value="enrolled">Enrolled</option><option value="lost">Lost</option></select>
+</div><table class="table"><thead><tr><th>Parent</th><th>Child</th><th>Course</th><th>Status</th><th>Demo</th><th>Action</th></tr></thead><tbody id="leadRows"><tr><td colspan="6" style="text-align:center;color:#8793a5">Loading live leads…</td></tr></tbody></table><div class="sub" style="margin-top:10px">Tip: In Google Sheets use <b>File → Download → Comma-separated values (.csv)</b>, then import it here. Existing LMS records are kept.</div></div></section>
 <section id="teachers" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Teachers</h3><span class="sub">Live teacher records</span></div><button class="btn primary" onclick="toast('Teacher onboarding will be connected here')">+ Add Teacher</button></div><table class="table"><thead><tr><th>Teacher</th><th>Email</th><th>Status</th></tr></thead><tbody id="teacherRows"><tr><td colspan="3" style="text-align:center;color:#8793a5">Loading live teachers…</td></tr></tbody></table></div></section>
 <section id="students" class="screen"><div class="card tablewrap"><div class="section"><h3>Students</h3><button class="btn primary" onclick="toast('Student onboarding will be connected here')">+ Add Student</button></div><table class="table"><thead><tr><th>Student</th><th>Course</th><th>Teacher</th><th>Progress</th><th>Status</th></tr></thead><tbody id="studentRows"><tr><td colspan="5" style="text-align:center;color:#8793a5">Loading live students…</td></tr></tbody></table></div></section>
 <section id="classes" class="screen"><div class="grid two"><div class="card"><div class="section"><h3>Class Schedule</h3><button class="btn primary" onclick="toast('Class creation will be connected here')">+ Class</button></div><div class="class"><b class="time">10:00</b><div class="grow"><b>Smart Speakers Story World</b><span>Tripti • 6 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div><div class="class"><b class="time">17:00</b><div class="grow"><b>Young Leaders</b><span>NMI Team • 5 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div></div><div class="card"><h3>Class Workspace</h3><p class="sub">Each class will hold its Google Meet, materials, attendance, notes and progress.</p><div class="quick"><button class="btn" onclick="toast('Meet integration')">Meet</button><button class="btn" onclick="toast('Materials')">Materials</button><button class="btn" onclick="toast('Attendance')">Attendance</button></div></div></div></section>
