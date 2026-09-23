@@ -264,7 +264,7 @@ document.getElementById('views').innerHTML=html;renderNav();go(current);if(role=
 }
 function adminScreens(){return `
 <section id="dashboard" class="screen">
-<div class="hero"><div><h2>Good morning 👋</h2><p>Your leads, teachers, classes and students are ready for action.</p></div><button class="btn primary" onclick="go('leads')">Open Lead Center</button></div>
+<div class="hero"><div><h2>Good morning 👋</h2><p>Your leads, teachers, classes and students are ready for action.</p></div><div class="quick"><button class="btn primary" onclick="go('leads');setTimeout(togglePasteLeads,80)">Open Lead Center</button><button class="btn ghost" onclick="go('leads');setTimeout(togglePasteLeads,80)">📋 Paste Leads</button></div></div>
 <div class="grid stats">
 <div class="card metric"><div class="label">NEW LEADS</div><div class="num" id="metricLeads">—</div><div class="trend">Live from LMS</div></div>
 <div class="card metric"><div class="label">DEMOS TODAY</div><div class="num" id="metricDemos">—</div><div class="trend" id="metricDemosSub">Live from leads</div></div>
