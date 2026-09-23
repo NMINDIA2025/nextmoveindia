@@ -154,9 +154,19 @@ async function importLeadCSV(e){
     };
   }).filter(x=>x.parent_name||x.phone||x.child_name);
   if(!payload.length){toast('No usable lead rows found');return}
-  const {error}=await supabaseClient.from('leads').insert(payload);
+  const {data:existing,error:existingError}=await supabaseClient.from('leads').select('phone,created_at').limit(5000);
+  if(existingError){console.error(existingError);toast('Could not check existing leads: '+existingError.message);return}
+  const keys=new Set((existing||[]).map(x=>String(x.phone||'')+'|'+String(x.created_at||'')));
+  const fresh=payload.filter(x=>!keys.has(String(x.phone||'')+'|'+String(x.created_at||'')));
+  if(!fresh.length){toast('No new leads found. Existing records were kept safe.');return}
+  let {error}=await supabaseClient.from('leads').insert(fresh);
+  if(error){
+    const fallback=fresh.map(x=>({parent_name:x.parent_name,phone:x.phone,child_name:x.child_name,child_age:x.child_age,city:x.city,status:x.status,demo_date:x.demo_date}));
+    const retry=await supabaseClient.from('leads').insert(fallback);
+    error=retry.error;
+  }
   if(error){console.error(error);toast('Import failed: '+error.message);return}
-  toast(payload.length+' leads imported successfully');
+  toast(fresh.length+' new leads imported');
   await refreshLeadCenter();
 }
 function filterLeadRows(){
