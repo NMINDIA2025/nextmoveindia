@@ -1,17 +1,17 @@
 // ===== MOBILE MENU =====
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobileMenu');
+const menuHamburger = document.getElementById('hamburger');
+const menuMobileMenu = document.getElementById('mobileMenu');
 
-if (hamburger && mobileMenu) {
-  hamburger.addEventListener('click', () => {
-    mobileMenu.classList.toggle('open');
-    hamburger.innerHTML = mobileMenu.classList.contains('open') ? '✕' : '&#9776;';
+if (menuHamburger && menuMobileMenu) {
+  menuHamburger.addEventListener('click', () => {
+    menuMobileMenu.classList.toggle('open');
+    menuHamburger.innerHTML = menuMobileMenu.classList.contains('open') ? '✕' : '&#9776;';
   });
   // Close on link click
-  mobileMenu.querySelectorAll('a').forEach(link => {
+  menuMobileMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      hamburger.innerHTML = '&#9776;';
+      menuMobileMenu.classList.remove('open');
+      menuHamburger.innerHTML = '&#9776;';
     });
   });
 }
