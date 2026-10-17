@@ -172,15 +172,16 @@ async function importPastedLeads(){
   const records=sheetRowsToObjects(text);
   if(records.length<1){toast('Paste the header row and at least one lead row');return}
   const payload=records.map(x=>{
-    const timestamp=csvField(x,'Timestamp','Created At','created_at');
-    const status=normalizeLeadStatus(csvField(x,'Status','Lead Status'));
+    const timestamp=csvField(x,'Timestamp','Inquiry Timestamp','Created At','created_at');
+    const status=normalizeLeadStatus(csvField(x,'Pipeline Stage','Lead Status','Status'));
     return {
-      parent_name:csvField(x,'Parent Name','Parent'),
-      phone:csvField(x,'Phone','Mobile','Phone Number'),
-      child_name:csvField(x,'Child Name','Student Name'),
-      child_age:csvField(x,'Child Age','Age')||null,
+      parent_name:csvField(x,'Parent Name','Parents Name','Parent'),
+      phone:csvField(x,'Phone','Mobile No','Mobile','Phone Number','WhatsApp'),
+      child_name:csvField(x,'Child Name','Childs Name','Student Name'),
+      child_age:csvField(x,'Child Age','Childs Age','Age')||null,
       city:csvField(x,'City','Location'),
       status,
+      interested_course:csvField(x,'Interested Course','Course')||null,
       demo_date:csvField(x,'Demo Date','Demo')||null,
       notes:csvField(x,'Notes','Remark','Remarks')||null,
       source:'Google Sheet Import',
@@ -261,15 +262,16 @@ async function importLeadCSV(e){
   const rows=csvParse(await file.text()); if(rows.length<2){toast('CSV has no lead rows');return}
   const headers=rows[0], records=rows.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]||''])));
   const payload=records.map(x=>{
-    const timestamp=csvField(x,'Timestamp','Created At','created_at');
-    const status=normalizeLeadStatus(csvField(x,'Status','Lead Status'));
+    const timestamp=csvField(x,'Timestamp','Inquiry Timestamp','Created At','created_at');
+    const status=normalizeLeadStatus(csvField(x,'Pipeline Stage','Lead Status','Status'));
     return {
-      parent_name:csvField(x,'Parent Name','Parent'),
-      phone:csvField(x,'Phone','Mobile','Phone Number'),
-      child_name:csvField(x,'Child Name','Student Name'),
-      child_age:csvField(x,'Child Age','Age')||null,
+      parent_name:csvField(x,'Parent Name','Parents Name','Parent'),
+      phone:csvField(x,'Phone','Mobile No','Mobile','Phone Number','WhatsApp'),
+      child_name:csvField(x,'Child Name','Childs Name','Student Name'),
+      child_age:csvField(x,'Child Age','Childs Age','Age')||null,
       city:csvField(x,'City','Location'),
       status,
+      interested_course:csvField(x,'Interested Course','Course')||null,
       demo_date:csvField(x,'Demo Date','Demo')||null,
       notes:csvField(x,'Notes','Remark','Remarks')||null,
       source:'Google Sheet Import',
