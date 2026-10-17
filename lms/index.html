@@ -76,7 +76,7 @@ async function loadAdminData(){
   const ps=document.getElementById('metricPaymentsSub'); if(ps&&payments!==null) ps.textContent='Pending records';
   const ds=document.getElementById('metricDemosSub'); if(ds&&demos!==null) ds.textContent='Scheduled demos';
 
-  const {data:leadData,error:leadError}=await supabaseClient.from('leads').select('*').order('created_at',{ascending:false}).limit(12);
+  const {data:leadData,error:leadError}=await supabaseClient.from('leads').select('*').order('created_at',{ascending:false}).limit(500);
   const leadRows=document.getElementById('leadRows');
   if(leadRows){
     if(leadError){leadRows.innerHTML='<tr><td colspan="6">Could not load leads.</td></tr>'}
@@ -92,7 +92,7 @@ async function loadAdminData(){
     }).join('');
   }
 
-  const {data:studentData,error:studentError}=await supabaseClient.from('students').select('*').order('created_at',{ascending:false}).limit(20);
+  const {data:studentData,error:studentError}=await supabaseClient.from('students').select('*').order('created_at',{ascending:false}).limit(300);
   const studentRows=document.getElementById('studentRows');
   if(studentRows){
     if(studentError){studentRows.innerHTML='<tr><td colspan="5">Could not load students.</td></tr>'}
