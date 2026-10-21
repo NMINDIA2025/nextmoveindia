@@ -11,9 +11,9 @@
  *     wins and your sheet cell is refreshed (nothing is lost silently: you get a message).
  */
 
-var DEFAULT_URL = 'https://fhxpdzvicrkyhjynrvxu.supabase.co';
+var DEFAULT_URL = 'https://qsibsuhejremcbzpmhwt.supabase.co';
 // Public "publishable" key: safe to keep here. The private sync password is NOT stored in this file.
-var DEFAULT_KEY = 'sb_publishable_gCsHleekXoNpjDli8xfApw_H-Ul6rhx';
+var DEFAULT_KEY = 'sb_publishable_xUiOIEr5U88-8DfQorcuWw_siREim5y';
 
 var LEADS_TAB = 'LMS Leads';
 var WEBSITE_TAB = 'Sheet1';
