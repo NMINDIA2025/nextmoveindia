@@ -5,501 +5,806 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Next Move India LMS</title>
 <style>
-:root{--ink:#172033;--muted:#7b8799;--line:#e8edf4;--bg:#f5f7fb;--card:#fff;--yellow:#ffc72c;--purple:#ff3d8b;--green:#19a875;--blue:#4d7cff;--navy:#2a0f3a;--navy2:#3b1550}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:radial-gradient(circle at 85% 0%,#fff 0,#f5f7fb 32%,#f3f6fa 100%);color:var(--ink);letter-spacing:-.01em}button{font:inherit}.app{display:flex;min-height:100vh}.sidebar{width:252px;background:linear-gradient(180deg,var(--navy),#230c31 70%,#1a0824);color:#fff;padding:20px 14px;position:fixed;inset:0 auto 0 0;z-index:5;box-shadow:14px 0 40px #0a14261a}.brand{display:flex;gap:11px;align-items:center;padding:4px 8px 25px}.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,#ffd34d,var(--yellow));display:grid;place-items:center;color:#101010;font-weight:950;font-size:21px;box-shadow:0 8px 24px #ffc72c2e;position:relative;overflow:hidden}.brand b{font-size:14px}.brand span{display:block;color:#93a0b5;font-size:11px;margin-top:2px}.role{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#8996aa;padding:0 10px 8px;font-weight:800}.nav button{width:100%;border:1px solid transparent;background:transparent;color:#9eabbd;padding:12px 12px;border-radius:12px;text-align:left;cursor:pointer;margin:3px 0;font-weight:650;transition:.18s ease}.nav button:hover,.nav button.active{box-shadow:inset 3px 0 0 var(--yellow),0 8px 22px #00000012}.nav button.active{box-shadow:inset 3px 0 0 var(--yellow)}.bottom{position:absolute;bottom:18px;left:14px;right:14px}.switch{width:100%;border:1px solid #5a2a73;background:#3b1550;color:#fff;border-radius:12px;padding:10px;cursor:pointer}.main{margin-left:252px;width:calc(100% - 252px);padding:25px 32px 42px;max-width:1600px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:20px;position:sticky;top:0;z-index:4;padding:5px 0 16px;background:linear-gradient(var(--bg) 75%,transparent)}.eyebrow{font-size:10px;font-weight:900;letter-spacing:.13em;color:var(--purple);text-transform:uppercase}.title{font-size:29px;font-weight:900;margin:4px 0;letter-spacing:-.035em}.sub{color:var(--muted);font-size:13px}.avatar{background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:13px;font-size:12px;font-weight:800;box-shadow:0 6px 20px #1720330b}.view{display:none}.view.active{display:block}.hero{border-radius:26px;padding:27px 29px;background:linear-gradient(120deg,#ff7a1a 0%,#ff4f7b 60%,#e8348f 100%);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:18px;overflow:hidden;position:relative;box-shadow:0 18px 45px #172b4818}.hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-80px;top:-130px;background:radial-gradient(circle,#ffc72c35 0,#ffc72c00 68%);pointer-events:none}.hero h2{margin:0 0 7px;font-size:22px}.hero p{margin:0;color:#cbd4e2;font-size:13px}.btn{border:0;border-radius:11px;padding:10px 14px;font-weight:850;cursor:pointer;transition:.16s ease;box-shadow:0 4px 12px #1720330b}.btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px #17203316}.primary{background:linear-gradient(135deg,#ffc72c,#ff8a1f);color:#111}.ghost{background:#fff;color:var(--ink)}.grid{display:grid;gap:15px}.stats{grid-template-columns:repeat(5,1fr)}.card,.tile{background:rgba(255,255,255,.92);border:1px solid #e7ebf2;border-radius:19px;padding:18px;box-shadow:0 12px 34px #1829430a;backdrop-filter:blur(8px);transition:transform .18s ease,box-shadow .18s ease}.metric .label{font-size:11px;color:var(--muted);font-weight:750}.metric .num{font-size:29px;font-weight:900;margin-top:8px;letter-spacing:-.04em}.metric .trend{font-size:10px;color:var(--green);font-weight:800;margin-top:5px}.two{grid-template-columns:1.45fr 1fr;margin-top:15px}.section{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section h3{margin:0;font-size:15px}.class{display:flex;align-items:center;gap:12px;padding:13px;border:1px solid #edf1f6;border-radius:14px;margin:8px 0;background:#fbfcfe}.time{width:48px;font-size:12px;font-weight:900}.grow{flex:1}.grow b{display:block;font-size:13px}.grow span{font-size:11px;color:var(--muted)}.pill{font-size:10px;font-weight:900;padding:5px 8px;border-radius:99px;background:#e8f8f0;color:#08784e;white-space:nowrap}.warning{background:#fff4db;color:#9a6500}.blue{background:#eaf0ff;color:#3158b8}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:13px 9px;border-bottom:1px solid #edf1f5;text-align:left;font-size:12px}.table tbody tr:hover{background:#fafbfd}.table th{font-size:10px;text-transform:uppercase;color:#8793a5;letter-spacing:.05em}.tiles{grid-template-columns:repeat(3,1fr)}.tile h3{font-size:14px;margin:0 0 6px}.big{font-size:26px;font-weight:900}.progress{height:8px;background:#edf1f5;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;width:72%;background:linear-gradient(90deg,#ffc72c,#ff7a1a,#ff3d8b)}.quick{display:flex;gap:9px;flex-wrap:wrap}.quick .btn{background:#f3f5f9}.mobilebar{display:none}.workspace-switch{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);padding:4px;border-radius:13px;box-shadow:0 6px 20px #1720330a}.workspace-switch button{border:0;background:transparent;padding:8px 10px;border-radius:9px;font-size:11px;font-weight:850;color:#718096;cursor:pointer}.workspace-switch button.active{background:#2a0f3a;color:#fff}.top-right{display:flex;align-items:center;gap:10px}.icon-btn{width:36px;height:36px;border:1px solid var(--line);background:#fff;border-radius:11px;cursor:pointer;box-shadow:0 6px 20px #1720330a}.toast{position:fixed;right:22px;bottom:22px;background:#2a0f3a;color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:20;font-size:12px;box-shadow:0 12px 35px #0003}
-@media(max-width:950px){.stats{grid-template-columns:repeat(3,1fr)}.tiles{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}}
-@media(max-width:700px){.sidebar{display:none}.main{margin:0;width:100%;padding:18px 15px 78px}.top{margin-bottom:17px}.title{font-size:24px}.avatar{display:none}.stats{grid-template-columns:1fr 1fr}.tiles{grid-template-columns:1fr}.hero{padding:20px;align-items:flex-start;flex-direction:column}.mobilebar{display:flex;position:fixed;bottom:0;left:0;right:0;background:#2a0f3a;padding:8px;z-index:10;gap:5px}.mobilebar button{flex:1;border:0;background:transparent;color:#aeb9ca;padding:8px 3px;border-radius:9px;font-size:10px}.mobilebar button.active{background:#202d45;color:#fff}.table{min-width:620px}.card.tablewrap{overflow:auto}}
-.modal{position:fixed;inset:0;background:#1a082499;z-index:50;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:30px 14px}.modalbox{background:#fff;border-radius:22px;max-width:760px;width:100%;padding:22px 24px;box-shadow:0 30px 80px #1a082455}.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mgrid label{display:block;font-size:11px;font-weight:800;color:#7b8799;text-transform:uppercase;letter-spacing:.05em}.mgrid input,.mgrid select,.mgrid textarea{width:100%;margin-top:5px;padding:10px 12px;border:1px solid #e3e8f0;border-radius:11px;font:inherit;font-size:13px;box-sizing:border-box;background:#fff}.mgrid .full{grid-column:1/-1}.hist{max-height:150px;overflow:auto;font-size:12px;color:#5b6577;border:1px solid #edf1f6;border-radius:12px;padding:8px 12px;margin-top:6px}.hist div{padding:4px 0;border-bottom:1px dashed #edf1f6}.hist div:last-child{border:0}.wa{background:#25d366;color:#06361a}@media(max-width:640px){.mgrid{grid-template-columns:1fr}}
+:root{--ink:#1f1530;--muted:#76708a;--line:#ece7f3;--bg:#faf7fc;--card:#fff;--orange:#ff7a1a;--yellow:#ffc72c;--pink:#ff3d8b;--plum:#2a0f3a;--plum2:#3b1550;--green:#12a36b;--blue:#4d7cff;--red:#e0475b;--r:16px;--shadow:0 10px 30px #2a0f3a12}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--pink)}
+.app{display:flex;min-height:100vh}
+/* sidebar */
+.side{width:248px;background:linear-gradient(180deg,#2a0f3a,#1d0a2a);color:#fff;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;padding:18px 12px;z-index:30;overflow:auto}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 18px}
+.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,var(--yellow),var(--orange) 60%,var(--pink));display:grid;place-items:center;font-weight:900;font-size:20px;color:#fff;box-shadow:0 8px 22px #ff7a1a40}
+.brand b{display:block;font-size:14px}.brand span{font-size:11px;color:#b9a6c9}
+.navgrp{font-size:10px;letter-spacing:.14em;color:#8f78a3;font-weight:800;text-transform:uppercase;padding:14px 12px 6px}
+.nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#d8cce4;padding:10px 12px;border-radius:11px;text-align:left;font-weight:600;margin:1px 0}
+.nav button .ic{width:20px;text-align:center;font-size:15px}
+.nav button:hover{background:#ffffff12}
+.nav button.on{background:linear-gradient(90deg,#ff7a1a33,#ff3d8b22);color:#fff;box-shadow:inset 3px 0 0 var(--yellow)}
+.nav .bd{margin-left:auto;background:var(--pink);color:#fff;border-radius:99px;font-size:10px;padding:1px 7px;font-weight:800}
+.sidefoot{margin-top:auto;padding-top:14px}
+.me{display:flex;gap:10px;align-items:center;background:#ffffff10;border-radius:13px;padding:10px}
+.me .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--yellow),var(--pink));display:grid;place-items:center;font-weight:800;color:#fff;flex:none}
+.me b{font-size:12px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}.me span{font-size:10px;color:#b9a6c9;text-transform:capitalize}
+.me button{margin-left:auto;background:transparent;border:0;color:#d8cce4;font-size:16px}
+/* main */
+.main{margin-left:248px;width:calc(100% - 248px);min-width:0}
+.topbar{position:sticky;top:0;z-index:20;background:#faf7fcf2;backdrop-filter:blur(10px);display:flex;align-items:center;gap:12px;padding:14px 28px;border-bottom:1px solid var(--line)}
+.topbar h1{font-size:22px;margin:0;letter-spacing:-.02em;font-weight:850}
+.topbar .sub{color:var(--muted);font-size:12px;margin-top:2px}
+.spacer{flex:1}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;min-width:240px;color:var(--muted);cursor:pointer}
+.search kbd{margin-left:auto;font-size:10px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;background:#faf7fc}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 11px;font-size:12px;font-weight:700;color:var(--ink)}
+.chip.ok{color:var(--green)}.chip.bad{color:var(--red)}
+.page{padding:22px 28px 60px;max-width:1500px}
+/* controls */
+.btn{color:var(--ink);border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 14px;font-weight:700;display:inline-flex;gap:7px;align-items:center;transition:.15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px #2a0f3a14}
+.btn.pri{background:linear-gradient(135deg,var(--yellow),var(--orange));border-color:transparent;color:#2a1200}
+.btn.pink{background:linear-gradient(135deg,var(--orange),var(--pink));border-color:transparent;color:#fff}
+.btn.red{color:var(--red);border-color:#f3c9d0}
+.btn.sm{padding:5px 10px;font-size:12px;border-radius:9px}
+.btn.wa{background:#25d366;border-color:transparent;color:#06361a}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+input,select,textarea{border:1px solid #e3dcee;border-radius:11px;padding:9px 12px;background:#fff;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid #ff7a1a55;border-color:var(--orange)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grow{flex:1;min-width:0}
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 4px;font-size:15px}
+.card .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.muted{color:var(--muted)}.sm{font-size:12px}
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.kpi{position:relative;overflow:hidden;cursor:pointer}
+.kpi .l{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.kpi .n{font-size:30px;font-weight:900;letter-spacing:-.04em;margin-top:6px}
+.kpi .s{font-size:11px;color:var(--muted);margin-top:2px}
+.kpi:after{content:"";position:absolute;right:-26px;top:-26px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,#ff7a1a22,#ff7a1a00 70%)}
+.cols2{grid-template-columns:1.5fr 1fr}.cols3{grid-template-columns:repeat(3,1fr)}
+.hero{border-radius:22px;padding:24px 28px;color:#fff;background:linear-gradient(120deg,#ff8a1f,#ff4f7b 60%,#d9328f);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px;box-shadow:0 16px 40px #ff4f7b30}
+.hero h2{margin:0 0 4px;font-size:22px}.hero p{margin:0;opacity:.92}
+/* table */
+.tw{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+table{width:100%;border-collapse:collapse}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+td.wrap{white-space:normal;min-width:180px}
+th{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:#fcfaff;position:sticky;top:0;cursor:pointer;user-select:none}
+tbody tr{cursor:pointer}tbody tr:hover{background:#fff8f2}
+tr:last-child td{border-bottom:0}
+.empty{padding:34px;text-align:center;color:var(--muted)}
+/* badges */
+.b{display:inline-block;border-radius:99px;padding:3px 9px;font-size:11px;font-weight:800;background:#efeaf6;color:#5b4a73;white-space:nowrap}
+.b.g{background:#e0f6ec;color:#0b7a4f}.b.o{background:#fff0dc;color:#a35a00}.b.r{background:#fde4e8;color:#b02c40}.b.bl{background:#e6edff;color:#2f55c0}.b.p{background:#ffe3f0;color:#b31a62}.b.y{background:#fff6cc;color:#7a5d00}
+.prog{height:7px;background:#efeaf6;border-radius:99px;overflow:hidden;min-width:70px}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--orange),var(--pink));border-radius:99px}
+/* tabs / seg */
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{border:0;background:transparent;padding:6px 12px;border-radius:9px;font-weight:700;color:var(--muted)}
+.seg button.on{background:var(--plum);color:#fff}
+/* kanban */
+.kan{display:flex;gap:12px;overflow:auto;padding-bottom:12px;align-items:flex-start}
+.kcol{flex:0 0 250px;background:#f4eff9;border-radius:15px;padding:10px;min-height:120px}
+.kcol.over{outline:2px dashed var(--orange);background:#fff3e6}
+.kcol h4{margin:2px 4px 10px;display:flex;justify-content:space-between;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.kcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 11px;margin-bottom:8px;cursor:grab;box-shadow:0 3px 10px #2a0f3a0d}
+.kcard:hover{border-color:var(--orange)}.kcard b{display:block}.kcard .sm{margin-top:2px}
+.kcard.dragging{opacity:.4}
+/* funnel */
+.fun{display:grid;grid-template-columns:130px 1fr 34px;gap:8px;align-items:center;margin:7px 0;font-size:12px}
+.fun .bar{height:12px;border-radius:99px;background:#f1ecf7;overflow:hidden}.fun .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--yellow),var(--orange),var(--pink))}
+/* list items */
+.li{display:flex;gap:11px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:13px;margin:7px 0;background:#fff;cursor:pointer}
+.li:hover{border-color:var(--orange)}
+.li .t{width:56px;font-weight:850;font-size:12px;text-align:center;flex:none}
+.li b{display:block}.li span.sm{display:block}
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.day{background:#fff;border:1px solid var(--line);border-radius:13px;padding:8px;min-height:140px}
+.day.today{border-color:var(--orange);box-shadow:0 0 0 2px #ff7a1a33}
+.day h5{margin:0 0 6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.ev{font-size:11px;border-radius:8px;padding:5px 7px;margin-bottom:5px;background:#fff0dc;color:#7a3f00;cursor:pointer;line-height:1.3}
+.ev.demo{background:#ffe3f0;color:#8c1650}.ev.fu{background:#e6edff;color:#2f4fa8}.ev.done{opacity:.55;text-decoration:line-through}
+/* drawer */
+.ov{position:fixed;inset:0;background:#1d0a2a88;z-index:60;display:none;justify-content:flex-end}
+.ov.on{display:flex}
+.drawer{background:#fff;width:min(560px,100%);height:100%;overflow:auto;padding:20px 22px 30px;box-shadow:-20px 0 60px #1d0a2a55;animation:slide .18s ease}
+@keyframes slide{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+.drawer .dh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
+.drawer h2{margin:0;font-size:20px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg label{display:block;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.fg label>*:not(span){margin-top:5px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink)}
+.fg .full{grid-column:1/-1}
+.drawer .act{position:sticky;bottom:-30px;background:linear-gradient(transparent,#fff 30%);padding:18px 0 4px;margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:0 0 14px}
+.tabs button{border:0;background:transparent;padding:8px 12px;font-weight:700;color:var(--muted);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--ink);border-color:var(--orange)}
+.hist div{padding:6px 0;border-bottom:1px dashed var(--line);font-size:12px}
+.sync{display:inline-flex;gap:6px;align-items:center;font-size:11px;font-weight:700;color:#0b7a4f;background:#e0f6ec;border-radius:99px;padding:3px 10px}
+.sync.no{color:#8c6a00;background:#fff6cc}
+/* palette */
+.pal{position:fixed;inset:0;background:#1d0a2a88;z-index:80;display:none;align-items:flex-start;justify-content:center;padding-top:12vh}
+.pal.on{display:flex}
+.palbox{background:#fff;border-radius:18px;width:min(600px,94%);padding:14px;box-shadow:0 30px 80px #0006}
+.palbox .res{max-height:50vh;overflow:auto;margin-top:8px}
+.palbox .li{margin:4px 0}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--plum);color:#fff;border-radius:12px;padding:12px 16px;z-index:99;display:none;box-shadow:0 12px 30px #0005;max-width:360px}
+.mbar{display:none}
+/* auth */
+.gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#2a0f3a,#5a1a6b 55%,#ff3d8b)}
+.gate .box{background:#fff;border-radius:24px;padding:30px;width:min(420px,100%);box-shadow:0 30px 90px #0006}
+.gate .tag{font-size:11px;font-weight:900;letter-spacing:.14em;color:var(--pink)}
+.gate h2{margin:6px 0 4px;font-size:26px}
+.gate input{margin-bottom:10px}
+.seat{font-size:12px;color:var(--red);min-height:18px;margin-top:10px}
+.pill-lang{border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 10px;font-weight:800;font-size:12px}
+@media(max-width:1000px){.cols2,.cols3{grid-template-columns:1fr}.cal{grid-template-columns:repeat(2,1fr)}.search{min-width:0}.search span.tx{display:none}}
+@media(max-width:760px){.side{display:none}.main{margin:0;width:100%}.topbar{padding:12px 14px}.page{padding:14px 12px 90px}.fg{grid-template-columns:1fr}.topbar h1{font-size:18px}.chip.hide-m{display:none}
+.mbar{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--plum);z-index:40;padding:6px;gap:2px;overflow:auto}
+.mbar button{flex:1;min-width:64px;border:0;background:transparent;color:#cdbbe0;padding:7px 4px;border-radius:10px;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
+.mbar button .ic{font-size:16px}.mbar button.on{background:#ffffff1f;color:#fff}.cal{grid-template-columns:1fr}.kcol{flex-basis:220px}}
 </style>
 </head>
 <body>
 <div class="app">
-<aside class="sidebar">
-  <div class="brand"><div class="logo">N</div><div><b>Next Move India</b><span>LMS • School OS</span></div></div>
-  <div class="role">Workspace</div>
-  <div class="nav" id="sideNav"></div>
-  <div class="bottom"><button class="switch" onclick="supabaseClient.auth.signOut()">↪ Sign out</button></div>
-</aside>
-<main class="main">
-  <div class="top"><div><div class="eyebrow">NEXT MOVE INDIA • SCHOOL OS</div><div class="title" id="title">Admin Dashboard</div><div class="sub" id="subtitle">Run your school from one clean workspace.</div></div><div class="top-right"><div class="workspace-switch"><button id="rAdmin" class="active" onclick="setRole('admin')">Admin</button><button id="rTeacher" onclick="setRole('teacher')">Teacher</button><button id="rStudent" onclick="setRole('student')">Student</button></div><button class="icon-btn" onclick="toast('Notifications are ready for the live data layer')">🔔</button><div class="avatar" id="user">👤 Admin</div></div></div>
-  <div id="views"></div>
-</main>
+  <aside class="side">
+    <div class="brand"><div class="logo">N</div><div><b>Next Move India</b><span>Learn • Lead • Rise</span></div></div>
+    <div class="nav" id="nav"></div>
+    <div class="sidefoot"><div class="me"><div class="av" id="meAv">N</div><div style="min-width:0"><b id="meName">…</b><span id="meRole"></span></div><button title="Sign out" onclick="signOut()">⎋</button></div></div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div><h1 id="pgTitle">Dashboard</h1><div class="sub" id="pgSub"></div></div>
+      <div class="spacer"></div>
+      <div class="search" onclick="openPalette()"><span>🔎</span><span class="tx">Search everything</span><kbd>Ctrl K</kbd></div>
+      <button class="pill-lang" id="langBtn" onclick="toggleLang()">हिं</button>
+      <span class="chip hide-m" id="liveChip">● Live</span>
+    </div>
+    <div class="page" id="page"></div>
+  </div>
 </div>
-<div class="mobilebar" id="mobileNav"></div>
-<div id="leadModal" class="modal" onclick="if(event.target===this)closeLead()"><div class="modalbox">
-<div class="section"><h3 id="lmTitle">Lead</h3><button class="btn ghost" onclick="closeLead()">✕ Close</button></div>
-<div class="mgrid">
-<label>Parent name<input id="lmParent"></label><label>Phone / WhatsApp<input id="lmPhone"></label>
-<label>Child name<input id="lmChild"></label><label>Child age<input id="lmAge"></label>
-<label>City<input id="lmCity"></label><label>Course interested in<select id="lmCourse"></select></label>
-<label>Status<select id="lmStatus" onchange="lmStatusChanged()"></select></label><label>Assigned counselor<select id="lmAssigned"></select></label>
-<label>Next follow-up date<input id="lmFollow" type="date"></label><label>Demo date<input id="lmDemoDate" placeholder="e.g. 2026-10-20"></label>
-<label>Demo time<input id="lmDemoTime" placeholder="e.g. 17:00"></label><label id="lmLostWrap" style="display:none">Reason (not interested / not reachable)<input id="lmLost"></label>
-<label class="full">Notes (private to you and the admin)<textarea id="lmNotes" rows="3"></textarea></label>
-</div>
-<div class="quick" style="margin-top:14px"><button class="btn primary" style="background:linear-gradient(135deg,#ffc72c,#ff8a1f)" onclick="saveLead()">💾 Save</button><a id="lmWa" class="btn wa" target="_blank" rel="noopener" style="text-decoration:none;background:#25d366;color:#06361a">💬 WhatsApp</a><button id="lmConvertBtn" class="btn ghost" onclick="convertLead()">🎓 Enrol as student</button></div>
-<div id="lmHistWrap" style="margin-top:14px"><b style="font-size:12px">History</b><div id="lmHist" class="hist"></div></div>
-</div></div>
+<div class="mbar" id="mbar"></div>
+<div class="ov" id="ov" onclick="if(event.target===this)closeDrawer()"><div class="drawer" id="drawer"></div></div>
+<div class="pal" id="pal" onclick="if(event.target===this)closePalette()"><div class="palbox"><input id="palQ" placeholder="Search leads, students, teachers, classes…" oninput="runPalette()"><div class="res" id="palRes"></div></div></div>
 <div class="toast" id="toast"></div>
+<div class="gate" id="gate" style="display:none"><div class="box">
+  <div class="tag">NEXT MOVE INDIA LMS</div><h2>Welcome back 👋</h2><p class="muted" style="margin:0 0 18px">Sign in to your secure school workspace.</p>
+  <input id="gEmail" type="email" placeholder="Email address" autocomplete="username">
+  <input id="gPass" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+  <button class="btn pri" style="width:100%;justify-content:center" onclick="doLogin()">Sign in</button>
+  <button class="btn" style="width:100%;justify-content:center;margin-top:8px" onclick="doSignup()">Create parent account</button>
+  <div class="seat" id="gMsg"></div>
+  <div class="sm muted">Your password is handled by Supabase Authentication.</div>
+</div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ================= Connection ================= */
 const SUPABASE_URL='https://qsibsuhejremcbzpmhwt.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_xUiOIEr5U88-8DfQorcuWw_siREim5y';
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-</script>
-<script>
-const data={
-admin:{title:'Admin Dashboard',sub:'Run your school from one clean workspace.',icon:'⌂',nav:[
-['dashboard','Dashboard'],['leads','Leads & Follow-up'],['teachers','Teachers'],['students','Students'],['classes','Classes & Timetable'],['payments','Payments'],['materials','Teaching Materials'],['progress','Attendance & Progress']],
-},
-teacher:{title:'Teacher Dashboard',sub:'Everything you need for today’s teaching.',icon:'◉',nav:[
-['teacherHome','My Dashboard'],['myclasses','My Classes'],['mystudents','My Students'],['materialsT','Materials'],['attendance','Attendance'],['teacherProgress','Student Progress']],
-},
-student:{title:'Student Dashboard',sub:'Learn, practise, play and collect achievements.',icon:'★',nav:[
-['studentHome','Home'],['mycourse','My Course'],['practice','Practice & Games'],['schedule','My Schedule'],['achievements','Achievements'],['certificates','Certificates']]
-}};
-let role='admin',current='dashboard',authRole='student',currentUser=null;
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 
-function escapeHtml(v){
-  return String(v ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-}
-function formatDate(v){
-  if(!v) return 'Not set';
-  const d=new Date(v); if(Number.isNaN(d.getTime())) return escapeHtml(v);
-  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
-}
-async function safeCount(table, filter){
-  let q=supabaseClient.from(table).select('*',{count:'exact',head:true});
-  if(filter) q=q.eq(filter[0],filter[1]);
-  const {count,error}=await q;
-  if(error) return null;
-  return count ?? 0;
-}
-async function loadAdminData(){
-  if(authRole!=='admin'&&authRole!=='counselor') return;
-  const [leads,students,teachers,payments,demos,followups]=await Promise.all([
-    safeCount('leads'),
-    safeCount('students'),
-    safeCount('teachers'),
-    safeCount('payments',['status','pending']),
-    safeCount('leads',['status','demo_scheduled']),
-    safeCount('leads',['status','follow_up'])
-  ]);
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v===null?'—':v};
-  set('metricLeads',leads); set('metricStudents',students); set('metricPayments',payments);
-  set('metricDemos',demos); set('metricFollowups',followups);
-  const ps=document.getElementById('metricPaymentsSub'); if(ps&&payments!==null) ps.textContent='Pending records';
-  const ds=document.getElementById('metricDemosSub'); if(ds&&demos!==null) ds.textContent='Scheduled demos';
+/* ================= Helpers ================= */
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const addDays=(s,n)=>{const d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function fmtDate(v){if(!v)return '—';const d=new Date(String(v).length<=10?v+'T00:00:00':v);return isNaN(d)?esc(v):d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'})}
+function fmtDT(v){if(!v)return '';const d=new Date(v);return isNaN(d)?'':d.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
+function money(n){return n==null||n===''?'—':'₹'+Number(n).toLocaleString('en-IN')}
+function toast(s,ms){const t=$('toast');t.textContent=s;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',ms||2600)}
+function titleCase(s){return String(s||'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
+function initials(s){return String(s||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'?'}
+function waLink(phone,parent,child){let d=String(phone||'').replace(/\D/g,'');if(d.length===10)d='91'+d;const m='Hello '+(parent||'')+', this is Next Move India'+(child?' regarding '+child:'')+'. ';return d?'https://wa.me/'+d+'?text='+encodeURIComponent(m):'#'}
+function download(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;a.click()}
+function toCSV(rows,cols){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';return [cols.map(c=>q(c.label)).join(',')].concat(rows.map(r=>cols.map(c=>q(c.csv?c.csv(r):r[c.k])).join(','))).join('\n')}
 
-  const {data:leadData,error:leadError}=await supabaseClient.from('leads').select('*').order('created_at',{ascending:false}).limit(500);
-  const sc=document.getElementById('sysCheck');if(sc)sc.textContent='Signed in as '+((currentUser&&currentUser.email)||'?')+' ('+authRole+') • Leads in database: '+(leads===null?'could not read':leads)+' • Showing: '+((leadData&&leadData.length)||0)+(leadError?' • Error: '+leadError.message:'');
-  const leadRows=document.getElementById('leadRows');
-  if(leadRows){
-    if(leadError){leadRows.innerHTML='<tr><td colspan="6">Could not load leads: '+escapeHtml(leadError.message)+'</td></tr>'}
-    else if(!leadData?.length){leadRows.innerHTML='<tr><td colspan="6" style="text-align:center;color:#8793a5">No leads yet.</td></tr>'}
-    else leadRows.innerHTML=leadData.map(x=>{
-      leadMap[x.id]=x;
-      const parent=x.parent_name||x.parentName||x.name||'—';
-      const child=x.child_name||x.childName||'—';
-      const age=x.child_age||x.childAge||'';
-      const course=x.course_name||x.course||x.interested_course||'—';
-      const status=x.status||'new';
-      const cls=String(status).toLowerCase().includes('pending')?'warning':String(status).toLowerCase().includes('scheduled')?'':'blue';
-      return '<tr data-status="'+escapeHtml(status)+'"><td>'+escapeHtml(parent)+'</td><td>'+escapeHtml(child+(age?' • '+age:''))+'</td><td>'+escapeHtml(course)+'</td><td><span class="pill '+cls+'">'+escapeHtml(leadStatusLabel(status))+'</span></td><td>'+formatDate(x.demo_date||x.demoDate)+(x.next_follow_up?' · follow-up '+formatDate(x.next_follow_up):'')+'</td><td><button class="btn ghost" style="padding:6px 10px" onclick="openLead(\''+escapeHtml(x.id)+'\')">Open</button></td></tr>';
-    }).join('');
-  }
+/* ================= Language (English / हिन्दी) ================= */
+const HI={Dashboard:'डैशबोर्ड',Leads:'लीड्स','Lead Pipeline':'लीड पाइपलाइन',Students:'विद्यार्थी',Classes:'कक्षाएं',Attendance:'उपस्थिति',Materials:'सामग्री',Tasks:'कार्य',Payments:'भुगतान',Teachers:'शिक्षक','Team & Access':'टीम और एक्सेस','Sheet Sync':'शीट सिंक',Home:'होम','My Classes':'मेरी कक्षाएं','My Children':'मेरे बच्चे','Add':'जोड़ें',Save:'सहेजें',Delete:'हटाएं',Cancel:'रद्द करें',Search:'खोजें',Status:'स्थिति',Today:'आज','Good morning':'सुप्रभात','Follow-ups due':'फॉलो-अप बाकी','New leads':'नए लीड','Active students':'सक्रिय विद्यार्थी','Pending payments':'बकाया भुगतान','Today\'s classes':'आज की कक्षाएं','Open tasks':'खुले कार्य',Progress:'प्रगति',Course:'कोर्स',Phone:'फ़ोन',Notes:'टिप्पणियां',Calendar:'कैलेंडर',List:'सूची',Board:'बोर्ड'};
+let LANG=(()=>{try{return localStorage.getItem('nmi_lang')||'en'}catch(e){return 'en'}})();
+const T=s=>LANG==='hi'&&HI[s]?HI[s]:s;
+function toggleLang(){LANG=LANG==='en'?'hi':'en';try{localStorage.setItem('nmi_lang',LANG)}catch(e){}
+  if(S.user)sb.from('profiles').update({language:LANG}).eq('id',S.user.id).then(()=>{});
+  $('langBtn').textContent=LANG==='en'?'हिं':'EN';renderNav();render()}
 
-  const {data:studentData,error:studentError}=await supabaseClient.from('students').select('*').order('created_at',{ascending:false}).limit(300);
-  const studentRows=document.getElementById('studentRows');
-  if(studentRows){
-    if(studentError){studentRows.innerHTML='<tr><td colspan="5">Could not load students.</td></tr>'}
-    else if(!studentData?.length){studentRows.innerHTML='<tr><td colspan="5" style="text-align:center;color:#8793a5">No students yet.</td></tr>'}
-    else studentRows.innerHTML=studentData.map(x=>{
-      const name=x.full_name||x.name||x.student_name||'—';
-      const course=x.course_name||x.course||'—';
-      const progress=x.progress_percent!=null?x.progress_percent+'%':'—';
-      const status=x.status||'active';
-      return '<tr><td>'+escapeHtml(name)+'</td><td>'+escapeHtml(course)+'</td><td>—</td><td>'+escapeHtml(progress)+'</td><td><span class="pill">'+escapeHtml(status)+'</span></td></tr>';
-    }).join('');
-  }
+/* ================= State & permissions ================= */
+const S={user:null,profile:null,role:'student',d:{},view:'dashboard',ui:{},loaded:false};
+const isAdmin=()=>S.role==='admin';
+const isStaff=()=>['admin','counselor','teacher'].includes(S.role);
+const isFamily=()=>['parent','student'].includes(S.role);
+function canEdit(ent){
+  const r=S.role;if(r==='admin')return true;
+  if(r==='counselor')return ['leads','tasks'].includes(ent);
+  if(r==='teacher')return ['classes','attendance','tasks'].includes(ent);
+  return false;
+}
+function canDelete(ent){return isAdmin()}
 
-  const {data:teacherData,error:teacherError}=await supabaseClient.from('teachers').select('*').order('created_at',{ascending:false}).limit(20);
-  const teacherRows=document.getElementById('teacherRows');
-  if(teacherRows){
-    if(teacherError){teacherRows.innerHTML='<tr><td colspan="3">Could not load teachers.</td></tr>'}
-    else if(!teacherData?.length){teacherRows.innerHTML='<tr><td colspan="3" style="text-align:center;color:#8793a5">No teachers yet.</td></tr>'}
-    else teacherRows.innerHTML=teacherData.map(x=>{
-      const name=x.full_name||x.name||x.teacher_name||'—';
-      const email=x.email||'—';
-      const status=x.status||'active';
-      return '<tr><td>'+escapeHtml(name)+'</td><td>'+escapeHtml(email)+'</td><td><span class="pill">'+escapeHtml(status)+'</span></td></tr>';
-    }).join('');
-  }
+/* ================= Status vocab & colours ================= */
+const LEAD_ST=[['new','New','bl'],['contacted','Contacted','y'],['interested','Interested','o'],['call_back_later','Call back later','y'],['demo_scheduled','Demo scheduled','p'],['demo_rescheduled','Demo rescheduled','p'],['demo_completed','Demo completed','g'],['follow_up','Follow-up (fee shared)','o'],['enrolled','Enrolled','g'],['not_interested','Not interested','r'],['not_reachable','Not reachable','r']];
+const LEAD_LABEL=Object.fromEntries(LEAD_ST.map(x=>[x[0],x[1]]));
+const LEAD_COLOR=Object.fromEntries(LEAD_ST.map(x=>[x[0],x[2]]));
+const BADGE={active:'g',on_hold:'y',completed:'bl',discontinued:'r',inactive:'r',scheduled:'bl',cancelled:'r',pending:'o',paid:'g',overdue:'r',todo:'bl',doing:'o',done:'g',low:'',normal:'bl',high:'r',present:'g',absent:'r',late:'y',excused:'bl'};
+const bd=(v,cls)=>v==null||v===''?'—':'<span class="b '+(cls??BADGE[v]??'')+'">'+esc(LEAD_LABEL[v]||titleCase(v))+'</span>';
+function normalizeLeadStatus(v){const t=String(v||'').toLowerCase().replace(/^[\d.\s]+/,'').replace(/[^a-z]+/g,'_').replace(/^_|_$/g,'');if(LEAD_LABEL[t])return t;
+  const m={new_inquiry:'new',new_website_inquiries:'new',contacted_pre_counseling:'contacted',fee_shared_follow_up:'follow_up',fee_shared:'follow_up',follow_up_pending:'follow_up',not_interested_lost:'not_interested',lost:'not_interested',lost_unresponsive:'not_reachable',unresponsive:'not_reachable',rescheduled:'demo_rescheduled',booked:'demo_scheduled',demo_booked:'demo_scheduled',demo_done:'demo_completed',done:'demo_completed',completed:'demo_completed',scheduled:'demo_scheduled'};return m[t]||'new'}
+
+/* ================= Entities (every one editable here AND in the Google Sheet) ================= */
+const KINDS_M=['video','pdf','worksheet','slides','quiz','game','link'];
+const ENT={
+ leads:{label:'Lead',plural:'Leads',tab:'LMS Leads',order:'created_at',
+  title:r=>r.parent_name||r.phone||'Lead',
+  fields:[
+   {k:'parent_name',l:'Parent name'},{k:'phone',l:'Phone / WhatsApp'},
+   {k:'child_name',l:'Child name'},{k:'child_age',l:'Child age'},
+   {k:'email',l:'Email'},{k:'city',l:'City'},
+   {k:'interested_course',l:'Course interested in',t:'course'},{k:'status',l:'Status',t:'sel',o:LEAD_ST.map(x=>[x[0],x[1]]),def:'new'},
+   {k:'assigned_to',l:'Assigned counselor',t:'staff',adminOnly:true},{k:'next_follow_up',l:'Next follow-up',t:'date'},
+   {k:'demo_date',l:'Demo date',ph:'2026-10-25'},{k:'demo_time',l:'Demo time',ph:'5:00 PM'},
+   {k:'lost_reason',l:'Reason (if lost)',w:1},{k:'notes',l:'Notes (private)',t:'area',w:1}],
+  cols:[{k:'parent_name',l:'Parent'},{k:'child_name',l:'Child',f:r=>esc(r.child_name||'—')+(r.child_age?' <span class="muted sm">· '+esc(r.child_age)+'</span>':'')},{k:'phone',l:'Phone'},{k:'interested_course',l:'Course'},{k:'status',l:'Status',f:r=>bd(r.status,LEAD_COLOR[r.status])},{k:'next_follow_up',l:'Follow-up',f:r=>fmtDate(r.next_follow_up)},{k:'created_at',l:'Received',f:r=>fmtDate(r.created_at)}],
+  filter:{k:'status',o:LEAD_ST.map(x=>[x[0],x[1]])}},
+ students:{label:'Student',plural:'Students',tab:'LMS Students',order:'created_at',
+  title:r=>r.full_name||'Student',
+  fields:[
+   {k:'full_name',l:'Student name',req:1},{k:'age',l:'Age',t:'num'},
+   {k:'course_name',l:'Course',t:'course'},{k:'teacher_id',l:'Teacher',t:'teacher'},
+   {k:'batch_timings',l:'Batch timings',ph:'Sat & Sun 5 PM'},{k:'status',l:'Status',t:'sel',o:['active','on_hold','completed','discontinued'].map(x=>[x,titleCase(x)]),def:'active'},
+   {k:'sessions_completed',l:'Sessions completed',t:'num'},{k:'total_sessions',l:'Total sessions',t:'num'},
+   {k:'joined_at',l:'Joined on',t:'date'},{k:'progress_notes',l:'Progress notes',t:'area',w:1}],
+  cols:[{k:'student_code',l:'ID'},{k:'full_name',l:'Student'},{k:'course_name',l:'Course'},{k:'batch_timings',l:'Batch'},{k:'progress_percent',l:'Progress',f:r=>'<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="prog" style="width:70px"><i style="width:'+(r.progress_percent||0)+'%"></i></div><span class="sm">'+(r.sessions_completed||0)+'/'+(r.total_sessions||'?')+'</span></div>'},{k:'status',l:'Status',f:r=>bd(r.status)}],
+  filter:{k:'status',o:['active','on_hold','completed','discontinued'].map(x=>[x,titleCase(x)])}},
+ teachers:{label:'Teacher',plural:'Teachers',tab:'LMS Teachers',order:'created_at',
+  title:r=>r.full_name||'Teacher',
+  fields:[{k:'full_name',l:'Name',req:1},{k:'email',l:'Email'},{k:'phone',l:'Phone'},{k:'subject',l:'Speciality'},{k:'status',l:'Status',t:'sel',o:[['active','Active'],['inactive','Inactive']],def:'active'}],
+  cols:[{k:'full_name',l:'Teacher'},{k:'subject',l:'Speciality'},{k:'email',l:'Email'},{k:'phone',l:'Phone'},{k:'status',l:'Status',f:r=>bd(r.status)}]},
+ classes:{label:'Class',plural:'Classes',tab:'LMS Classes',order:'class_date',asc:false,
+  title:r=>r.title||'Class',
+  fields:[{k:'title',l:'Class title',req:1,w:1},{k:'course_name',l:'Course',t:'course'},{k:'teacher_id',l:'Teacher',t:'teacher'},
+   {k:'kind',l:'Type',t:'sel',o:[['batch','Batch class'],['demo','Free demo'],['one_to_one','One-to-one'],['workshop','Workshop']],def:'batch'},{k:'status',l:'Status',t:'sel',o:[['scheduled','Scheduled'],['completed','Completed'],['cancelled','Cancelled']],def:'scheduled'},
+   {k:'class_date',l:'Date',t:'date'},{k:'class_time',l:'Time',ph:'5:00 PM'},{k:'duration_min',l:'Minutes',t:'num',def:45},{k:'meet_link',l:'Google Meet link'},{k:'notes',l:'Notes',t:'area',w:1}],
+  cols:[{k:'class_date',l:'Date',f:r=>fmtDate(r.class_date)},{k:'class_time',l:'Time'},{k:'title',l:'Class'},{k:'course_name',l:'Course'},{k:'teacher_name',l:'Teacher'},{k:'kind',l:'Type',f:r=>bd(r.kind,'p')},{k:'status',l:'Status',f:r=>bd(r.status)}],
+  filter:{k:'kind',o:[['batch','Batch'],['demo','Demo'],['one_to_one','One-to-one'],['workshop','Workshop']]}},
+ materials:{label:'Material',plural:'Materials',tab:'LMS Materials',order:'sort_order',asc:true,
+  title:r=>r.title||'Material',
+  fields:[{k:'title',l:'Title',req:1,w:1},{k:'course_name',l:'Course',t:'course'},{k:'kind',l:'Type',t:'sel',o:KINDS_M.map(x=>[x,titleCase(x)]),def:'link'},
+   {k:'url',l:'Link (Google Drive / YouTube)',w:1},{k:'age_group',l:'Age group',ph:'6-9'},{k:'language',l:'Language',t:'sel',o:[['English','English'],['Hindi','Hindi'],['Both','Both']],def:'English'},
+   {k:'published',l:'Visible to families',t:'bool',def:true},{k:'sort_order',l:'Order',t:'num',def:0},{k:'description',l:'Description',t:'area',w:1}],
+  cols:[{k:'title',l:'Title'},{k:'course_name',l:'Course'},{k:'kind',l:'Type',f:r=>bd(r.kind,'bl')},{k:'age_group',l:'Ages'},{k:'language',l:'Language'},{k:'published',l:'Visible',f:r=>r.published?'<span class="b g">Yes</span>':'<span class="b">Hidden</span>'}],
+  filter:{k:'kind',o:KINDS_M.map(x=>[x,titleCase(x)])}},
+ tasks:{label:'Task',plural:'Tasks',tab:'LMS Tasks',order:'due_date',asc:true,
+  title:r=>r.title||'Task',
+  fields:[{k:'title',l:'Task',req:1,w:1},{k:'priority',l:'Priority',t:'sel',o:[['low','Low'],['normal','Normal'],['high','High']],def:'normal'},{k:'status',l:'Status',t:'sel',o:[['todo','To do'],['doing','In progress'],['done','Done']],def:'todo'},
+   {k:'due_date',l:'Due date',t:'date'},{k:'assignee_id',l:'Assigned to',t:'staff'},{k:'description',l:'Details',t:'area',w:1}],
+  cols:[{k:'title',l:'Task'},{k:'priority',l:'Priority',f:r=>bd(r.priority)},{k:'status',l:'Status',f:r=>bd(r.status)},{k:'due_date',l:'Due',f:r=>{const late=r.due_date&&r.due_date<todayStr()&&r.status!=='done';return (late?'<span style="color:var(--red);font-weight:800">':'<span>')+fmtDate(r.due_date)+'</span>'}},{k:'assignee_name',l:'Assigned to'}],
+  filter:{k:'status',o:[['todo','To do'],['doing','In progress'],['done','Done']]}},
+ payments:{label:'Payment',plural:'Payments',tab:'LMS Payments',order:'due_date',asc:false,
+  title:r=>(r.student_name||'Payment')+' • '+money(r.amount),
+  fields:[{k:'student_id',l:'Student',t:'student',req:1,w:1},{k:'course_name',l:'Course',t:'course'},{k:'package',l:'Package',ph:'12 sessions'},
+   {k:'amount',l:'Amount (₹)',t:'num'},{k:'status',l:'Status',t:'sel',o:[['pending','Pending'],['paid','Paid'],['overdue','Overdue'],['cancelled','Cancelled']],def:'pending'},{k:'due_date',l:'Due date',t:'date'},{k:'paid_date',l:'Paid on',t:'date'}],
+  cols:[{k:'student_name',l:'Student'},{k:'course_name',l:'Course'},{k:'package',l:'Package'},{k:'amount',l:'Amount',f:r=>money(r.amount)},{k:'due_date',l:'Due',f:r=>fmtDate(r.due_date)},{k:'status',l:'Status',f:r=>bd(effPay(r))}],
+  filter:{k:'status',o:[['pending','Pending'],['paid','Paid'],['overdue','Overdue'],['cancelled','Cancelled']]}}
+};
+const effPay=r=>r.status==='pending'&&r.due_date&&r.due_date<todayStr()?'overdue':r.status;
+
+/* ================= Data layer ================= */
+const TABLES_BY_ROLE={
+ admin:['leads','students','teachers','classes','materials','tasks','payments','attendance','profiles','courses','demos'],
+ counselor:['leads','teachers','classes','materials','tasks','courses'],
+ teacher:['classes','students','materials','tasks','attendance','teachers','courses'],
+ parent:['students','classes','materials','payments','attendance','courses'],
+ student:['students','classes','materials','attendance','courses']};
+const LIMIT=2000;
+async function loadTable(t){
+  let q=sb.from(t).select('*').limit(LIMIT);
+  const e=ENT[t];
+  if(e&&e.order)q=q.order(e.order,{ascending:!!e.asc,nullsFirst:false});
+  else if(t==='profiles')q=q.order('created_at');
+  else if(t==='courses')q=q.order('name');
+  const {data,error}=await q;
+  if(error){S.err=S.err||{};S.err[t]=error.message;return []}
+  return data||[];
 }
-function togglePasteLeads(){
-  const box=document.getElementById('pasteLeadBox');
-  if(box) box.style.display=box.style.display==='none'?'block':'none';
+async function loadAll(quiet){
+  S.err={};
+  const list=TABLES_BY_ROLE[S.role]||[];
+  const res=await Promise.all(list.map(loadTable));
+  list.forEach((t,i)=>S.d[t]=res[i]);
+  S.loaded=true;S.last=new Date();
+  S.map={};for(const t of list){S.map[t]={};for(const r of S.d[t])S.map[t][r.id]=r}
+  const bad=Object.keys(S.err);
+  const chip=$('liveChip');
+  chip.className='chip hide-m '+(bad.length?'bad':'ok');
+  chip.textContent=bad.length?'⚠ '+bad.length+' problem(s)':'● Live · '+S.last.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  chip.title=bad.length?bad.map(t=>t+': '+S.err[t]).join('\n'):'Data refreshes automatically every minute and whenever you save.';
+  updateBadges();if(!quiet)render();
 }
-async function pasteClipboardData(){
-  const box=document.getElementById('leadPaste'), status=document.getElementById('pasteReadStatus');
-  try{
-    if(!navigator.clipboard || !navigator.clipboard.readText) throw new Error('Clipboard access is not available. Use Ctrl+V in the box below.');
-    const text=await navigator.clipboard.readText();
-    if(!text.trim()) throw new Error('Clipboard is empty. First copy your rows from Google Sheets.');
-    box.value=text;
-    const rows=text.replace(/\r/g,'').split('\n').filter(x=>x.trim()!=='');
-    status.textContent='✓ Clipboard data pasted: '+rows.length+' row(s). Now click Import Pasted Leads.';
-    toast('Clipboard data pasted');
-  }catch(e){
-    status.textContent='Click inside the box below and press Ctrl+V to paste your Google Sheet data.';
-    toast(e.message||'Could not access clipboard');
-    box.focus();
-  }
+const D=t=>S.d[t]||[];
+const byId=(t,id)=>(S.map&&S.map[t]&&S.map[t][id])||null;
+function teacherName(id){const t=byId('teachers',id);return t?t.full_name:''}
+function staffList(){return D('profiles').filter(p=>['admin','counselor','teacher'].includes(p.role))}
+function myTeacherId(){const t=D('teachers').find(x=>x.profile_id===(S.user&&S.user.id));return t?t.id:null}
+
+/* ================= Generic save / delete ================= */
+async function saveRecord(ent,id,payload){
+  const t=ent;let res;
+  if(id)res=await sb.from(t).update(payload).eq('id',id).select().maybeSingle();
+  else res=await sb.from(t).insert(payload).select().maybeSingle();
+  if(res.error){toast('Could not save: '+res.error.message,5000);return null}
+  if(id&&!res.data){toast('Nothing was saved — you may not have permission for this record.',5000);return null}
+  await loadAll(true);return res.data||true;
+}
+async function deleteRecord(ent,id){
+  if(!confirm('Delete this '+ENT[ent].label.toLowerCase()+'? This cannot be undone.'))return false;
+  const {error}=await sb.from(ent).delete().eq('id',id);
+  if(error){toast('Could not delete: '+error.message,5000);return false}
+  await loadAll(true);return true;
 }
 
-function captureSheetPaste(e){
-  const text=e.clipboardData?.getData('text/plain')||'';
-  if(text){
-    e.preventDefault();
-    const box=e.currentTarget;
-    box.value=text;
-    const rows=text.replace(/\r/g,'').split('\n').filter(x=>x.trim()!=='');
-    const status=document.getElementById('pasteReadStatus');
-    if(status) status.textContent='✓ Pasted successfully: '+rows.length+' row(s) detected.';
-  }
+/* ================= Drawer + generic editor ================= */
+function openDrawer(html){$('drawer').innerHTML=html;$('ov').classList.add('on')}
+function closeDrawer(){$('ov').classList.remove('on');$('drawer').innerHTML='';render()}
+function optionsFor(f,val){
+  const sel=v=>String(v)===String(val??'')?' selected':'';
+  let o=[];
+  if(f.t==='sel')o=f.o;
+  else if(f.t==='course'){o=[['','—']].concat(D('courses').map(c=>[c.name,c.name]));if(val&&!o.some(x=>x[0]===val))o.push([val,val])}
+  else if(f.t==='teacher'){o=[['','—']].concat(D('teachers').map(c=>[c.id,c.full_name]))}
+  else if(f.t==='staff'){o=[['','Unassigned']].concat(staffList().map(p=>[p.id,(p.full_name||p.email)+' ('+p.role+')']));if(!isAdmin()&&S.user)o=[['',''],[S.user.id,'Me']]}
+  else if(f.t==='student'){o=[['','Choose student…']].concat(D('students').map(c=>[c.id,c.full_name+(c.student_code?' • '+c.student_code:'')]))}
+  return o.map(x=>'<option value="'+esc(x[0])+'"'+sel(x[0])+'>'+esc(x[1])+'</option>').join('');
 }
-function sheetRowsToObjects(text){
-  text=String(text||'').replace(/\r/g,'').replace(/^\uFEFF/,'');
-  const lines=text.split('\n').filter(x=>x.trim()!=='');
-  if(!lines.length)return [];
-  const split=line=>line.includes('\t')?line.split('\t'):line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
-  let headers=split(lines[0]).map(x=>x.trim().replace(/^"|"$/g,''));
-  const known=headers.map(normHeader);
-  const looksLikeHeader=known.some(x=>['timestamp','parentname','phone','childname','childage','city','status','assignedteacher','demodate'].includes(x));
-  if(!looksLikeHeader){
-    headers=['Timestamp','Parent Name','Phone','Child Name','Child Age','City','Status','Assigned Teacher','Demo Date','Notes'];
-  }
-  return (looksLikeHeader?lines.slice(1):lines).map(line=>{
-    const vals=split(line).map(x=>x.trim().replace(/^"|"$/g,''));
-    return Object.fromEntries(headers.map((h,i)=>[h,vals[i]||'']));
-  });
+function fieldHTML(f,r,ro){
+  const v=r[f.k]!=null?r[f.k]:(f.def!=null&&!r.id?f.def:'');
+  const dis=ro||(f.adminOnly&&!isAdmin())?' disabled':'';
+  let inner;
+  if(['sel','course','teacher','staff','student'].includes(f.t))inner='<select data-k="'+f.k+'"'+dis+'>'+optionsFor(f,v)+'</select>';
+  else if(f.t==='area')inner='<textarea data-k="'+f.k+'" rows="3"'+dis+'>'+esc(v)+'</textarea>';
+  else if(f.t==='bool')inner='<select data-k="'+f.k+'" data-bool="1"'+dis+'><option value="true"'+(v===true||v==='true'?' selected':'')+'>Yes</option><option value="false"'+(v===false||v==='false'?' selected':'')+'>No</option></select>';
+  else if(f.t==='date')inner='<input type="date" data-k="'+f.k+'" value="'+esc(v)+'"'+dis+'>';
+  else if(f.t==='num')inner='<input type="number" step="any" data-k="'+f.k+'" value="'+esc(v)+'"'+dis+'>';
+  else inner='<input data-k="'+f.k+'" value="'+esc(v)+'" placeholder="'+esc(f.ph||'')+'"'+dis+'>';
+  return '<label class="'+(f.w?'full':'')+'"><span>'+esc(f.l)+(f.req?' *':'')+'</span>'+inner+'</label>';
 }
-async function importPastedLeads(){
-  const text=document.getElementById('leadPaste')?.value||'';
-  const records=sheetRowsToObjects(text);
-  if(records.length<1){toast('Paste the header row and at least one lead row');return}
-  const payload=records.map(x=>{
-    const timestamp=csvField(x,'Timestamp','Inquiry Timestamp','Created At','created_at');
-    const status=normalizeLeadStatus(csvField(x,'Pipeline Stage','Lead Status','Status'));
-    return {
-      parent_name:csvField(x,'Parent Name','Parents Name','Parent'),
-      phone:csvField(x,'Phone','Mobile No','Mobile','Phone Number','WhatsApp'),
-      child_name:csvField(x,'Child Name','Childs Name','Student Name'),
-      child_age:csvField(x,'Child Age','Childs Age','Age')||null,
-      city:csvField(x,'City','Location'),
-      status,
-      interested_course:csvField(x,'Interested Course','Course')||null,
-      demo_date:csvField(x,'Demo Date','Demo')||null,
-      notes:csvField(x,'Notes','Remark','Remarks')||null,
-      source:'Google Sheet Import',
-      created_at:parseSheetTimestamp(timestamp)||(Date.parse(timestamp)?new Date(timestamp).toISOString():new Date().toISOString())
-    };
-  }).filter(x=>x.parent_name||x.phone||x.child_name);
-  if(!payload.length){
-    const raw=document.getElementById('leadPaste')?.value||'';
-    const sample=raw.split(/\n/).slice(0,2).join(' | ');
-    toast('I could not read the pasted columns. Please paste directly from Google Sheets, including Parent Name and Phone.');
-    console.log('Paste preview:',sample);
-    return;
+function collect(ent){
+  const e=ENT[ent],p={};
+  for(const f of e.fields){
+    const el=document.querySelector('#drawer [data-k="'+f.k+'"]');if(!el||el.disabled)continue;
+    let v=el.value;
+    if(f.t==='num')v=v===''?null:Number(v);
+    else if(el.dataset.bool)v=v==='true';
+    else v=String(v).trim()===''?null:String(v).trim();
+    p[f.k]=v;
   }
-  const {data:existing,error:existingError}=await supabaseClient.from('leads').select('phone,child_name').limit(5000);
-  if(existingError){toast('Could not check existing leads: '+existingError.message);return}
-  const keys=new Set((existing||[]).map(leadKey));
-  const seen=new Set();const fresh=payload.filter(x=>{const k=leadKey(x);if(keys.has(k)||seen.has(k))return false;seen.add(k);return true});
-  if(!fresh.length){toast('No new leads found. Existing records were kept safe.');return}
-  let {error}=await supabaseClient.from('leads').insert(fresh);
-  if(error){
-    const fallback=fresh.map(x=>({parent_name:x.parent_name,phone:x.phone,child_name:x.child_name,child_age:x.child_age,city:x.city,status:x.status,demo_date:x.demo_date}));
-    error=(await supabaseClient.from('leads').insert(fallback)).error;
-  }
-  if(error){toast('Import failed: '+error.message);return}
-  toast(fresh.length+' new leads imported');
-  document.getElementById('leadPaste').value='';
-  togglePasteLeads();
-  await refreshLeadCenter();
+  return p;
 }
-function csvParse(text){
-  const rows=[]; let row=[]; let cell=''; let quote=false;
-  text=String(text||'').replace(/^\uFEFF/,'');
-  for(let i=0;i<text.length;i++){
-    const ch=text[i], nx=text[i+1];
-    if(ch==='"'){
-      if(quote && nx==='"'){cell+='"';i++;}
-      else quote=!quote;
-    } else if((ch===',' || ch===';' || ch==='\t') && !quote){
-      row.push(cell); cell='';
-    } else if((ch==='\n' || ch==='\r') && !quote){
-      if(ch==='\r' && nx==='\n') i++;
-      row.push(cell); cell='';
-      if(row.some(v=>String(v).trim()!=='')) rows.push(row);
-      row=[];
-    } else {
-      cell+=ch;
-    }
-  }
-  if(cell!=='' || row.length){
-    row.push(cell);
-    if(row.some(v=>String(v).trim()!=='')) rows.push(row);
-  }
+function editor(ent,id,preset,extraTop,extraBottom){
+  const e=ENT[ent],r=id?(byId(ent,id)||{}):(preset||{});const ro=!canEdit(ent);
+  const missing=e.fields.filter(f=>f.req&&!r[f.k]&&id);
+  openDrawer('<div class="dh"><div><div class="sm muted">'+esc(e.label)+'</div><h2>'+esc(id?e.title(r):'New '+e.label.toLowerCase())+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="row" style="margin-bottom:12px"><span class="sync" title="Edit here or in the Google Sheet tab &quot;'+esc(e.tab)+'&quot; — both stay in step.">⇄ Synced with Google Sheet</span>'+(ro?'<span class="b y">View only</span>':'')+'</div>'
+   +(extraTop||'')
+   +'<div class="fg">'+e.fields.map(f=>fieldHTML(f,r,ro)).join('')+'</div>'
+   +(extraBottom||'')
+   +(ro?'':'<div class="act"><button class="btn pri" onclick="submitEditor(\''+ent+'\','+(id?'\''+id+'\'':'null')+')">💾 Save</button>'+(id&&canDelete(ent)?'<button class="btn red" onclick="removeFromEditor(\''+ent+'\',\''+id+'\')">Delete</button>':'')+'<button class="btn" onclick="closeDrawer()">Cancel</button></div>'));
+}
+async function submitEditor(ent,id){
+  const e=ENT[ent],p=collect(ent);
+  for(const f of e.fields)if(f.req&&!p[f.k]){toast('Please fill in: '+f.l);return}
+  if(ent==='leads'&&!p.parent_name&&!p.phone&&!p.child_name){toast('Add at least a name or phone number');return}
+  if(ent==='leads'){const bad=(p.status==='not_interested'||p.status==='not_reachable');if(!bad&&'lost_reason' in p)p.lost_reason=null;
+    if(!id&&!isAdmin())p.assigned_to=S.user.id;if(!id)p.source='manual'}
+  if(ent==='tasks'&&!id&&!p.assignee_id)p.assignee_id=S.user.id;
+  if(ent==='classes'&&p.teacher_id===null)p.teacher_name=null;
+  if(ent==='students'&&'teacher_id' in p){}
+  const ok=await saveRecord(ent,id,p);if(ok){toast('Saved ✓');closeDrawer()}
+}
+async function removeFromEditor(ent,id){if(await deleteRecord(ent,id)){toast('Deleted');closeDrawer()}}
+
+/* ================= Generic list view ================= */
+function listView(ent,opts){
+  opts=opts||{};const e=ENT[ent];const u=(S.ui[ent]=S.ui[ent]||{q:'',f:'',sort:null,dir:1});
+  const rows=filterRows(ent);
+  const canAdd=canEdit(ent)&&(ent!=='attendance')&&!opts.noAdd;
+  return '<div class="row" style="margin-bottom:12px">'
+   +'<div class="grow" style="min-width:200px"><input placeholder="🔎 '+T('Search')+' '+esc(e.plural.toLowerCase())+'…" value="'+esc(u.q)+'" oninput="S.ui[\''+ent+'\'].q=this.value;refreshRows(\''+ent+'\')"></div>'
+   +(e.filter?'<select style="width:auto" onchange="S.ui[\''+ent+'\'].f=this.value;refreshRows(\''+ent+'\')"><option value="">All</option>'+e.filter.o.map(o=>'<option value="'+esc(o[0])+'"'+(u.f===o[0]?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>':'')
+   +(opts.toolbar||'')
+   +'<button class="btn" onclick="exportEnt(\''+ent+'\')">⬇ CSV</button>'
+   +(canAdd?'<button class="btn pri" onclick="addRecord(\''+ent+'\')">＋ '+T('Add')+' '+esc(e.label.toLowerCase())+'</button>':'')
+   +'</div><div class="tw" id="tw_'+ent+'">'+tableHTML(ent,rows)+'</div>'
+   +'<div class="sm muted" style="margin-top:8px"><span class="sync">⇄ Two-way</span> &nbsp;Every change here appears in the Google Sheet tab “'+esc(e.tab)+'”, and edits made in that tab come back here.</div>';
+}
+function filterRows(ent){
+  const e=ENT[ent],u=S.ui[ent]||{q:'',f:''};let rows=D(ent);
+  if(u.f&&e.filter)rows=rows.filter(r=>String(r[e.filter.k])===u.f);
+  const q=(u.q||'').toLowerCase().trim();
+  if(q)rows=rows.filter(r=>Object.values(r).some(v=>v!=null&&typeof v!=='object'&&String(v).toLowerCase().includes(q)));
+  if(u.sort){const k=u.sort,d=u.dir;rows=rows.slice().sort((a,b)=>{const x=a[k],y=b[k];if(x==null)return 1;if(y==null)return -1;return (x>y?1:x<y?-1:0)*d})}
   return rows;
 }
-
-const LEAD_STATUSES=['new','contacted','interested','call_back_later','demo_scheduled','demo_rescheduled','demo_completed','follow_up','enrolled','not_interested','not_reachable'];
-function normalizeLeadStatus(v){
-  const t=String(v||'').toLowerCase().replace(/^[\d.\s]+/,'').replace(/[^a-z]+/g,'_').replace(/^_|_$/g,'');
-  if(LEAD_STATUSES.includes(t)) return t;
-  const map={new_inquiry:'new',new_website_inquiries:'new',contacted_pre_counseling:'contacted',fee_shared_follow_up:'follow_up',fee_shared:'follow_up',follow_up_pending:'follow_up',not_interested_lost:'not_interested',lost:'not_interested',lost_unresponsive:'not_reachable',unresponsive:'not_reachable',rescheduled:'demo_rescheduled',booked:'demo_scheduled',demo_booked:'demo_scheduled',demo_done:'demo_completed',done:'demo_completed',completed:'demo_completed',scheduled:'demo_scheduled'};
-  return map[t]||'new';
+function tableHTML(ent,rows){
+  const e=ENT[ent],u=S.ui[ent]||{};
+  if(!rows.length)return '<div class="empty">'+(S.err&&S.err[ent]?'Could not load: '+esc(S.err[ent])+'<br><span class="sm">If this says “relation does not exist”, run phase 3 in Supabase.</span>':'Nothing here yet.')+'</div>';
+  return '<table><thead><tr>'+e.cols.map(c=>'<th onclick="sortBy(\''+ent+'\',\''+c.k+'\')">'+esc(c.l)+(u.sort===c.k?(u.dir>0?' ▲':' ▼'):'')+'</th>').join('')+'</tr></thead><tbody>'
+   +rows.slice(0,400).map(r=>'<tr onclick="openRecord(\''+ent+'\',\''+r.id+'\')">'+e.cols.map(c=>'<td>'+(c.f?c.f(r):esc(r[c.k]??'—'))+'</td>').join('')+'</tr>').join('')
+   +'</tbody></table>'+(rows.length>400?'<div class="empty sm">Showing 400 of '+rows.length+' — use search to narrow down.</div>':'');
 }
-function parseSheetTimestamp(v){
-  const m=String(v||'').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
-  if(!m) return null;
-  const p=n=>String(n||0).padStart(2,'0');
-  return m[3]+'-'+p(m[2])+'-'+p(m[1])+'T'+p(m[4])+':'+p(m[5])+':'+p(m[6])+'+05:30';
+function refreshRows(ent){const el=$('tw_'+ent);if(el)el.innerHTML=tableHTML(ent,filterRows(ent))}
+function sortBy(ent,k){const u=S.ui[ent];if(u.sort===k)u.dir=-u.dir;else{u.sort=k;u.dir=1}refreshRows(ent)}
+function exportEnt(ent){const e=ENT[ent];download('nmi-'+ent+'-'+todayStr()+'.csv',toCSV(filterRows(ent),e.cols.map(c=>({label:c.l,k:c.k}))))}
+function addRecord(ent){
+  if(ent==='classes')return editor('classes',null,{class_date:todayStr()});
+  if(ent==='tasks')return editor('tasks',null,{assignee_id:S.user.id});
+  if(ent==='leads')return editor('leads',null,{assigned_to:S.user.id});
+  editor(ent,null,{});
 }
-function leadKey(x){
-  const digits=String(x.phone||'').replace(/\D/g,'').slice(-10);
-  return digits+'|'+String(x.child_name||'').trim().toLowerCase();
+function openRecord(ent,id){
+  if(ent==='leads')return openLead(id);
+  if(ent==='students')return openStudent(id);
+  if(ent==='classes')return openClass(id);
+  editor(ent,id);
 }
-
-const LEAD_STATUS_LABELS={new:'New',contacted:'Contacted',interested:'Interested',call_back_later:'Call back later',demo_scheduled:'Demo scheduled',demo_rescheduled:'Demo rescheduled',demo_completed:'Demo completed',follow_up:'Follow-up (fee shared)',enrolled:'Enrolled',not_interested:'Not interested',not_reachable:'Not reachable'};
-function leadStatusLabel(s){return LEAD_STATUS_LABELS[s]||String(s||'').replaceAll('_',' ')}
-function uiRoleOf(a){return (a==='admin'||a==='counselor')?'admin':(a==='teacher'?'teacher':'student')}
-let editingLeadId=null,leadMap={},courseCache=null,staffCache=null;
-async function loadStaff(){
-  if(staffCache) return staffCache;
-  if(authRole==='admin'){const {data}=await supabaseClient.from('profiles').select('id,full_name,email,role').in('role',['admin','counselor']).order('full_name');staffCache=data||[]}
-  else staffCache=currentUser?[{id:currentUser.id,full_name:'Me',email:currentUser.email,role:authRole}]:[];
-  return staffCache;
-}
-async function loadCourses(){
-  if(courseCache) return courseCache;
-  const {data}=await supabaseClient.from('courses').select('id,name').order('name');
-  courseCache=data||[];return courseCache;
-}
-function waLink(phone,parent,child){
-  let d=String(phone||'').replace(/\D/g,'');if(d.length===10)d='91'+d;
-  const msg='Hello '+(parent||'')+', this is Next Move India'+(child?' regarding '+child:'')+'. ';
-  return d?'https://wa.me/'+d+'?text='+encodeURIComponent(msg):'#';
-}
-function lmStatusChanged(){
-  const v=document.getElementById('lmStatus').value;
-  document.getElementById('lmLostWrap').style.display=(v==='not_interested'||v==='not_reachable')?'block':'none';
-}
-async function openLead(id){
-  editingLeadId=id;const x=id?(leadMap[id]||{}):{};
-  const [staff,courses]=await Promise.all([loadStaff(),loadCourses()]);
-  const el=n=>document.getElementById(n);
-  el('lmTitle').textContent=id?'Lead: '+(x.parent_name||x.phone||''):'Add a lead';
-  el('lmParent').value=x.parent_name||'';el('lmPhone').value=x.phone||'';el('lmChild').value=x.child_name||'';
-  el('lmAge').value=x.child_age||'';el('lmCity').value=x.city||'';
-  const names=courses.map(c=>c.name);if(x.interested_course&&!names.includes(x.interested_course))names.push(x.interested_course);
-  el('lmCourse').innerHTML='<option value="">—</option>'+names.map(n=>'<option'+(n===x.interested_course?' selected':'')+'>'+escapeHtml(n)+'</option>').join('');
-  el('lmStatus').innerHTML=Object.keys(LEAD_STATUS_LABELS).map(k=>'<option value="'+k+'"'+(k===(x.status||'new')?' selected':'')+'>'+LEAD_STATUS_LABELS[k]+'</option>').join('');
-  const cur=id?x.assigned_to:(currentUser&&currentUser.id);
-  el('lmAssigned').innerHTML='<option value="">Unassigned</option>'+staff.map(p=>'<option value="'+p.id+'"'+(p.id===cur?' selected':'')+'>'+escapeHtml(p.full_name||p.email)+'</option>').join('');
-  el('lmAssigned').disabled=authRole!=='admin';
-  el('lmFollow').value=x.next_follow_up||'';el('lmDemoDate').value=x.demo_date||'';el('lmDemoTime').value=x.demo_time||'';
-  el('lmNotes').value=x.notes||'';el('lmLost').value=x.lost_reason||'';lmStatusChanged();
-  el('lmWa').href=waLink(x.phone,x.parent_name,x.child_name);
-  el('lmConvertBtn').style.display=(id&&x.status!=='enrolled'&&!x.converted_student_id)?'inline-block':'none';
-  el('lmHistWrap').style.display=id?'block':'none';el('lmHist').innerHTML='Loading…';
-  el('leadModal').style.display='flex';
-  if(id){
-    const {data,error}=await supabaseClient.from('lead_events').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(20);
-    el('lmHist').innerHTML=error?'Could not load history':(data&&data.length?data.map(h=>'<div>'+new Date(h.created_at).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+' — '+escapeHtml(leadStatusLabel(h.from_status))+' → <b>'+escapeHtml(leadStatusLabel(h.to_status))+'</b></div>').join(''):'No changes yet');
-  }
-}
-function closeLead(){document.getElementById('leadModal').style.display='none';editingLeadId=null}
-async function saveLead(){
-  const v=n=>document.getElementById(n).value.trim();
-  const status=v('lmStatus');
-  const payload={parent_name:v('lmParent')||null,phone:v('lmPhone')||null,child_name:v('lmChild')||null,child_age:v('lmAge')||null,city:v('lmCity')||null,
-    interested_course:v('lmCourse')||null,status,next_follow_up:v('lmFollow')||null,demo_date:v('lmDemoDate')||null,demo_time:v('lmDemoTime')||null,
-    notes:document.getElementById('lmNotes').value.trim()||null,lost_reason:(status==='not_interested'||status==='not_reachable')?(v('lmLost')||null):null};
-  if(!payload.parent_name&&!payload.phone&&!payload.child_name){toast('Please enter at least a name or phone number');return}
-  if(authRole==='admin'||!editingLeadId)payload.assigned_to=document.getElementById('lmAssigned').value||(editingLeadId?null:(currentUser&&currentUser.id));
-  let error;
-  if(editingLeadId){({error}=await supabaseClient.from('leads').update(payload).eq('id',editingLeadId))}
-  else{payload.source='manual';({error}=await supabaseClient.from('leads').insert(payload))}
-  if(error){toast('Could not save: '+error.message);return}
-  toast('Saved');closeLead();await refreshLeadCenter();
-}
-async function convertLead(){
-  if(!editingLeadId)return;
-  const courses=await loadCourses();const x=leadMap[editingLeadId]||{};
-  const match=courses.find(c=>c.name===document.getElementById('lmCourse').value);
-  if(!match){toast('Choose the course first, then save and enrol');return}
-  if(!confirm('Enrol '+(x.child_name||'this child')+' in '+match.name+'? This creates the student record.'))return;
-  const {error}=await supabaseClient.rpc('convert_lead_to_student',{p_lead:editingLeadId,p_course:match.id});
-  if(error){toast('Could not enrol: '+error.message);return}
-  toast('Student created');closeLead();await refreshLeadCenter();
-}
-function normHeader(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
-function csvField(obj,...names){for(const n of names){const k=Object.keys(obj).find(x=>normHeader(x)===normHeader(n));if(k)return obj[k]?.trim()||''}return ''}
-async function importLeadCSV(e){
-  const file=e.target.files?.[0]; if(!file)return;
-  toast('Reading your Google Sheet export…');
-  const rows=csvParse(await file.text()); if(rows.length<2){toast('CSV has no lead rows');return}
-  const headers=rows[0], records=rows.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]||''])));
-  const payload=records.map(x=>{
-    const timestamp=csvField(x,'Timestamp','Inquiry Timestamp','Created At','created_at');
-    const status=normalizeLeadStatus(csvField(x,'Pipeline Stage','Lead Status','Status'));
-    return {
-      parent_name:csvField(x,'Parent Name','Parents Name','Parent'),
-      phone:csvField(x,'Phone','Mobile No','Mobile','Phone Number','WhatsApp'),
-      child_name:csvField(x,'Child Name','Childs Name','Student Name'),
-      child_age:csvField(x,'Child Age','Childs Age','Age')||null,
-      city:csvField(x,'City','Location'),
-      status,
-      interested_course:csvField(x,'Interested Course','Course')||null,
-      demo_date:csvField(x,'Demo Date','Demo')||null,
-      notes:csvField(x,'Notes','Remark','Remarks')||null,
-      source:'Google Sheet Import',
-      created_at:parseSheetTimestamp(timestamp)||(Date.parse(timestamp)?new Date(timestamp).toISOString():new Date().toISOString())
-    };
-  }).filter(x=>x.parent_name||x.phone||x.child_name);
-  if(!payload.length){toast('No usable lead rows found');return}
-  const {data:existing,error:existingError}=await supabaseClient.from('leads').select('phone,child_name').limit(5000);
-  if(existingError){console.error(existingError);toast('Could not check existing leads: '+existingError.message);return}
-  const keys=new Set((existing||[]).map(leadKey));
-  const seen=new Set();const fresh=payload.filter(x=>{const k=leadKey(x);if(keys.has(k)||seen.has(k))return false;seen.add(k);return true});
-  if(!fresh.length){toast('No new leads found. Existing records were kept safe.');return}
-  let {error}=await supabaseClient.from('leads').insert(fresh);
-  if(error){
-    const fallback=fresh.map(x=>({parent_name:x.parent_name,phone:x.phone,child_name:x.child_name,child_age:x.child_age,city:x.city,status:x.status,demo_date:x.demo_date}));
-    const retry=await supabaseClient.from('leads').insert(fallback);
-    error=retry.error;
-  }
-  if(error){console.error(error);toast('Import failed: '+error.message);return}
-  toast(fresh.length+' new leads imported');
-  await refreshLeadCenter();
-}
-function filterLeadRows(){
-  const q=(document.getElementById('leadSearch')?.value||'').toLowerCase();
-  const s=(document.getElementById('leadStatusFilter')?.value||'').toLowerCase();
-  document.querySelectorAll('#leadRows tr').forEach(tr=>{
-    const text=tr.innerText.toLowerCase();
-    const status=(tr.dataset.status||'').toLowerCase();
-    tr.style.display=(!q||text.includes(q))&&(!s||status===s)?'':'none';
-  });
-}
-async function refreshLeadCenter(){await loadAdminData();filterLeadRows();}
-function navFor(r){return data[r].nav}
-function renderNav(){const items=navFor(role);document.getElementById('sideNav').innerHTML=items.map(x=>'<button class="'+(x[0]===current?'active':'')+'" onclick="go(\''+x[0]+'\')">'+data[role].icon+' &nbsp; '+x[1]+'</button>').join('');document.getElementById('mobileNav').innerHTML=items.slice(0,5).map(x=>'<button class="'+(x[0]===current?'active':'')+'" onclick="go(\''+x[0]+'\')">'+x[1]+'</button>').join('')}
-function go(id){current=id;renderNav();document.querySelectorAll('.screen').forEach(x=>x.style.display=x.id===id?'block':'none');const item=navFor(role).find(x=>x[0]===id);document.getElementById('title').textContent=item?item[1]:data[role].title;document.getElementById('subtitle').textContent=data[role].sub}
-function setRole(r){
-  if(authRole!=='admin' && r!==uiRoleOf(authRole)) return;
-  role=r; current=data[r].nav[0][0];
-  ['Admin','Teacher','Student'].forEach(x=>{const b=document.getElementById('r'+x);if(b)b.style.display=(authRole==='admin'||x.toLowerCase()===uiRoleOf(authRole))?'block':'none';if(b)b.classList.toggle('active',x.toLowerCase()===r)});
-  build(); go(current);
-  if(r==='admin') setTimeout(loadAdminData,50);
-}
-function toast(s){const t=document.getElementById('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
-function build(){
-let html='';
-if(role==='admin')html=adminScreens();
-if(role==='teacher')html=teacherScreens();
-if(role==='student')html=studentScreens();
-document.getElementById('views').innerHTML=html;renderNav();go(current);if(role==='admin')setTimeout(loadAdminData,50)
-}
-function adminScreens(){return `
-<section id="dashboard" class="screen">
-<div class="hero"><div><h2>Good morning 👋</h2><p>Your leads, teachers, classes and students are ready for action.</p></div><div class="quick"><button class="btn primary" onclick="go('leads');setTimeout(togglePasteLeads,80)">Open Lead Center</button><button class="btn ghost" onclick="go('leads');setTimeout(togglePasteLeads,80)">📋 Paste Leads</button></div></div>
-<div class="grid stats">
-<div class="card metric"><div class="label">NEW LEADS</div><div class="num" id="metricLeads">—</div><div class="trend">Live from LMS</div></div>
-<div class="card metric"><div class="label">DEMOS TODAY</div><div class="num" id="metricDemos">—</div><div class="trend" id="metricDemosSub">Live from leads</div></div>
-<div class="card metric"><div class="label">FOLLOW-UPS</div><div class="num" id="metricFollowups">—</div><div class="trend">Live from leads</div></div>
-<div class="card metric"><div class="label">ACTIVE STUDENTS</div><div class="num" id="metricStudents">—</div><div class="trend">Live from LMS</div></div>
-<div class="card metric"><div class="label">PAYMENTS PENDING</div><div class="num" id="metricPayments">—</div><div class="trend" id="metricPaymentsSub">Live from LMS</div></div></div>
-<div class="grid two"><div class="card"><div class="section"><h3>Today’s Classes</h3><button class="btn primary" onclick="go('classes')">View all</button></div>
-<div class="class"><b class="time">10:00</b><div class="grow"><b>Smart Speakers Story World</b><span>Tripti • 6 students</span></div><span class="pill">Upcoming</span></div>
-<div class="class"><b class="time">17:00</b><div class="grow"><b>Young Leaders Public Speaking</b><span>NMI Team • 5 students</span></div><span class="pill">Upcoming</span></div>
-<div class="class"><b class="time">19:00</b><div class="grow"><b>Tiny Talkers</b><span>NMI Team • 7 students</span></div><span class="pill">Upcoming</span></div></div>
-<div class="card"><div class="section"><h3>Today’s Action</h3><span class="pill warning">7 tasks</span></div>
-<div class="class">☎️<div class="grow"><b>Call new parents</b><span>4 enquiries waiting</span></div></div>
-<div class="class">✓<div class="grow"><b>Confirm demos</b><span>2 parents</span></div></div>
-<div class="class">₹<div class="grow"><b>Payment follow-up</b><span>3 pending</span></div></div></div></div></section>
-<section id="leads" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Lead Command Center</h3><span class="sub">From enquiry to enrollment</span></div><div class="quick"><label class="btn ghost" style="cursor:pointer">⬆ Import Google Sheet CSV<input id="leadCsv" type="file" accept=".csv,text/csv" style="display:none" onchange="importLeadCSV(event)"></label><button class="btn primary" onclick="openLead(null)">＋ Add lead</button><button class="btn ghost" onclick="refreshLeadCenter()">↻ Refresh</button><button class="btn ghost" onclick="document.getElementById('leadCsv').click()">Choose CSV File</button><button class="btn ghost" onclick="togglePasteLeads()">📋 Paste Sheet Data</button></div></div>
-<div id="sysCheck" class="sub" style="margin:-4px 0 12px;font-size:11px"></div>
-<div class="quick" style="margin-bottom:12px">
-<input id="leadSearch" oninput="filterLeadRows()" placeholder="Search parent, child, phone or city" style="flex:1;min-width:220px;padding:10px 12px;border:1px solid #e3e8f0;border-radius:11px;font:inherit">
-<select id="leadStatusFilter" onchange="filterLeadRows()" style="padding:10px 12px;border:1px solid #e3e8f0;border-radius:11px;font:inherit"><option value="">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="interested">Interested</option><option value="call_back_later">Call back later</option><option value="demo_scheduled">Demo scheduled</option><option value="demo_rescheduled">Demo rescheduled</option><option value="demo_completed">Demo completed</option><option value="follow_up">Follow-up (fee shared)</option><option value="enrolled">Enrolled</option><option value="not_interested">Not interested</option><option value="not_reachable">Not reachable</option></select>
-</div>
-<div id="pasteLeadBox" style="display:none;margin:0 0 14px;padding:14px;border:1px dashed #d9dee8;border-radius:14px;background:#fafbfd">
-  <div style="font-weight:700;margin-bottom:6px">Paste your Google Sheet rows</div>
-  <div class="sub" style="margin-bottom:8px">In Google Sheets, select your header + lead rows, press Ctrl+C, then paste here. No CSV download needed.</div>
-  <textarea id="leadPaste" onpaste="captureSheetPaste(event)" rows="7" placeholder="Copy from Google Sheets, then press Ctrl+V here" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #dfe5ee;border-radius:12px;font:inherit;resize:vertical"></textarea>
-  <div class="quick" style="margin-top:8px"><button class="btn primary" onclick="pasteClipboardData()">📋 Paste Clipboard Data</button><button class="btn primary" onclick="importPastedLeads()">Import Pasted Leads</button><button class="btn ghost" onclick="togglePasteLeads()">Close</button></div>
-  <div id="pasteReadStatus" class="sub" style="margin-top:8px"></div>
-</div>
-<table class="table"><thead><tr><th>Parent</th><th>Child</th><th>Course</th><th>Status</th><th>Demo / follow-up</th><th>Action</th></tr></thead><tbody id="leadRows"><tr><td colspan="6" style="text-align:center;color:#8793a5">Loading live leads…</td></tr></tbody></table><div class="sub" style="margin-top:10px">Tip: In Google Sheets use <b>File → Download → Comma-separated values (.csv)</b>, then import it here. Existing LMS records are kept.</div></div></section>
-<section id="teachers" class="screen"><div class="card tablewrap"><div class="section"><div><h3>Teachers</h3><span class="sub">Live teacher records</span></div><button class="btn primary" onclick="toast('Teacher onboarding will be connected here')">+ Add Teacher</button></div><table class="table"><thead><tr><th>Teacher</th><th>Email</th><th>Status</th></tr></thead><tbody id="teacherRows"><tr><td colspan="3" style="text-align:center;color:#8793a5">Loading live teachers…</td></tr></tbody></table></div></section>
-<section id="students" class="screen"><div class="card tablewrap"><div class="section"><h3>Students</h3><button class="btn primary" onclick="toast('Student onboarding will be connected here')">+ Add Student</button></div><table class="table"><thead><tr><th>Student</th><th>Course</th><th>Teacher</th><th>Progress</th><th>Status</th></tr></thead><tbody id="studentRows"><tr><td colspan="5" style="text-align:center;color:#8793a5">Loading live students…</td></tr></tbody></table></div></section>
-<section id="classes" class="screen"><div class="grid two"><div class="card"><div class="section"><h3>Class Schedule</h3><button class="btn primary" onclick="toast('Class creation will be connected here')">+ Class</button></div><div class="class"><b class="time">10:00</b><div class="grow"><b>Smart Speakers Story World</b><span>Tripti • 6 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div><div class="class"><b class="time">17:00</b><div class="grow"><b>Young Leaders</b><span>NMI Team • 5 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div></div><div class="card"><h3>Class Workspace</h3><p class="sub">Each class will hold its Google Meet, materials, attendance, notes and progress.</p><div class="quick"><button class="btn" onclick="toast('Meet integration')">Meet</button><button class="btn" onclick="toast('Materials')">Materials</button><button class="btn" onclick="toast('Attendance')">Attendance</button></div></div></div></section>
-<section id="payments" class="screen"><div class="card tablewrap"><div class="section"><h3>Payments & Enrollments</h3><span class="pill warning">3 pending</span></div><table class="table"><thead><tr><th>Parent</th><th>Student</th><th>Course</th><th>Amount</th><th>Status</th></tr></thead><tbody><tr><td>Parent A</td><td>Aadya</td><td>Smart Speakers</td><td>₹9,499</td><td><span class="pill warning">Pending</span></td></tr><tr><td>Parent B</td><td>Sree</td><td>Young Leaders</td><td>₹9,999</td><td><span class="pill">Paid</span></td></tr></tbody></table></div></section>
-<section id="materials" class="screen"><div class="grid tiles"><div class="tile"><h3>📚 Course Materials</h3><p class="sub">PPTs, worksheets and activities</p><button class="btn primary" onclick="toast('Materials library')">Open Library</button></div><div class="tile"><h3>🎤 Speaking Activities</h3><p class="sub">Voice, phonics and public speaking</p><button class="btn primary" onclick="toast('Activity library')">Open</button></div><div class="tile"><h3>🎮 Practice Games</h3><p class="sub">Student-ready interactive practice</p><button class="btn primary" onclick="toast('Games library')">Open</button></div></div></section>
-<section id="progress" class="screen"><div class="grid tiles"><div class="tile"><h3>Attendance</h3><div class="big">94%</div><p class="sub">School average</p></div><div class="tile"><h3>Progress Reviews</h3><div class="big">8</div><p class="sub">due this week</p></div><div class="tile"><h3>Certificates</h3><div class="big">5</div><p class="sub">ready to issue</p></div></div></section>`;}
-function teacherScreens(){return `
-<section id="teacherHome" class="screen"><div class="hero"><div><h2>Good morning, Teacher 👋</h2><p>Your next class, students and teaching tools are here.</p></div><button class="btn primary" onclick="go('myclasses')">View Classes</button></div><div class="grid stats"><div class="card metric"><div class="label">TODAY’S CLASSES</div><div class="num">3</div></div><div class="card metric"><div class="label">MY STUDENTS</div><div class="num">11</div></div><div class="card metric"><div class="label">ATTENDANCE DUE</div><div class="num">2</div></div><div class="card metric"><div class="label">PROGRESS DUE</div><div class="num">3</div></div><div class="card metric"><div class="label">MATERIALS</div><div class="num">24</div></div></div><div class="card" style="margin-top:15px"><div class="section"><h3>Next Class</h3><span class="pill">10:00 AM</span></div><div class="class"><div class="grow"><b>Smart Speakers Story World</b><span>6 students • Room 1</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join Meet</button></div></div></section>
-<section id="myclasses" class="screen"><div class="card"><h3>My Classes</h3><div class="class"><b class="time">10:00</b><div class="grow"><b>Smart Speakers Story World</b><span>6 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div><div class="class"><b class="time">17:00</b><div class="grow"><b>Young Leaders</b><span>5 students</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div></div></section>
-<section id="mystudents" class="screen"><div class="card tablewrap"><h3>My Students</h3><table class="table"><thead><tr><th>Student</th><th>Course</th><th>Attendance</th><th>Progress</th></tr></thead><tbody><tr><td>Aadya</td><td>Smart Speakers</td><td>96%</td><td>72%</td></tr><tr><td>Riya</td><td>Smart Speakers</td><td>91%</td><td>65%</td></tr><tr><td>Khyathi</td><td>Young Leaders</td><td>88%</td><td>54%</td></tr></tbody></table></div></section>
-<section id="materialsT" class="screen"><div class="grid tiles"><div class="tile"><h3>📚 Today’s PPTs</h3><p class="sub">Your assigned class material</p><button class="btn primary" onclick="toast('Opening teaching material')">Open</button></div><div class="tile"><h3>🎯 Activities</h3><p class="sub">Games, speaking and practice</p><button class="btn primary" onclick="toast('Opening activities')">Open</button></div><div class="tile"><h3>📝 Class Notes</h3><p class="sub">Save notes after every class</p><button class="btn primary" onclick="toast('Class notes')">Open</button></div></div></section>
-<section id="attendance" class="screen"><div class="card"><h3>Attendance</h3><p class="sub">Mark students present after each class.</p><button class="btn primary" onclick="toast('Attendance form ready')">Mark Today’s Attendance</button></div></section>
-<section id="teacherProgress" class="screen"><div class="card"><h3>Student Progress</h3><p class="sub">Update speaking, confidence, participation and assignments.</p><button class="btn primary" onclick="toast('Progress form ready')">Update Progress</button></div></section>`;}
-function studentScreens(){return `
-<section id="studentHome" class="screen"><div class="hero"><div><h2>Hi, Aarav! 👋</h2><p>Ready for today’s learning adventure?</p></div><button class="btn primary" onclick="go('schedule')">See Schedule</button></div><div class="grid tiles"><div class="tile"><h3>🎤 Speaking Practice</h3><p class="sub">Build confidence and voice.</p><button class="btn primary" onclick="toast('Practice starting')">Start</button></div><div class="tile"><h3>🎮 Practice Games</h3><p class="sub">Learn through challenges.</p><button class="btn primary" onclick="go('practice')">Play</button></div><div class="tile"><h3>🏆 Achievements</h3><p class="sub">3 badges unlocked.</p><button class="btn primary" onclick="go('achievements')">View</button></div></div><div class="card" style="margin-top:15px"><div class="section"><h3>Course Progress</h3><b>72%</b></div><div class="progress"><i></i></div><p class="sub">Smart Speakers Story World</p></div></section>
-<section id="mycourse" class="screen"><div class="card"><h3>My Course</h3><p class="sub">Smart Speakers Story World</p><div class="progress"><i></i></div><p class="sub">18 lessons • 13 completed</p></div></section>
-<section id="practice" class="screen"><div class="grid tiles"><div class="tile"><h3>🎤 Speak & Record</h3><p class="sub">Answer today’s speaking challenge.</p><button class="btn primary" onclick="toast('Voice practice')">Start</button></div><div class="tile"><h3>🧩 Word Puzzle</h3><p class="sub">Build vocabulary with fun.</p><button class="btn primary" onclick="toast('Puzzle starting')">Play</button></div><div class="tile"><h3>⚡ Quick Quiz</h3><p class="sub">5 questions, 2 minutes.</p><button class="btn primary" onclick="toast('Quiz starting')">Start</button></div></div></section>
-<section id="schedule" class="screen"><div class="card"><h3>My Schedule</h3><div class="class"><b class="time">Today</b><div class="grow"><b>Smart Speakers Story World</b><span>10:00 AM • Google Meet</span></div><button class="btn primary" onclick="toast('Meet link ready')">Join</button></div></div></section>
-<section id="achievements" class="screen"><div class="grid tiles"><div class="tile"><h3>🏅 Brave Speaker</h3><p class="sub">Completed 5 speaking tasks.</p></div><div class="tile"><h3>⭐ Practice Star</h3><p class="sub">Practised 7 days.</p></div><div class="tile"><h3>🔥 Super Learner</h3><p class="sub">Completed 10 lessons.</p></div></div></section>
-<section id="certificates" class="screen"><div class="card"><h3>Certificates</h3><p class="sub">Your earned certificates will appear here.</p><button class="btn primary" onclick="toast('Certificate area ready')">View Certificates</button></div></section>`;}
-build();
 </script>
-<div id="authGate" style="position:fixed;inset:0;background:rgba(7,16,30,.88);backdrop-filter:blur(12px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px">
-<div style="width:min(420px,100%);background:#fff;border-radius:24px;padding:28px;box-shadow:0 30px 90px #0006">
-<div style="font-size:12px;font-weight:900;letter-spacing:.12em;color:#ff3d8b">NEXT MOVE INDIA LMS</div>
-<h2 style="margin:7px 0 5px;font-size:25px">Welcome back 👋</h2>
-<p style="margin:0 0 20px;color:#7b8799;font-size:13px">Sign in to your secure school workspace.</p>
-<input id="authEmail" type="email" placeholder="Email address" style="width:100%;padding:12px;border:1px solid #e3e8f0;border-radius:11px;margin-bottom:9px;font:inherit">
-<input id="authPassword" type="password" placeholder="Password" style="width:100%;padding:12px;border:1px solid #e3e8f0;border-radius:11px;margin-bottom:12px;font:inherit">
-<button class="btn primary" style="width:100%" onclick="loginLMS()">Sign in</button>
-<button class="btn ghost" style="width:100%;margin-top:8px" onclick="signupLMS()">Create account</button>
-<div id="authMsg" style="font-size:12px;color:#d04a4a;margin-top:12px;min-height:18px"></div>
-<div style="font-size:10px;color:#9aa5b5;margin-top:12px">Your password is handled by Supabase Authentication.</div>
-</div></div>
 <script>
-async function loginLMS(){const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,msg=document.getElementById('authMsg');msg.textContent='Signing in...';const {error}=await supabaseClient.auth.signInWithPassword({email,password});msg.textContent=error?error.message:'';}
-async function signupLMS(){
-  const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,msg=document.getElementById('authMsg');
-  if(!email||password.length<6){msg.textContent='Enter an email and a password of at least 6 characters.';return;}
-  msg.textContent='Creating account...';
-  const {data,error}=await supabaseClient.auth.signUp({email,password});
-  if(error){msg.textContent=error.message;return;}
-  msg.textContent=data.session?'Account created. You are signed in.':'Account created. Check your email if confirmation is enabled, then sign in.';
+/* ================= Navigation ================= */
+const NAV={
+ admin:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['students','🎓','Students'],['classes','📅','Classes'],['attendance','✅','Attendance'],['Manage'],['materials','📚','Materials'],['tasks','☑','Tasks'],['payments','₹','Payments'],['teachers','👩‍🏫','Teachers'],['team','🔑','Team & Access'],['sync','⇄','Sheet Sync']],
+ counselor:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['classes','📅','Classes'],['tasks','☑','Tasks'],['materials','📚','Materials'],['sync','⇄','Sheet Sync']],
+ teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['classes','📅','My Classes'],['attendance','✅','Attendance'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
+ parent:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['materials','📚','Materials'],['payments','₹','Payments']],
+ student:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['materials','📚','Materials']]};
+const SUBS={dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
+function myNav(){return NAV[S.role]||NAV.student}
+function renderNav(){
+  const items=myNav();let h='';
+  for(const x of items){
+    if(x.length===1){h+='<div class="navgrp">'+esc(T(x[0]))+'</div>';continue}
+    h+='<button class="'+(S.view===x[0]?'on':'')+'" onclick="go(\''+x[0]+'\')"><span class="ic">'+x[1]+'</span>'+esc(T(x[2]))+'<span class="bd" id="bd_'+x[0]+'" style="display:none"></span></button>';
+  }
+  $('nav').innerHTML=h;
+  $('mbar').innerHTML=items.filter(x=>x.length>1).slice(0,6).map(x=>'<button class="'+(S.view===x[0]?'on':'')+'" onclick="go(\''+x[0]+'\')"><span class="ic">'+x[1]+'</span>'+esc(T(x[2]))+'</button>').join('');
+  updateBadges();
 }
-async function loadLMSUser(){
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  if(!session){document.getElementById('authGate').style.display='flex';return;}
-  document.getElementById('authGate').style.display='none';
-  currentUser=session.user;
-  const {data:profile}=await supabaseClient.from('profiles').select('full_name,role').eq('id',session.user.id).maybeSingle();
-  authRole=profile&&profile.role?profile.role:'student';
-  role=uiRoleOf(authRole);
-  document.getElementById('user').textContent='👤 '+(profile&&profile.full_name?profile.full_name:session.user.email);
-  setRole(role);
+function updateBadges(){
+  const set=(id,n)=>{const el=$('bd_'+id);if(!el)return;el.style.display=n>0?'inline-block':'none';el.textContent=n};
+  if(!S.loaded)return;
+  const t=todayStr();
+  if(S.role==='admin'||S.role==='counselor')set('leads',D('leads').filter(l=>l.status==='new').length);
+  set('tasks',D('tasks').filter(x=>x.status!=='done'&&x.due_date&&x.due_date<=t).length);
 }
-supabaseClient.auth.onAuthStateChange((_event,session)=>{if(session)loadLMSUser();else document.getElementById('authGate').style.display='flex';});loadLMSUser();
+function go(v){S.view=v;renderNav();render();window.scrollTo(0,0);try{location.hash=v}catch(e){}}
+function render(){
+  if(!S.user||!S.loaded){return}
+  const nav=myNav().find(x=>x[0]===S.view);
+  $('pgTitle').textContent=nav?T(nav[2]):'';$('pgSub').textContent=SUBS[S.view]||'';
+  const fn=VIEWS[S.view]||VIEWS.dashboard;
+  $('page').innerHTML=fn();
+  if(AFTER[S.view])AFTER[S.view]();
+}
+const AFTER={};
+
+/* ================= Dashboard ================= */
+function kpi(label,num,sub,go_){return '<div class="card kpi" onclick="'+(go_?"go('"+go_+"')":'')+'"><div class="l">'+esc(label)+'</div><div class="n">'+num+'</div><div class="s">'+esc(sub||'')+'</div></div>'}
+function classLI(c){return '<div class="li" onclick="openClass(\''+c.id+'\')"><div class="t">'+esc(c.class_time||fmtDate(c.class_date))+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.teacher_name,c.course_name].filter(Boolean).join(' • '))+'</span></div>'+bd(c.kind,'p')+'</div>'}
+function leadLI(l){return '<div class="li" onclick="openLead(\''+l.id+'\')"><div class="grow"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><span class="sm muted">'+esc((l.child_name||'')+(l.child_age?' · '+l.child_age:'')+(l.interested_course?' · '+l.interested_course:''))+'</span></div><div style="text-align:right">'+bd(l.status,LEAD_COLOR[l.status])+'<span class="sm muted">'+(l.next_follow_up?'follow-up '+fmtDate(l.next_follow_up):'')+'</span></div></div>'}
+function taskLI(t){return '<div class="li" onclick="editor(\'tasks\',\''+t.id+'\')"><input type="checkbox" style="width:auto" '+(t.status==='done'?'checked':'')+' onclick="event.stopPropagation();toggleTask(\''+t.id+'\',this.checked)"><div class="grow"><b>'+esc(t.title)+'</b><span class="sm muted">'+esc(t.assignee_name||'')+'</span></div>'+bd(t.priority)+'<span class="sm">'+fmtDate(t.due_date)+'</span></div>'}
+async function toggleTask(id,done){await saveRecord('tasks',id,{status:done?'done':'todo'});render()}
+function dueLeads(){const t=todayStr();return D('leads').filter(l=>l.next_follow_up&&l.next_follow_up<=t&&!['enrolled','not_interested'].includes(l.status)).sort((a,b)=>a.next_follow_up>b.next_follow_up?1:-1)}
+function greeting(){const h=new Date().getHours();return T('Good morning').replace('Good morning',h<12?'Good morning':h<17?'Good afternoon':'Good evening')}
+
+function dashboardAdmin(){
+  const t=todayStr(),L=D('leads'),due=dueLeads();
+  const todays=D('classes').filter(c=>c.class_date===t&&c.status!=='cancelled').sort((a,b)=>String(a.class_time).localeCompare(String(b.class_time)));
+  const pend=D('payments').filter(p=>['pending','overdue'].includes(p.status));
+  const pendSum=pend.reduce((s,p)=>s+Number(p.amount||0),0);
+  const openT=D('tasks').filter(x=>x.status!=='done');
+  const active=L.filter(l=>!['enrolled','not_interested','not_reachable'].includes(l.status));
+  const conv=L.length?Math.round(100*L.filter(l=>l.status==='enrolled').length/L.length):0;
+  const isA=isAdmin();
+  const mx=Math.max(1,...LEAD_ST.map(s=>L.filter(l=>l.status===s[0]).length));
+  return '<div class="hero"><div><h2>'+greeting()+', '+esc((S.profile&&S.profile.full_name)||'')+' 👋</h2><p>'+due.length+' follow-up'+(due.length===1?'':'s')+' due · '+todays.length+' class'+(todays.length===1?'':'es')+' today · '+L.filter(l=>l.status==='new').length+' new lead(s) waiting</p></div><div class="row"><button class="btn pri" onclick="go(\'leads\')">Open leads</button>'+(isA?'<button class="btn" onclick="addRecord(\'classes\')">＋ Class</button>':'')+'<button class="btn" onclick="addRecord(\'tasks\')">＋ Task</button></div></div>'
+  +'<div class="grid kpis">'
+  +kpi(T('New leads'),L.filter(l=>l.status==='new').length,L.length+' total leads','leads')
+  +kpi(T('Follow-ups due'),due.length,'today or overdue','leads')
+  +kpi('Conversion',conv+'%',L.filter(l=>l.status==='enrolled').length+' enrolled','leads')
+  +(isA?kpi(T('Active students'),D('students').filter(s=>s.status==='active').length,D('students').length+' on record','students'):'')
+  +(isA?kpi(T('Pending payments'),money(pendSum),pend.length+' record(s)','payments'):'')
+  +kpi(T('Open tasks'),openT.length,openT.filter(x=>x.due_date&&x.due_date<t).length+' overdue','tasks')
+  +'</div><div class="grid cols2" style="margin-top:14px"><div class="grid">'
+  +'<div class="card"><div class="hd"><h3>📞 '+T('Follow-ups due')+'</h3><button class="btn sm" onclick="go(\'leads\')">All leads</button></div>'+(due.slice(0,6).map(leadLI).join('')||'<div class="empty">You are all caught up 🎉</div>')+'</div>'
+  +(S.role==='counselor'?'':'<div class="card"><div class="hd"><h3>📅 '+T('Today\'s classes')+'</h3><button class="btn sm" onclick="go(\'classes\')">Calendar</button></div>'+(todays.map(classLI).join('')||'<div class="empty">No classes today.</div>')+'</div>')
+  +'</div><div class="grid">'
+  +'<div class="card"><div class="hd"><h3>Lead funnel</h3></div>'+LEAD_ST.map(s=>{const n=L.filter(l=>l.status===s[0]).length;return '<div class="fun"><span>'+esc(s[1])+'</span><div class="bar"><i style="width:'+Math.round(100*n/mx)+'%"></i></div><b>'+n+'</b></div>'}).join('')+'</div>'
+  +'<div class="card"><div class="hd"><h3>☑ '+T('Open tasks')+'</h3><button class="btn sm" onclick="go(\'tasks\')">Board</button></div>'+(openT.slice(0,5).map(taskLI).join('')||'<div class="empty">No open tasks.</div>')+'</div>'
+  +'</div></div>';
+}
+function dashboardTeacher(){
+  const t=todayStr(),todays=D('classes').filter(c=>c.class_date===t&&c.status!=='cancelled');
+  const upcoming=D('classes').filter(c=>c.class_date>t&&c.status==='scheduled').sort((a,b)=>a.class_date>b.class_date?1:-1).slice(0,5);
+  const needAtt=D('classes').filter(c=>c.class_date<=t&&c.status!=='cancelled'&&!D('attendance').some(a=>a.class_id===c.id)).length;
+  return '<div class="hero"><div><h2>'+greeting()+', '+esc((S.profile&&S.profile.full_name)||'')+' 👋</h2><p>'+todays.length+' class(es) today · '+needAtt+' without attendance</p></div><button class="btn pri" onclick="go(\'attendance\')">Mark attendance</button></div>'
+  +'<div class="grid kpis">'+kpi(T('Today\'s classes'),todays.length,'','classes')+kpi('My students',D('students').length,'','students')+kpi('Attendance due',needAtt,'classes to mark','attendance')+kpi('Materials',D('materials').length,'in the library','materials')+'</div>'
+  +'<div class="grid cols2" style="margin-top:14px"><div class="card"><div class="hd"><h3>'+T('Today\'s classes')+'</h3></div>'+(todays.map(classLI).join('')||'<div class="empty">No classes today.</div>')+'</div><div class="card"><div class="hd"><h3>Coming up</h3></div>'+(upcoming.map(classLI).join('')||'<div class="empty">Nothing scheduled.</div>')+'</div></div>';
+}
+function ring(p){return '<div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--orange) '+(p*3.6)+'deg,#efeaf6 0);display:grid;place-items:center"><div style="width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:900">'+p+'%</div></div>'}
+function dashboardFamily(){
+  const kids=D('students'),t=todayStr();
+  const next=D('classes').filter(c=>c.class_date>=t&&c.status==='scheduled').sort((a,b)=>a.class_date>b.class_date?1:-1).slice(0,5);
+  return '<div class="hero"><div><h2>Hi '+esc((S.profile&&S.profile.full_name)||'')+'! 👋</h2><p>'+(kids.length?'Here is how learning is going.':'Your child\'s profile will appear here once enrolment is complete.')+'</p></div></div>'
+  +'<div class="grid cols3">'+kids.map(k=>'<div class="card"><div class="row" style="flex-wrap:nowrap">'+ring(k.progress_percent||0)+'<div><h3>'+esc(k.full_name)+'</h3><div class="sm muted">'+esc(k.course_name||'')+'</div><div class="sm">'+(k.sessions_completed||0)+' of '+(k.total_sessions||'?')+' sessions</div></div></div>'+(k.progress_notes?'<p class="sm" style="margin:12px 0 0;background:#fff8f2;border-radius:10px;padding:9px">'+esc(k.progress_notes)+'</p>':'')+'</div>').join('')+'</div>'
+  +'<div class="grid cols2" style="margin-top:14px"><div class="card"><div class="hd"><h3>Upcoming classes</h3></div>'+(next.map(classLI).join('')||'<div class="empty">No upcoming classes yet.</div>')+'</div>'
+  +'<div class="card"><div class="hd"><h3>Latest attendance</h3></div>'+(D('attendance').slice(0,6).map(a=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(a.class_title||'Class')+'</b><span class="sm muted">'+esc(a.student_name||'')+' · '+fmtDate(a.class_date)+'</span></div>'+bd(a.status)+'</div>').join('')||'<div class="empty">Attendance will show here.</div>')+'</div></div>';
+}
+
+/* ================= Leads: board + list + import ================= */
+function kanban(ent,field,cols,cardFn,filterFn){
+  const rows=filterFn?D(ent).filter(filterFn):D(ent);
+  return '<div class="kan">'+cols.map(c=>{
+    const items=rows.filter(r=>r[field]===c[0]);
+    return '<div class="kcol" data-ent="'+ent+'" data-field="'+field+'" data-val="'+c[0]+'" ondragover="event.preventDefault();this.classList.add(\'over\')" ondragleave="this.classList.remove(\'over\')" ondrop="dropCard(event,this)"><h4><span>'+esc(c[1])+'</span><span class="b">'+items.length+'</span></h4>'+items.slice(0,60).map(cardFn).join('')+(items.length>60?'<div class="sm muted" style="text-align:center">+'+(items.length-60)+' more — use List view</div>':'')+'</div>';
+  }).join('')+'</div>';
+}
+function dragStart(ev,id){ev.dataTransfer.setData('text/plain',id);ev.currentTarget.classList.add('dragging')}
+async function dropCard(ev,col){
+  ev.preventDefault();col.classList.remove('over');const id=ev.dataTransfer.getData('text/plain');if(!id)return;
+  const ent=col.dataset.ent,f=col.dataset.field,v=col.dataset.val;
+  const r=byId(ent,id);if(!r||r[f]===v)return;
+  if(!canEdit(ent)){toast('You have view-only access');return}
+  r[f]=v;render();
+  const ok=await saveRecord(ent,id,{[f]:v});toast(ok?'Moved to '+(LEAD_LABEL[v]||titleCase(v)):'Move failed');if(!ok)await loadAll();
+}
+function leadCard(l){
+  const fu=l.next_follow_up,late=fu&&fu<=todayStr();
+  return '<div class="kcard" draggable="true" ondragstart="dragStart(event,\''+l.id+'\')" ondragend="this.classList.remove(\'dragging\')" onclick="openLead(\''+l.id+'\')"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><div class="sm muted">'+esc((l.child_name||'—')+(l.child_age?' · '+l.child_age:''))+'</div>'+(l.interested_course?'<div class="sm">'+esc(l.interested_course)+'</div>':'')+'<div class="row" style="margin-top:6px;gap:6px">'+(fu?'<span class="b '+(late?'r':'bl')+'">'+(late?'⏰ ':'')+fmtDate(fu)+'</span>':'')+(l.demo_date?'<span class="b p">Demo '+esc(l.demo_date)+'</span>':'')+'</div></div>';
+}
+const VIEWS={};
+VIEWS.dashboard=()=>S.role==='teacher'?dashboardTeacher():isFamily()?dashboardFamily():dashboardAdmin();
+VIEWS.leads=()=>{
+  const m=S.ui.leadMode||'board';
+  const tb='<div class="seg"><button class="'+(m==='board'?'on':'')+'" onclick="S.ui.leadMode=\'board\';render()">'+T('Board')+'</button><button class="'+(m==='list'?'on':'')+'" onclick="S.ui.leadMode=\'list\';render()">'+T('List')+'</button></div>'
+   +'<button class="btn" onclick="openImport()">⬆ Import</button>';
+  if(m==='list')return listView('leads',{toolbar:tb});
+  const q=(S.ui.leadQ||'').toLowerCase();
+  const ff=q?(l=>[l.parent_name,l.phone,l.child_name,l.city,l.interested_course].some(v=>String(v||'').toLowerCase().includes(q))):null;
+  return '<div class="row" style="margin-bottom:12px"><div class="grow"><input placeholder="🔎 Search leads…" value="'+esc(S.ui.leadQ||'')+'" oninput="S.ui.leadQ=this.value;clearTimeout(S.ui.lt);S.ui.lt=setTimeout(()=>{const k=$(\'kanWrap\');if(k)k.innerHTML=kanbanLeads()},250)"></div>'+tb+'<button class="btn pri" onclick="addRecord(\'leads\')">＋ '+T('Add')+' lead</button></div>'
+   +'<div id="kanWrap">'+kanbanLeads()+'</div><div class="sm muted" style="margin-top:6px">Drag a card to another column to change its status. <span class="sync">⇄ Two-way with Google Sheet</span></div>';
+};
+function kanbanLeads(){const q=(S.ui.leadQ||'').toLowerCase();const ff=q?(l=>[l.parent_name,l.phone,l.child_name,l.city,l.interested_course].some(v=>String(v||'').toLowerCase().includes(q))):null;return kanban('leads','status',LEAD_ST.map(x=>[x[0],x[1]]),leadCard,ff)}
+
+async function openLead(id){
+  const r=byId('leads',id)||{};
+  const chips=id?'<div class="row" style="gap:6px;margin-bottom:12px">'+LEAD_ST.map(s=>'<button class="btn sm" style="'+(r.status===s[0]?'background:var(--plum);color:#fff;border-color:var(--plum)':'')+'" onclick="quickStatus(\''+id+'\',\''+s[0]+'\')">'+esc(s[1])+'</button>').join('')+'</div>':'';
+  const contact=id?'<div class="row" style="margin-bottom:12px"><a class="btn wa" target="_blank" rel="noopener" href="'+waLink(r.phone,r.parent_name,r.child_name)+'" style="text-decoration:none">💬 WhatsApp</a>'+(r.phone?'<a class="btn" href="tel:'+esc(r.phone)+'" style="text-decoration:none">📞 Call</a>':'')+'<button class="btn" onclick="taskForLead(\''+id+'\')">☑ Add follow-up task</button>'+(r.status!=='enrolled'&&!r.converted_student_id&&canEdit('students')?'<button class="btn pink" onclick="enrolLead(\''+id+'\')">🎓 Enrol as student</button>':'')+'</div>':'';
+  const bottom=id?'<div style="margin-top:16px"><b class="sm">History</b><div class="hist" id="leadHist">Loading…</div></div>':'';
+  editor('leads',id,null,chips+contact,bottom);
+  if(id){const {data,error}=await sb.from('lead_events').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(25);
+    const el=$('leadHist');if(el)el.innerHTML=error?'Could not load history':(data&&data.length?data.map(h=>'<div>'+fmtDT(h.created_at)+' — '+esc(LEAD_LABEL[h.from_status]||h.from_status||'')+' → <b>'+esc(LEAD_LABEL[h.to_status]||h.to_status)+'</b></div>').join(''):'No status changes yet')}
+}
+async function quickStatus(id,st){
+  const p={status:st};if(!['not_interested','not_reachable'].includes(st))p.lost_reason=null;
+  const ok=await saveRecord('leads',id,p);if(ok){toast('Status: '+LEAD_LABEL[st]);openLead(id)}
+}
+async function taskForLead(id){
+  const l=byId('leads',id);
+  const ok=await saveRecord('tasks',null,{title:'Follow up: '+(l.parent_name||l.phone||'lead')+(l.child_name?' ('+l.child_name+')':''),due_date:l.next_follow_up||addDays(todayStr(),1),priority:'high',lead_id:id,assignee_id:l.assigned_to||S.user.id});
+  if(ok)toast('Task added');
+}
+async function enrolLead(id){
+  const l=byId('leads',id);const course=D('courses').find(c=>c.name===l.interested_course);
+  if(!course){toast('Choose the course in this lead first, save, then enrol.',4000);return}
+  if(!confirm('Enrol '+(l.child_name||'this child')+' in '+course.name+'? This creates the student record.'))return;
+  const {error}=await sb.rpc('convert_lead_to_student',{p_lead:id,p_course:course.id});
+  if(error){toast('Could not enrol: '+error.message,5000);return}
+  await loadAll(true);toast('Student created 🎉');closeDrawer();go('students');
+}
+
+/* ---- Import leads (paste from Google Sheets or CSV file) ---- */
+function openImport(){
+  openDrawer('<div class="dh"><div><div class="sm muted">Leads</div><h2>Import leads</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+  +'<p class="muted">Already connected to Google Sheets? The <b>Sheet Sync</b> page sets up automatic two-way sync. This is for a one-time bulk import.</p>'
+  +'<label class="sm"><b>Option 1 — Choose a CSV file</b></label><input type="file" accept=".csv,text/csv" onchange="importFile(event)" style="margin:6px 0 14px">'
+  +'<label class="sm"><b>Option 2 — Paste rows copied from Google Sheets</b> (include the header row)</label><textarea id="impText" rows="8" placeholder="Copy from Google Sheets, then press Ctrl+V here" style="margin-top:6px"></textarea>'
+  +'<div class="act"><button class="btn pri" onclick="importText($(\'impText\').value)">Import pasted rows</button><button class="btn" onclick="closeDrawer()">Cancel</button></div><div id="impMsg" class="sm muted"></div>');
+}
+function csvParse(text){const rows=[];let row=[],cell='',q=false;text=String(text||'').replace(/^﻿/,'');
+  for(let i=0;i<text.length;i++){const ch=text[i],nx=text[i+1];
+    if(ch==='"'){if(q&&nx==='"'){cell+='"';i++}else q=!q}
+    else if((ch===','||ch===';'||ch==='\t')&&!q){row.push(cell);cell=''}
+    else if((ch==='\n'||ch==='\r')&&!q){if(ch==='\r'&&nx==='\n')i++;row.push(cell);cell='';if(row.some(v=>String(v).trim()!==''))rows.push(row);row=[]}
+    else cell+=ch}
+  if(cell!==''||row.length){row.push(cell);if(row.some(v=>String(v).trim()!==''))rows.push(row)}return rows}
+const normH=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+function fld(o,...names){for(const n of names){const k=Object.keys(o).find(x=>normH(x)===normH(n));if(k)return String(o[k]||'').trim()}return ''}
+function parseSheetTimestamp(v){const m=String(v||'').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);if(!m)return null;const p=n=>String(n||0).padStart(2,'0');return m[3]+'-'+p(m[2])+'-'+p(m[1])+'T'+p(m[4])+':'+p(m[5])+':'+p(m[6])+'+05:30'}
+const leadKey=x=>String(x.phone||'').replace(/\D/g,'').slice(-10)+'|'+String(x.child_name||'').trim().toLowerCase();
+async function importFile(e){const f=e.target.files&&e.target.files[0];if(f)importText(await f.text())}
+async function importText(text){
+  const msg=$('impMsg');const rows=csvParse(text);
+  if(rows.length<2){msg.textContent='I could not find a header row plus lead rows. Please include the header row.';return}
+  const H=rows[0];const recs=rows.slice(1).map(r=>Object.fromEntries(H.map((h,i)=>[h,r[i]||''])));
+  const payload=recs.map(x=>{const ts=fld(x,'Timestamp','Inquiry Timestamp','Created At','created_at');
+    return {parent_name:fld(x,'Parent Name','Parents Name','Parent'),phone:fld(x,'Phone','Mobile No','Mobile','Phone Number','WhatsApp'),child_name:fld(x,'Child Name','Childs Name','Student Name'),child_age:fld(x,'Child Age','Childs Age','Age')||null,city:fld(x,'City','Location'),
+      status:normalizeLeadStatus(fld(x,'Pipeline Stage','Lead Status','Status')),interested_course:fld(x,'Interested Course','Course')||null,demo_date:fld(x,'Demo Date','Demo')||null,notes:fld(x,'Notes','Remark','Remarks')||null,source:'Google Sheet Import',
+      created_at:parseSheetTimestamp(ts)||(Date.parse(ts)?new Date(ts).toISOString():new Date().toISOString())}}).filter(x=>x.parent_name||x.phone||x.child_name);
+  if(!payload.length){msg.textContent='No usable rows found — check that the header row has names like Parent Name and Phone.';return}
+  const seen=new Set(D('leads').map(leadKey));const fresh=payload.filter(x=>{const k=leadKey(x);if(seen.has(k))return false;seen.add(k);return true});
+  if(!fresh.length){msg.textContent='These leads are already in the LMS — nothing new to add.';return}
+  if(!isAdmin())fresh.forEach(x=>x.assigned_to=S.user.id);
+  msg.textContent='Importing '+fresh.length+' lead(s)…';
+  const {error}=await sb.from('leads').insert(fresh);
+  if(error){msg.textContent='Import failed: '+error.message;return}
+  await loadAll(true);toast(fresh.length+' new lead(s) imported ✓');closeDrawer();
+}
+
+/* ================= Students (360 view) ================= */
+function openStudent(id){
+  const s=byId('students',id);if(!s)return editor('students',id);
+  const pays=D('payments').filter(p=>p.student_id===id),att=D('attendance').filter(a=>a.student_id===id).sort((a,b)=>String(b.class_date).localeCompare(String(a.class_date)));
+  const present=att.filter(a=>['present','late'].includes(a.status)).length;
+  const top='<div class="card" style="margin-bottom:14px;background:#fff8f2"><div class="row" style="flex-wrap:nowrap">'+ring(s.progress_percent||0)+'<div class="grow"><b>'+esc(s.student_code||'')+'</b><div class="sm muted">'+esc(s.course_name||'No course yet')+(s.teacher_id?' · '+esc(teacherName(s.teacher_id)):'')+'</div><div class="sm">Attendance: <b>'+(att.length?Math.round(100*present/att.length)+'%':'—')+'</b> ('+present+'/'+att.length+') · Sessions '+(s.sessions_completed||0)+'/'+(s.total_sessions||'?')+'</div></div></div></div>';
+  const bottom='<div style="margin-top:18px"><div class="hd row" style="justify-content:space-between"><b>Payments</b>'+(canEdit('payments')?'<button class="btn sm" onclick="newPayment(\''+id+'\')">＋ Payment</button>':'')+'</div>'
+   +(pays.length?pays.map(p=>'<div class="li" onclick="editor(\'payments\',\''+p.id+'\')"><div class="grow"><b>'+money(p.amount)+'</b><span class="sm muted">'+esc(p.package||p.course_name||'')+' · due '+fmtDate(p.due_date)+'</span></div>'+bd(effPay(p))+'</div>').join(''):'<div class="sm muted">No payments recorded.</div>')+'</div>'
+   +'<div style="margin-top:18px"><b>Recent attendance</b>'+(att.length?att.slice(0,8).map(a=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(a.class_title||'Class')+'</b><span class="sm muted">'+fmtDate(a.class_date)+'</span></div>'+bd(a.status)+'</div>').join(''):'<div class="sm muted">No attendance yet.</div>')+'</div>';
+  editor('students',id,null,top,bottom);
+}
+function newPayment(sid){const s=byId('students',sid);editor('payments',null,{student_id:sid,course_name:s.course_name,status:'pending'})}
+
+/* ================= Classes: calendar + list, class drawer, attendance ================= */
+function weekStart(off){const d=new Date(todayStr()+'T00:00:00');const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd+7*(off||0));return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+VIEWS.classes=()=>{
+  const m=S.ui.classMode||'cal';
+  const tb='<div class="seg"><button class="'+(m==='cal'?'on':'')+'" onclick="S.ui.classMode=\'cal\';render()">'+T('Calendar')+'</button><button class="'+(m==='list'?'on':'')+'" onclick="S.ui.classMode=\'list\';render()">'+T('List')+'</button></div>';
+  if(m==='list')return listView('classes',{toolbar:tb});
+  const off=S.ui.weekOff||0,ws=weekStart(off),t=todayStr();let days='';
+  for(let i=0;i<7;i++){const ds=addDays(ws,i),d=new Date(ds+'T00:00:00');
+    const cl=D('classes').filter(c=>c.class_date===ds).sort((a,b)=>String(a.class_time).localeCompare(String(b.class_time)));
+    const fu=isStaff()&&S.role!=='teacher'?D('leads').filter(l=>l.next_follow_up===ds&&!['enrolled','not_interested'].includes(l.status)):[];
+    days+='<div class="day'+(ds===t?' today':'')+'"><h5>'+d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})+'</h5>'
+     +cl.map(c=>'<div class="ev'+(c.kind==='demo'||c.kind==='one_to_one'?' demo':'')+(c.status==='cancelled'||c.status==='completed'?' done':'')+'" onclick="openClass(\''+c.id+'\')"><b>'+esc(c.class_time||'')+'</b> '+esc(c.title)+(c.teacher_name?'<br><span style="opacity:.75">'+esc(c.teacher_name)+'</span>':'')+'</div>').join('')
+     +(fu.length?'<div class="ev fu" onclick="S.ui.leadMode=\'list\';go(\'leads\')">📞 '+fu.length+' follow-up'+(fu.length>1?'s':'')+'</div>':'')+'</div>';}
+  return '<div class="row" style="margin-bottom:12px"><div class="seg"><button onclick="S.ui.weekOff=(S.ui.weekOff||0)-1;render()">‹</button><button onclick="S.ui.weekOff=0;render()">Today</button><button onclick="S.ui.weekOff=(S.ui.weekOff||0)+1;render()">›</button></div><b>'+fmtDate(ws)+' – '+fmtDate(addDays(ws,6))+'</b><div class="spacer"></div>'+tb+(canEdit('classes')?'<button class="btn pri" onclick="addRecord(\'classes\')">＋ Class</button>':'')+'</div><div class="cal">'+days+'</div><div class="sm muted" style="margin-top:8px"><span class="sync">⇄ Two-way</span> Classes also live in the “LMS Classes” tab of your Google Sheet.</div>';
+};
+function openClass(id){
+  const c=byId('classes',id);if(!c)return editor('classes',id);
+  const att=D('attendance').filter(a=>a.class_id===id);
+  const top='<div class="row" style="margin-bottom:12px">'+(c.meet_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(c.meet_link)+'" style="text-decoration:none">🎥 Join Google Meet</a>':'')+(isStaff()&&S.role!=='counselor'?'<button class="btn" onclick="openAttendance(\''+id+'\')">✅ Attendance ('+att.length+' marked)</button>':'')+'</div>';
+  editor('classes',id,null,top,'');
+}
+VIEWS.attendance=()=>{
+  const t=todayStr();
+  const cl=D('classes').filter(c=>c.status!=='cancelled'&&c.class_date&&c.class_date<=addDays(t,1)).sort((a,b)=>String(b.class_date).localeCompare(String(a.class_date))).slice(0,40);
+  return '<div class="card"><div class="hd"><h3>Choose a class to mark attendance</h3></div>'+(cl.map(c=>{const n=D('attendance').filter(a=>a.class_id===c.id).length;return '<div class="li" onclick="openAttendance(\''+c.id+'\')"><div class="t">'+fmtDate(c.class_date)+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.class_time,c.teacher_name,c.course_name].filter(Boolean).join(' • '))+'</span></div>'+(n?'<span class="b g">'+n+' marked</span>':'<span class="b o">Not marked</span>')+'</div>'}).join('')||'<div class="empty">No classes yet. Add one under Classes.</div>')+'</div>';
+};
+function classRoster(c){
+  const st=D('students').filter(s=>s.status==='active'||D('attendance').some(a=>a.class_id===c.id&&a.student_id===s.id));
+  const m=st.filter(s=>c.course_name&&s.course_name===c.course_name);return m.length?m:st;
+}
+function openAttendance(cid){
+  const c=byId('classes',cid);if(!c)return;const roster=classRoster(c);
+  const rows=roster.map(s=>{const a=D('attendance').find(x=>x.class_id===cid&&x.student_id===s.id);const cur=a?a.status:'';
+    return '<div class="li" style="cursor:default"><div class="grow"><b>'+esc(s.full_name)+'</b><span class="sm muted">'+esc(s.course_name||'')+'</span></div><div class="row" style="gap:4px;flex-wrap:nowrap">'+['present','absent','late','excused'].map(k=>'<button class="btn sm" style="'+(cur===k?'background:'+({present:'#12a36b',absent:'#e0475b',late:'#e0a200',excused:'#4d7cff'}[k])+';color:#fff;border-color:transparent':'')+'" onclick="markAtt(\''+cid+'\',\''+s.id+'\',\''+k+'\')">'+esc(k==='present'?'P':k==='absent'?'A':k==='late'?'L':'E')+'</button>').join('')+'</div></div>'}).join('');
+  openDrawer('<div class="dh"><div><div class="sm muted">Attendance · '+fmtDate(c.class_date)+'</div><h2>'+esc(c.title)+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="row" style="margin-bottom:10px"><button class="btn pri" onclick="markAll(\''+cid+'\')">✓ Mark everyone present</button><button class="btn" onclick="openClass(\''+cid+'\')">← Class details</button></div><div class="sm muted" style="margin-bottom:6px">P = present · A = absent · L = late · E = excused. Sessions completed update automatically.</div>'
+   +(rows||'<div class="empty">No students to show. Add students first.</div>'));
+}
+async function markAtt(cid,sid,status){
+  const {error}=await sb.from('attendance').upsert({class_id:cid,student_id:sid,status},{onConflict:'class_id,student_id'});
+  if(error){toast('Could not save: '+error.message,5000);return}
+  await loadAll(true);openAttendance(cid);
+}
+async function markAll(cid){
+  const c=byId('classes',cid);const rows=classRoster(c).map(s=>({class_id:cid,student_id:s.id,status:'present'}));
+  if(!rows.length)return;const {error}=await sb.from('attendance').upsert(rows,{onConflict:'class_id,student_id'});
+  if(error){toast('Could not save: '+error.message,5000);return}
+  await loadAll(true);toast('Everyone marked present ✓');openAttendance(cid);
+}
+
+/* ================= Students / Teachers / Payments / Tasks / Materials ================= */
+VIEWS.students=()=>listView('students');
+VIEWS.teachers=()=>listView('teachers');
+VIEWS.payments=()=>{
+  const P=D('payments'),sum=f=>P.filter(f).reduce((s,p)=>s+Number(p.amount||0),0);
+  const k='<div class="grid kpis" style="margin-bottom:14px">'+kpi('Collected',money(sum(p=>p.status==='paid')),P.filter(p=>p.status==='paid').length+' payments')+kpi('Pending',money(sum(p=>effPay(p)==='pending')),'')+kpi('Overdue',money(sum(p=>effPay(p)==='overdue')),'needs a reminder')+'</div>';
+  return k+listView('payments',{noAdd:!isAdmin(),toolbar:''});
+};
+VIEWS.tasks=()=>{
+  const m=S.ui.taskMode||'board';
+  const tb='<div class="seg"><button class="'+(m==='board'?'on':'')+'" onclick="S.ui.taskMode=\'board\';render()">'+T('Board')+'</button><button class="'+(m==='list'?'on':'')+'" onclick="S.ui.taskMode=\'list\';render()">'+T('List')+'</button></div>';
+  if(m==='list')return listView('tasks',{toolbar:tb});
+  return '<div class="row" style="margin-bottom:12px"><div class="spacer"></div>'+tb+'<button class="btn pri" onclick="addRecord(\'tasks\')">＋ '+T('Add')+' task</button></div>'
+   +kanban('tasks','status',[['todo','To do'],['doing','In progress'],['done','Done']],t=>'<div class="kcard" draggable="true" ondragstart="dragStart(event,\''+t.id+'\')" ondragend="this.classList.remove(\'dragging\')" onclick="editor(\'tasks\',\''+t.id+'\')"><b>'+esc(t.title)+'</b><div class="row" style="margin-top:6px;gap:6px">'+bd(t.priority)+(t.due_date?'<span class="b '+(t.due_date<todayStr()&&t.status!=='done'?'r':'bl')+'">'+fmtDate(t.due_date)+'</span>':'')+(t.assignee_name?'<span class="sm muted">'+esc(t.assignee_name)+'</span>':'')+'</div></div>')
+   +'<div class="sm muted"><span class="sync">⇄ Two-way</span> Tasks are also in the “LMS Tasks” tab of your Google Sheet.</div>';
+};
+const KIND_ICON={video:'🎬',pdf:'📄',worksheet:'📝',slides:'📽',quiz:'❓',game:'🎮',link:'🔗'};
+VIEWS.materials=()=>{
+  const m=S.ui.matMode||'lib';
+  const tb=isAdmin()?'<div class="seg"><button class="'+(m==='lib'?'on':'')+'" onclick="S.ui.matMode=\'lib\';render()">Library</button><button class="'+(m==='list'?'on':'')+'" onclick="S.ui.matMode=\'list\';render()">'+T('List')+'</button></div>':'';
+  if(m==='list'&&isAdmin())return listView('materials',{toolbar:tb});
+  const q=(S.ui.matQ||'').toLowerCase();const items=D('materials').filter(x=>!q||[x.title,x.course_name,x.kind,x.description].some(v=>String(v||'').toLowerCase().includes(q)));
+  const groups={};items.forEach(x=>(groups[x.course_name||'All courses']=groups[x.course_name||'All courses']||[]).push(x));
+  return '<div class="row" style="margin-bottom:12px"><div class="grow"><input placeholder="🔎 Search materials…" value="'+esc(S.ui.matQ||'')+'" oninput="S.ui.matQ=this.value;clearTimeout(S.ui.mt);S.ui.mt=setTimeout(render,250)"></div>'+tb+(isAdmin()?'<button class="btn pri" onclick="addRecord(\'materials\')">＋ '+T('Add')+' material</button>':'')+'</div>'
+   +(Object.keys(groups).sort().map(g=>'<h3 style="margin:18px 0 8px">'+esc(g)+' <span class="b">'+groups[g].length+'</span></h3><div class="grid cols3">'+groups[g].map(x=>'<div class="card"><div class="row" style="flex-wrap:nowrap"><div style="font-size:26px">'+(KIND_ICON[x.kind]||'🔗')+'</div><div class="grow"><b>'+esc(x.title)+'</b><div class="sm muted">'+esc([titleCase(x.kind),x.age_group&&('Ages '+x.age_group),x.language].filter(Boolean).join(' · '))+'</div></div>'+(x.published?'':'<span class="b">Hidden</span>')+'</div>'+(x.description?'<p class="sm" style="margin:10px 0 0">'+esc(x.description)+'</p>':'')+'<div class="row" style="margin-top:12px">'+(x.url?'<a class="btn sm pri" target="_blank" rel="noopener" href="'+esc(x.url)+'" style="text-decoration:none">Open</a>':'<span class="sm muted">No link yet</span>')+(isAdmin()?'<button class="btn sm" onclick="editor(\'materials\',\''+x.id+'\')">Edit</button>':'')+'</div></div>').join('')+'</div>').join('')||'<div class="card empty">No materials yet. '+(isAdmin()?'Click “Add material” and paste a Google Drive link, or add rows in the “LMS Materials” tab of your sheet.':'')+'</div>')
+   +'<div class="sm muted" style="margin-top:12px"><span class="sync">⇄ Two-way</span> Materials are also in the “LMS Materials” tab of your Google Sheet.</div>';
+};
+
+/* ================= Team & access ================= */
+VIEWS.team=()=>{
+  const P=D('profiles');
+  return '<div class="card" style="margin-bottom:14px"><b>How to add a counselor or teacher</b><ol class="sm muted" style="margin:8px 0 0;padding-left:18px"><li>Ask them to open this page and tap <b>Create account</b> with their email.</li><li>They appear below as <b>Student</b>. Change their role here — they get the right screens the next time they sign in.</li><li>For a teacher, also add them under <b>Teachers</b> and set their email to match.</li></ol></div>'
+  +'<div class="tw"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Language</th><th>Active</th></tr></thead><tbody>'+P.map(p=>'<tr style="cursor:default"><td><b>'+esc(p.full_name||'—')+'</b></td><td>'+esc(p.email||'')+'</td><td><select style="width:auto" onchange="setProfile(\''+p.id+'\',{role:this.value})">'+['admin','counselor','teacher','parent','student'].map(r=>'<option'+(p.role===r?' selected':'')+'>'+r+'</option>').join('')+'</select></td><td>'+(p.language==='hi'?'हिन्दी':'English')+'</td><td><select style="width:auto" onchange="setProfile(\''+p.id+'\',{active:this.value===\'true\'})"><option value="true"'+(p.active?' selected':'')+'>Active</option><option value="false"'+(p.active?'':' selected')+'>Blocked</option></select></td></tr>').join('')+'</tbody></table></div>';
+};
+async function setProfile(id,patch){
+  if(id===S.user.id&&patch.role&&patch.role!=='admin'&&!confirm('You are changing your OWN role. You may lose admin access. Continue?')){render();return}
+  const {error}=await sb.from('profiles').update(patch).eq('id',id);
+  if(error){toast('Could not update: '+error.message,5000);return}
+  toast('Updated ✓');await loadAll(true);
+}
+
+/* ================= Sheet sync help ================= */
+VIEWS.sync=()=>{
+  const tabs=Object.values(ENT).map(e=>'<tr style="cursor:default"><td><b>'+esc(e.tab)+'</b></td><td>'+esc(e.plural)+'</td></tr>').join('');
+  return '<div class="card" style="margin-bottom:14px"><h3>⇄ Everything is two-way</h3><p class="muted" style="margin:6px 0 0">Change anything in the LMS and it shows up in your Google Sheet within minutes. Change a cell in the sheet and it appears here. If both sides were changed at once, the LMS version wins and the sheet row is flagged.</p></div>'
+  +'<div class="grid cols2"><div class="card"><h3>Sheet tabs kept in step</h3><div class="tw" style="margin-top:8px"><table><tbody><tr style="cursor:default"><td><b>Sheet1</b></td><td>Website form → new leads (one-way in)</td></tr>'+tabs+'<tr style="cursor:default"><td><b>LMS Attendance</b></td><td>Attendance (edit status / note)</td></tr></tbody></table></div></div>'
+  +'<div class="card"><h3>In your Google Sheet</h3><ol class="sm" style="padding-left:18px;line-height:1.7"><li>Open the menu <b>Next Move LMS</b> at the top.</li><li>Choose <b>Sync now</b> to push and pull immediately.</li><li>Choose <b>Auto-sync on</b> and it runs every 5 minutes and after each edit.</li><li>You can <b>add new rows</b> (students, classes, materials, tasks, teachers) in their tabs — leave the <i>id</i> column blank.</li><li>Do not edit the grey columns (id, updated) — they are the link between the sheet and the LMS.</li></ol><p class="sm muted">Leads can be added in the sheet too. Payments and attendance can be edited there, but new payment/attendance rows are created in the LMS.</p></div></div>';
+};
+
+/* ================= Search palette ================= */
+function openPalette(){$('pal').classList.add('on');$('palQ').value='';runPalette();setTimeout(()=>$('palQ').focus(),30)}
+function closePalette(){$('pal').classList.remove('on')}
+function runPalette(){
+  const q=$('palQ').value.toLowerCase().trim();const out=[];
+  const src=[['leads','🎯',r=>r.parent_name||r.phone,r=>[r.child_name,r.phone,r.status].filter(Boolean).join(' · '),'openLead'],['students','🎓',r=>r.full_name,r=>[r.student_code,r.course_name].filter(Boolean).join(' · '),'openStudent'],['teachers','👩‍🏫',r=>r.full_name,r=>r.subject||r.email,'tchr'],['classes','📅',r=>r.title,r=>fmtDate(r.class_date)+' '+(r.class_time||''),'openClass'],['materials','📚',r=>r.title,r=>r.course_name||'','mat']];
+  if(q.length<2){$('palRes').innerHTML='<div class="empty sm">Type at least 2 letters — searches leads, students, teachers, classes and materials.</div>';return}
+  for(const [t,ic,a,b,fn] of src)for(const r of D(t)){const hay=Object.values(r).filter(v=>v!=null&&typeof v!=='object').join(' ').toLowerCase();if(hay.includes(q))out.push([t,ic,a(r),b(r),fn,r.id]);if(out.length>40)break}
+  $('palRes').innerHTML=out.slice(0,25).map(o=>'<div class="li" onclick="palGo(\''+o[0]+'\',\''+o[5]+'\')"><span>'+o[1]+'</span><div class="grow"><b>'+esc(o[2]||'—')+'</b><span class="sm muted">'+esc(o[3]||'')+'</span></div><span class="b">'+esc(ENT[o[0]].label)+'</span></div>').join('')||'<div class="empty sm">No matches.</div>';
+}
+function palGo(t,id){closePalette();openRecord(t,id)}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();if(S.user)openPalette()}if(e.key==='Escape'){closePalette();if($('ov').classList.contains('on'))closeDrawer()}});
+</script>
+<script>
+/* ================= Sign in / boot ================= */
+async function doLogin(){const m=$('gMsg');m.textContent='Signing in…';const {error}=await sb.auth.signInWithPassword({email:$('gEmail').value.trim(),password:$('gPass').value});m.textContent=error?error.message:''}
+async function doSignup(){
+  const email=$('gEmail').value.trim(),password=$('gPass').value,m=$('gMsg');
+  if(!email||password.length<6){m.textContent='Enter your email and a password of at least 6 characters.';return}
+  m.textContent='Creating account…';
+  const {data,error}=await sb.auth.signUp({email,password});
+  if(error){m.textContent=error.message;return}
+  m.style.color='#12a36b';m.textContent=data.session?'Account created — you are signed in.':'Account created. Check your email to confirm, then sign in.';
+}
+async function signOut(){await sb.auth.signOut();S.user=null;S.loaded=false;S.d={};$('gate').style.display='flex'}
+let booting=false;
+async function boot(){
+  if(booting)return;booting=true;
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){$('gate').style.display='flex';return}
+    $('gate').style.display='none';S.user=session.user;
+    const {data:p}=await sb.from('profiles').select('*').eq('id',session.user.id).maybeSingle();
+    S.profile=p||{full_name:session.user.email};S.role=(p&&p.active!==false&&p.role)||'student';
+    if(p&&p.language&&!localStorage.getItem('nmi_lang')){LANG=p.language}
+    $('langBtn').textContent=LANG==='en'?'हिं':'EN';
+    $('meName').textContent=S.profile.full_name||session.user.email;$('meRole').textContent=S.role;$('meAv').textContent=initials(S.profile.full_name||session.user.email);
+    const h=(location.hash||'').replace('#','');
+    S.view=myNav().some(x=>x[0]===h)?h:'dashboard';
+    renderNav();$('page').innerHTML='<div class="empty">Loading your workspace…</div>';
+    await loadAll();
+  }catch(e){console.error(e);$('page').innerHTML='<div class="card"><b>Something went wrong while loading.</b><p class="muted">'+esc(e.message||e)+'</p><button class="btn pri" onclick="location.reload()">Reload</button></div>'}
+  finally{booting=false}
+}
+sb.auth.onAuthStateChange((ev,session)=>{if(ev==='SIGNED_OUT'){S.user=null;$('gate').style.display='flex'}else if(session&&(!S.user||ev==='SIGNED_IN'&&S.user.id!==session.user.id))setTimeout(boot,0)});
+/* keep data fresh: changes made in the Google Sheet appear here within a minute */
+setInterval(async()=>{
+  if(!S.user||document.hidden||$('ov').classList.contains('on')||$('pal').classList.contains('on'))return;
+  const a=document.activeElement;if(a&&['INPUT','TEXTAREA','SELECT'].includes(a.tagName))return;
+  await loadAll(true);render();
+},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.user&&!$('ov').classList.contains('on'))loadAll(true).then(()=>{const a=document.activeElement;if(!(a&&['INPUT','TEXTAREA','SELECT'].includes(a.tagName)))render()})});
+boot();
 </script>
 </body>
 </html>
