@@ -172,11 +172,11 @@ tr:last-child td{border-bottom:0}
 <div class="pal" id="pal" onclick="if(event.target===this)closePalette()"><div class="palbox"><input id="palQ" placeholder="Search leads, students, teachers, classes…" oninput="runPalette()"><div class="res" id="palRes"></div></div></div>
 <div class="toast" id="toast"></div>
 <div class="gate" id="gate" style="display:none"><div class="box">
-  <div class="tag">NEXT MOVE INDIA LMS</div><h2>Welcome back 👋</h2><p class="muted" style="margin:0 0 18px">Sign in to your secure school workspace.</p>
+  <div class="tag">NEXT MOVE INDIA LMS</div><h2 id="gTitle">Welcome back 👋</h2><p class="muted" style="margin:0 0 18px">Sign in to your secure school workspace.</p>
   <input id="gEmail" type="email" placeholder="Email address" autocomplete="username">
   <input id="gPass" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
   <button class="btn pri" style="width:100%;justify-content:center" onclick="doLogin()">Sign in</button>
-  <button class="btn" style="width:100%;justify-content:center;margin-top:8px" onclick="doSignup()">Create parent account</button>
+  <button class="btn" id="gSignup" style="width:100%;justify-content:center;margin-top:8px" onclick="doSignup()">Create parent account</button><div class="sm muted" id="gHint" style="margin-top:8px"></div>
   <div class="seat" id="gMsg"></div>
   <div class="sm muted">Your password is handled by Supabase Authentication.</div>
 </div></div>
@@ -705,7 +705,11 @@ async function markAll(cid){
 
 /* ================= Students / Teachers / Payments / Tasks / Materials ================= */
 VIEWS.students=()=>listView('students');
-VIEWS.teachers=()=>listView('teachers');
+VIEWS.teachers=()=>{
+  const link=location.origin+location.pathname+'#teacher';
+  return '<div class="card" style="margin-bottom:14px"><b>Invite a tutor</b><p class="sm muted" style="margin:6px 0 10px">Add the tutor below with their email, then send them this link. They tap <b>Create tutor account</b> using that same email and are set up as a teacher automatically.</p><div class="row"><input readonly id="inviteLink" value="'+esc(link)+'" onclick="this.select()"><button class="btn pri" onclick="copyInvite()">📋 Copy tutor link</button></div></div>'+listView('teachers');
+};
+function copyInvite(){const el=$('inviteLink');el.select();try{navigator.clipboard.writeText(el.value).then(()=>toast('Tutor link copied ✓'),()=>{document.execCommand('copy');toast('Tutor link copied ✓')})}catch(e){document.execCommand('copy');toast('Tutor link copied ✓')}}
 VIEWS.payments=()=>{
   const P=D('payments'),sum=f=>P.filter(f).reduce((s,p)=>s+Number(p.amount||0),0);
   const k='<div class="grid kpis" style="margin-bottom:14px">'+kpi('Collected',money(sum(p=>p.status==='paid')),P.filter(p=>p.status==='paid').length+' payments')+kpi('Pending',money(sum(p=>effPay(p)==='pending')),'')+kpi('Overdue',money(sum(p=>effPay(p)==='overdue')),'needs a reminder')+'</div>';
@@ -777,6 +781,13 @@ async function doSignup(){
   m.style.color='#12a36b';m.textContent=data.session?'Account created — you are signed in.':'Account created. Check your email to confirm, then sign in.';
 }
 async function signOut(){await sb.auth.signOut();S.user=null;S.loaded=false;S.d={};$('gate').style.display='flex'}
+function gateMode(){
+  const t=(location.hash||'').replace('#','')==='teacher';
+  $('gTitle').textContent=t?'Welcome, tutor 👋':'Welcome back 👋';
+  $('gSignup').textContent=t?'Create tutor account':'Create parent account';
+  $('gHint').textContent=t?'First time? Use the same email your Next Move India admin added for you, choose a password, then tap Create tutor account.':'First time? Tap Create parent account with your email and choose a password.';
+}
+window.addEventListener('hashchange',gateMode);gateMode();
 let booting=false;
 async function boot(){
   if(booting)return;booting=true;
