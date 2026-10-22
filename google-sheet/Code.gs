@@ -9,6 +9,10 @@
  *     counselor, notes ...) are sent back into the LMS within seconds.
  *  4. If the same lead was changed in the LMS in the meantime, the LMS version
  *     wins and your sheet cell is refreshed (nothing is lost silently: you get a message).
+ *  5. Students, Teachers, Classes, Materials, Tasks, Payments and Attendance each get
+ *     their own "LMS ..." tab that works the same way, in both directions. You can add
+ *     new rows (leave the hidden ID cell empty) for Students, Teachers, Classes,
+ *     Materials and Tasks.
  */
 
 var DEFAULT_URL = 'https://qsibsuhejremcbzpmhwt.supabase.co';
@@ -47,6 +51,43 @@ var STATUS_LABELS = {
   not_reachable: 'Not reachable'
 };
 
+
+/* Extra tabs: header, LMS field, editable in the sheet?, optional dropdown list.
+   Column A is always the hidden ID and the last column the hidden "synced version". */
+var TABS = {
+  'LMS Students': { table: 'students', insert: true, cols: [
+    ['Student ID', 'student_code', false], ['Name', 'full_name', true], ['Age', 'age', true],
+    ['Course', 'course_name', true], ['Batch timings', 'batch_timings', true],
+    ['Sessions done', 'sessions_completed', true], ['Total sessions', 'total_sessions', true],
+    ['Progress %', 'progress_percent', false], ['Status', 'status', true, ['active', 'on_hold', 'completed', 'discontinued']],
+    ['Joined (YYYY-MM-DD)', 'joined_at', true], ['Progress notes', 'progress_notes', true]] },
+  'LMS Teachers': { table: 'teachers', insert: true, cols: [
+    ['Name', 'full_name', true], ['Email', 'email', true], ['Phone', 'phone', true],
+    ['Speciality', 'subject', true], ['Status', 'status', true, ['active', 'inactive']]] },
+  'LMS Classes': { table: 'classes', insert: true, cols: [
+    ['Title', 'title', true], ['Course', 'course_name', true], ['Teacher (name)', 'teacher_name', true],
+    ['Type', 'kind', true, ['batch', 'demo', 'one_to_one', 'workshop']],
+    ['Date (YYYY-MM-DD)', 'class_date', true], ['Time', 'class_time', true], ['Minutes', 'duration_min', true],
+    ['Meet link', 'meet_link', true], ['Status', 'status', true, ['scheduled', 'completed', 'cancelled']],
+    ['Notes', 'notes', true]] },
+  'LMS Materials': { table: 'materials', insert: true, cols: [
+    ['Title', 'title', true], ['Course', 'course_name', true],
+    ['Type', 'kind', true, ['video', 'pdf', 'worksheet', 'slides', 'quiz', 'game', 'link']],
+    ['Link (Drive / YouTube)', 'url', true], ['Age group', 'age_group', true], ['Language', 'language', true, ['English', 'Hindi', 'Both']],
+    ['Description', 'description', true], ['Visible to families', 'published', true, ['TRUE', 'FALSE']], ['Order', 'sort_order', true]] },
+  'LMS Tasks': { table: 'tasks', insert: true, cols: [
+    ['Task', 'title', true], ['Details', 'description', true], ['Priority', 'priority', true, ['low', 'normal', 'high']],
+    ['Status', 'status', true, ['todo', 'doing', 'done']], ['Due (YYYY-MM-DD)', 'due_date', true],
+    ['Assigned to (name)', 'assignee_name', true]] },
+  'LMS Payments': { table: 'payments', insert: false, cols: [
+    ['Student', 'student_name', false], ['Course', 'course_name', true], ['Package', 'package', true],
+    ['Amount', 'amount', true], ['Due (YYYY-MM-DD)', 'due_date', true], ['Paid on (YYYY-MM-DD)', 'paid_date', true],
+    ['Status', 'status', true, ['pending', 'paid', 'overdue', 'cancelled']]] },
+  'LMS Attendance': { table: 'attendance', insert: false, cols: [
+    ['Date', 'class_date', false], ['Class', 'class_title', false], ['Student', 'student_name', false],
+    ['Status', 'status', true, ['present', 'absent', 'late', 'excused']], ['Note', 'note', true]] }
+};
+
 /* ---------------------------------------------------------------- menu */
 
 function onOpen() {
@@ -76,7 +117,7 @@ function connectToLms() {
     return;
   }
   syncAll();
-  ui.alert('Connected. Your leads are now in the "' + LEADS_TAB + '" tab.\n\nNext: Next Move LMS > 3. Turn on automatic sync.');
+  ui.alert('Connected. Your leads are in the "' + LEADS_TAB + '" tab, and Students, Classes, Materials, Tasks, Teachers, Payments and Attendance each have an "LMS ..." tab.\n\nNext: Next Move LMS > 3. Turn on automatic sync.');
 }
 
 function turnOnAutoSync() {
@@ -102,7 +143,14 @@ function syncAll() {
   try {
     sendWebsiteLeads_();
     var last = Number(PropertiesService.getScriptProperties().getProperty('LAST_EDIT_MS') || 0);
-    if (Date.now() - last > QUIET_AFTER_EDIT_MS) mirrorLeads_();
+    if (Date.now() - last > QUIET_AFTER_EDIT_MS) {
+      mirrorLeads_();
+      var problems = [];
+      Object.keys(TABS).forEach(function (name) {
+        try { mirrorTab_(name); } catch (err) { problems.push(name + ': ' + err.message); }
+      });
+      if (problems.length) toast_('Some tabs could not refresh. ' + problems[0]);
+    }
   } finally {
     lock.releaseLock();
   }
@@ -112,6 +160,7 @@ function syncAll() {
 function onLmsEdit(e) {
   if (!e || !e.range) return;
   var sheet = e.range.getSheet();
+  if (TABS[sheet.getName()]) return onTabEdit_(e, sheet, TABS[sheet.getName()]);
   if (sheet.getName() !== LEADS_TAB) return;
   var firstRow = e.range.getRow(), numRows = e.range.getNumRows();
   var firstCol = e.range.getColumn(), numCols = e.range.getNumColumns();
@@ -270,6 +319,120 @@ function ensureLeadsSheet_() {
   sheet.hideColumns(1);
   sheet.hideColumns(COLS.length);
   return sheet;
+}
+
+
+/* ------------------------------------- other LMS tabs (generic, both ways) */
+
+function tabCols_(def) {
+  // [header, field, editable, list]; ID first, synced-version last.
+  return [['ID', 'id', false]]
+    .concat(def.cols)
+    .concat([['Synced version (do not edit)', 'updated_at', false]]);
+}
+
+function tabRowToObject_(cols, v) {
+  var o = {};
+  cols.forEach(function (c, i) { o[c[1]] = cellText_(v[i]); });
+  return o;
+}
+
+function tabObjectToRow_(cols, o) {
+  return cols.map(function (c) {
+    var val = o[c[1]];
+    if (val === null || val === undefined) return '';
+    if (val === true) return 'TRUE';
+    if (val === false) return 'FALSE';
+    return String(val);
+  });
+}
+
+function ensureTab_(name, def) {
+  var ss = SpreadsheetApp.getActive();
+  var sheet = ss.getSheetByName(name);
+  if (sheet) return sheet;
+  var cols = tabCols_(def);
+  sheet = ss.insertSheet(name);
+  sheet.getRange(1, 1, 1, cols.length).setValues([cols.map(function (c) { return c[0]; })])
+    .setFontWeight('bold').setBackground('#ffedd5');
+  sheet.getRange(2, 1, 1000, cols.length).setNumberFormat('@');
+  sheet.setFrozenRows(1);
+  cols.forEach(function (c, i) {
+    if (c[3]) sheet.getRange(2, i + 1, 1000, 1).setDataValidation(
+      SpreadsheetApp.newDataValidation().requireValueInList(c[3], true).setAllowInvalid(true).build());
+    if (!c[2]) sheet.getRange(2, i + 1, 1000, 1).protect().setWarningOnly(true).setDescription('Managed by the LMS');
+  });
+  sheet.hideColumns(1);
+  sheet.hideColumns(cols.length);
+  return sheet;
+}
+
+function mirrorTab_(name) {
+  var def = TABS[name], cols = tabCols_(def);
+  var sheet = ensureTab_(name, def);
+  var list = rpc_('sheet_table_pull', { p_table: def.table });
+  var out = list.map(function (o) { return tabObjectToRow_(cols, o); });
+  if (out.length) sheet.getRange(2, 1, out.length, cols.length).setValues(out);
+  var last = sheet.getLastRow();
+  if (last > out.length + 1) sheet.getRange(out.length + 2, 1, last - out.length - 1, cols.length).clearContent();
+}
+
+function refreshTabRows_(name, sheet, startRow, count) {
+  var def = TABS[name], cols = tabCols_(def);
+  var list = rpc_('sheet_table_pull', { p_table: def.table });
+  var byId = {};
+  list.forEach(function (o) { byId[o.id] = o; });
+  var range = sheet.getRange(startRow, 1, count, cols.length);
+  range.setValues(range.getValues().map(function (row) {
+    return row[0] && byId[row[0]] ? tabObjectToRow_(cols, byId[row[0]]) : row;
+  }));
+}
+
+function onTabEdit_(e, sheet, def) {
+  var name = sheet.getName(), cols = tabCols_(def);
+  var firstRow = e.range.getRow(), numRows = e.range.getNumRows();
+  var firstCol = e.range.getColumn(), numCols = e.range.getNumColumns();
+  if (firstRow + numRows - 1 < 2) return;
+  var edited = [];
+  for (var c = firstCol; c < firstCol + numCols; c++) {
+    var d = cols[c - 1];
+    if (d && d[2]) edited.push(d[1]);
+  }
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(25000)) { toast_('The LMS is busy, please edit again in a moment.'); return; }
+  try {
+    var startRow = Math.max(2, firstRow);
+    var count = firstRow + numRows - startRow;
+    var values = sheet.getRange(startRow, 1, count, cols.length).getValues();
+    var rows = [], inserted = false;
+    values.forEach(function (v) {
+      var obj = tabRowToObject_(cols, v);
+      if (!obj.id) {
+        if (!def.insert) return;
+        var any = false, row = {};
+        cols.forEach(function (c) { if (c[2] && obj[c[1]] !== '') { row[c[1]] = obj[c[1]]; any = true; } });
+        if (!any) return;
+        inserted = true; rows.push(row); return;
+      }
+      if (!edited.length) return;
+      var out = { id: obj.id, base_updated_at: obj.updated_at };
+      edited.forEach(function (f) { out[f] = obj[f]; });
+      rows.push(out);
+    });
+    if (!rows.length) return;
+    PropertiesService.getScriptProperties().setProperty('LAST_EDIT_MS', String(Date.now()));
+    var res = rpc_('sheet_table_push', { p_table: def.table, p_rows: rows });
+    if (inserted) mirrorTab_(name); else refreshTabRows_(name, sheet, startRow, count);
+    var n = function (x) { return Object.prototype.toString.call(x) === '[object Array]' ? x.length : Number(x || 0); };
+    var msg = (n(res.updated) + n(res.inserted)) + ' saved to the LMS';
+    if (n(res.conflicts)) msg += ' · ' + n(res.conflicts) + ' changed in the LMS meanwhile (sheet refreshed with the LMS version)';
+    if (n(res.rejected)) msg += ' · ' + n(res.rejected) + ' not accepted: ' + (res.rejected[0] && res.rejected[0].why || 'check the values');
+    toast_(msg);
+  } catch (err) {
+    toast_('Could not save to the LMS: ' + err.message);
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 /* ------------------------------------------------------------ helpers */
