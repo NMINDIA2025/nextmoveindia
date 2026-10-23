@@ -203,7 +203,7 @@ function download(name,text){const a=document.createElement('a');a.href=URL.crea
 function toCSV(rows,cols){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';return [cols.map(c=>q(c.label)).join(',')].concat(rows.map(r=>cols.map(c=>q(c.csv?c.csv(r):r[c.k])).join(','))).join('\n')}
 
 /* ================= Language (English / हिन्दी) ================= */
-const HI={Dashboard:'डैशबोर्ड',Leads:'लीड्स','Lead Pipeline':'लीड पाइपलाइन',Students:'विद्यार्थी',Classes:'कक्षाएं',Attendance:'उपस्थिति',Materials:'सामग्री',Tasks:'कार्य',Payments:'भुगतान',Teachers:'शिक्षक','Team & Access':'टीम और एक्सेस','Sheet Sync':'शीट सिंक',Home:'होम','My Classes':'मेरी कक्षाएं','My Children':'मेरे बच्चे','Add':'जोड़ें',Save:'सहेजें',Delete:'हटाएं',Cancel:'रद्द करें',Search:'खोजें',Status:'स्थिति',Today:'आज','Good morning':'सुप्रभात','Follow-ups due':'फॉलो-अप बाकी','New leads':'नए लीड','Active students':'सक्रिय विद्यार्थी','Pending payments':'बकाया भुगतान','Today\'s classes':'आज की कक्षाएं','Open tasks':'खुले कार्य',Progress:'प्रगति',Course:'कोर्स',Phone:'फ़ोन',Notes:'टिप्पणियां',Calendar:'कैलेंडर',List:'सूची',Board:'बोर्ड'};
+const HI={Dashboard:'डैशबोर्ड',Leads:'लीड्स','Lead Pipeline':'लीड पाइपलाइन',Students:'विद्यार्थी',Classes:'कक्षाएं',Attendance:'उपस्थिति',Assignments:'असाइनमेंट',Materials:'सामग्री',Tasks:'कार्य',Payments:'भुगतान',Teachers:'शिक्षक','Team & Access':'टीम और एक्सेस','Sheet Sync':'शीट सिंक',Home:'होम','My Classes':'मेरी कक्षाएं','My Children':'मेरे बच्चे','Add':'जोड़ें',Save:'सहेजें',Delete:'हटाएं',Cancel:'रद्द करें',Search:'खोजें',Status:'स्थिति',Today:'आज','Good morning':'सुप्रभात','Follow-ups due':'फॉलो-अप बाकी','New leads':'नए लीड','Active students':'सक्रिय विद्यार्थी','Pending payments':'बकाया भुगतान','Today\'s classes':'आज की कक्षाएं','Open tasks':'खुले कार्य',Progress:'प्रगति',Course:'कोर्स',Phone:'फ़ोन',Notes:'टिप्पणियां',Calendar:'कैलेंडर',List:'सूची',Board:'बोर्ड'};
 let LANG=(()=>{try{return localStorage.getItem('nmi_lang')||'en'}catch(e){return 'en'}})();
 const T=s=>LANG==='hi'&&HI[s]?HI[s]:s;
 function toggleLang(){LANG=LANG==='en'?'hi':'en';try{localStorage.setItem('nmi_lang',LANG)}catch(e){}
@@ -218,7 +218,7 @@ const isFamily=()=>['parent','student'].includes(S.role);
 function canEdit(ent){
   const r=S.role;if(r==='admin')return true;
   if(r==='counselor')return ['leads','tasks'].includes(ent);
-  if(r==='teacher')return ['classes','attendance','tasks'].includes(ent);
+  if(r==='teacher')return ['classes','attendance','tasks','assignments'].includes(ent);
   return false;
 }
 function canDelete(ent){return isAdmin()}
@@ -252,10 +252,11 @@ const ENT={
   fields:[
    {k:'full_name',l:'Student name',req:1},{k:'age',l:'Age',t:'num'},
    {k:'course_name',l:'Course',t:'course'},{k:'teacher_id',l:'Teacher',t:'teacher'},
+   {k:'parent_email',l:"Parent's email (this is their login)",w:1,ph:'parent@gmail.com'},
    {k:'batch_timings',l:'Batch timings',ph:'Sat & Sun 5 PM'},{k:'status',l:'Status',t:'sel',o:['active','on_hold','completed','discontinued'].map(x=>[x,titleCase(x)]),def:'active'},
    {k:'sessions_completed',l:'Sessions completed',t:'num'},{k:'total_sessions',l:'Total sessions',t:'num'},
    {k:'joined_at',l:'Joined on',t:'date'},{k:'progress_notes',l:'Progress notes',t:'area',w:1}],
-  cols:[{k:'student_code',l:'ID'},{k:'full_name',l:'Student'},{k:'course_name',l:'Course'},{k:'batch_timings',l:'Batch'},{k:'progress_percent',l:'Progress',f:r=>'<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="prog" style="width:70px"><i style="width:'+(r.progress_percent||0)+'%"></i></div><span class="sm">'+(r.sessions_completed||0)+'/'+(r.total_sessions||'?')+'</span></div>'},{k:'status',l:'Status',f:r=>bd(r.status)}],
+  cols:[{k:'student_code',l:'ID'},{k:'full_name',l:'Student'},{k:'course_name',l:'Course'},{k:'parent_email',l:'Parent email',f:r=>r.parent_email?esc(r.parent_email)+(r.parent_id?' <span class="b g">linked</span>':' <span class="b o">waiting</span>'):'<span class="b y">add email</span>'},{k:'batch_timings',l:'Batch'},{k:'progress_percent',l:'Progress',f:r=>'<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="prog" style="width:70px"><i style="width:'+(r.progress_percent||0)+'%"></i></div><span class="sm">'+(r.sessions_completed||0)+'/'+(r.total_sessions||'?')+'</span></div>'},{k:'status',l:'Status',f:r=>bd(r.status)}],
   filter:{k:'status',o:['active','on_hold','completed','discontinued'].map(x=>[x,titleCase(x)])}},
  teachers:{label:'Teacher',plural:'Teachers',tab:'LMS Teachers',order:'created_at',
   title:r=>r.full_name||'Teacher',
@@ -265,8 +266,8 @@ const ENT={
   title:r=>r.title||'Class',
   fields:[{k:'title',l:'Class title',req:1,w:1},{k:'course_name',l:'Course',t:'course'},{k:'teacher_id',l:'Teacher',t:'teacher'},
    {k:'kind',l:'Type',t:'sel',o:[['batch','Batch class'],['demo','Free demo'],['one_to_one','One-to-one'],['workshop','Workshop']],def:'batch'},{k:'status',l:'Status',t:'sel',o:[['scheduled','Scheduled'],['completed','Completed'],['cancelled','Cancelled']],def:'scheduled'},
-   {k:'class_date',l:'Date',t:'date'},{k:'class_time',l:'Time',ph:'5:00 PM'},{k:'duration_min',l:'Minutes',t:'num',def:45},{k:'meet_link',l:'Google Meet link'},{k:'notes',l:'Notes',t:'area',w:1}],
-  cols:[{k:'class_date',l:'Date',f:r=>fmtDate(r.class_date)},{k:'class_time',l:'Time'},{k:'title',l:'Class'},{k:'course_name',l:'Course'},{k:'teacher_name',l:'Teacher'},{k:'kind',l:'Type',f:r=>bd(r.kind,'p')},{k:'status',l:'Status',f:r=>bd(r.status)}],
+   {k:'class_date',l:'Date',t:'date'},{k:'class_time',l:'Time',ph:'5:00 PM'},{k:'duration_min',l:'Minutes',t:'num',def:45},{k:'meet_link',l:'Google Meet link'},{k:'recording_url',l:'Recording link (Drive / YouTube)',w:1},{k:'notes',l:'Notes',t:'area',w:1}],
+  cols:[{k:'class_date',l:'Date',f:r=>fmtDate(r.class_date)},{k:'class_time',l:'Time'},{k:'title',l:'Class'},{k:'course_name',l:'Course'},{k:'teacher_name',l:'Teacher'},{k:'kind',l:'Type',f:r=>bd(r.kind,'p')},{k:'recording_url',l:'Recording',f:r=>r.recording_url?'<span class="b g">▶ yes</span>':'—'},{k:'status',l:'Status',f:r=>bd(r.status)}],
   filter:{k:'kind',o:[['batch','Batch'],['demo','Demo'],['one_to_one','One-to-one'],['workshop','Workshop']]}},
  materials:{label:'Material',plural:'Materials',tab:'LMS Materials',order:'sort_order',asc:true,
   title:r=>r.title||'Material',
@@ -281,6 +282,12 @@ const ENT={
    {k:'due_date',l:'Due date',t:'date'},{k:'assignee_id',l:'Assigned to',t:'staff'},{k:'description',l:'Details',t:'area',w:1}],
   cols:[{k:'title',l:'Task'},{k:'priority',l:'Priority',f:r=>bd(r.priority)},{k:'status',l:'Status',f:r=>bd(r.status)},{k:'due_date',l:'Due',f:r=>{const late=r.due_date&&r.due_date<todayStr()&&r.status!=='done';return (late?'<span style="color:var(--red);font-weight:800">':'<span>')+fmtDate(r.due_date)+'</span>'}},{k:'assignee_name',l:'Assigned to'}],
   filter:{k:'status',o:[['todo','To do'],['doing','In progress'],['done','Done']]}},
+ assignments:{label:'Assignment',plural:'Assignments',tab:'LMS Assignments',order:'due_date',asc:false,
+  title:r=>r.title||'Assignment',
+  fields:[{k:'title',l:'Title',req:1,w:1},{k:'course_name',l:'Course (blank = all courses)',t:'course'},{k:'due_date',l:'Due date',t:'date'},
+   {k:'answer_type',l:'Answer by',t:'sel',o:[['both','Typed answer or link'],['link','Link (video / file)'],['text','Typed answer']],def:'both'},{k:'published',l:'Visible to families',t:'bool',def:true},
+   {k:'instructions',l:'Instructions',t:'area',w:1}],
+  cols:[{k:'title',l:'Assignment'},{k:'course_name',l:'Course',f:r=>esc(r.course_name||'All courses')},{k:'due_date',l:'Due',f:r=>fmtDate(r.due_date)},{k:'answer_type',l:'Answer by',f:r=>bd(r.answer_type,'bl')},{k:'id',l:'Submitted',f:r=>D('submissions').filter(x=>x.assignment_id===r.id).length+' / '+D('submissions').filter(x=>x.assignment_id===r.id&&x.status==='submitted').length+' to review'},{k:'published',l:'Visible',f:r=>r.published?'<span class="b g">Yes</span>':'<span class="b">Hidden</span>'}]},
  payments:{label:'Payment',plural:'Payments',tab:'LMS Payments',order:'due_date',asc:false,
   title:r=>(r.student_name||'Payment')+' • '+money(r.amount),
   fields:[{k:'student_id',l:'Student',t:'student',req:1,w:1},{k:'course_name',l:'Course',t:'course'},{k:'package',l:'Package',ph:'12 sessions'},
@@ -292,11 +299,11 @@ const effPay=r=>r.status==='pending'&&r.due_date&&r.due_date<todayStr()?'overdue
 
 /* ================= Data layer ================= */
 const TABLES_BY_ROLE={
- admin:['leads','students','teachers','classes','materials','tasks','payments','attendance','profiles','courses','demos'],
+ admin:['leads','students','teachers','classes','materials','tasks','payments','attendance','assignments','submissions','profiles','courses','demos'],
  counselor:['leads','teachers','classes','materials','tasks','courses'],
- teacher:['classes','students','materials','tasks','attendance','teachers','courses'],
- parent:['students','classes','materials','payments','attendance','courses'],
- student:['students','classes','materials','attendance','courses']};
+ teacher:['classes','students','materials','tasks','attendance','assignments','submissions','teachers','courses'],
+ parent:['students','classes','materials','payments','attendance','assignments','submissions','courses'],
+ student:['students','classes','materials','attendance','assignments','submissions','courses']};
 const LIMIT=2000;
 async function loadTable(t){
   let q=sb.from(t).select('*').limit(LIMIT);
@@ -452,12 +459,12 @@ function openRecord(ent,id){
 <script>
 /* ================= Navigation ================= */
 const NAV={
- admin:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['students','🎓','Students'],['classes','📅','Classes'],['attendance','✅','Attendance'],['Manage'],['materials','📚','Materials'],['tasks','☑','Tasks'],['payments','₹','Payments'],['teachers','👩‍🏫','Teachers'],['team','🔑','Team & Access'],['sync','⇄','Sheet Sync']],
+ admin:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['students','🎓','Students'],['classes','📅','Classes'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['Manage'],['materials','📚','Materials'],['tasks','☑','Tasks'],['payments','₹','Payments'],['teachers','👩‍🏫','Teachers'],['team','🔑','Team & Access'],['sync','⇄','Sheet Sync']],
  counselor:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['classes','📅','Classes'],['tasks','☑','Tasks'],['materials','📚','Materials'],['sync','⇄','Sheet Sync']],
- teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['classes','📅','My Classes'],['attendance','✅','Attendance'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
- parent:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['materials','📚','Materials'],['payments','₹','Payments']],
- student:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['materials','📚','Materials']]};
-const SUBS={dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
+ teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['classes','📅','My Classes'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
+ parent:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['assignments','📝','Assignments'],['materials','📚','Materials'],['payments','₹','Payments']],
+ student:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['assignments','📝','Assignments'],['materials','📚','Materials']]};
+const SUBS={dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',assignments:'Set work, collect answers, give feedback',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
 function myNav(){return NAV[S.role]||NAV.student}
 function renderNav(){
   const items=myNav();let h='';
@@ -485,7 +492,7 @@ function render(){
   $('page').innerHTML=fn();
   if(AFTER[S.view])AFTER[S.view]();
 }
-const AFTER={};
+const AFTER={};const VIEWS={};
 
 /* ================= Dashboard ================= */
 function kpi(label,num,sub,go_){return '<div class="card kpi" onclick="'+(go_?"go('"+go_+"')":'')+'"><div class="l">'+esc(label)+'</div><div class="n">'+num+'</div><div class="s">'+esc(sub||'')+'</div></div>'}
@@ -514,6 +521,7 @@ function dashboardAdmin(){
   +(isA?kpi(T('Active students'),D('students').filter(s=>s.status==='active').length,D('students').length+' on record','students'):'')
   +(isA?kpi(T('Pending payments'),money(pendSum),pend.length+' record(s)','payments'):'')
   +kpi(T('Open tasks'),openT.length,openT.filter(x=>x.due_date&&x.due_date<t).length+' overdue','tasks')
+  +kpi('To review',D('submissions').filter(x=>x.status==='submitted').length,'assignment answers','assignments')
   +'</div><div class="grid cols2" style="margin-top:14px"><div class="grid">'
   +'<div class="card"><div class="hd"><h3>📞 '+T('Follow-ups due')+'</h3><button class="btn sm" onclick="go(\'leads\')">All leads</button></div>'+(due.slice(0,6).map(leadLI).join('')||'<div class="empty">You are all caught up 🎉</div>')+'</div>'
   +(S.role==='counselor'?'':'<div class="card"><div class="hd"><h3>📅 '+T('Today\'s classes')+'</h3><button class="btn sm" onclick="go(\'classes\')">Calendar</button></div>'+(todays.map(classLI).join('')||'<div class="empty">No classes today.</div>')+'</div>')
@@ -527,17 +535,73 @@ function dashboardTeacher(){
   const upcoming=D('classes').filter(c=>c.class_date>t&&c.status==='scheduled').sort((a,b)=>a.class_date>b.class_date?1:-1).slice(0,5);
   const needAtt=D('classes').filter(c=>c.class_date<=t&&c.status!=='cancelled'&&!D('attendance').some(a=>a.class_id===c.id)).length;
   return '<div class="hero"><div><h2>'+greeting()+', '+esc((S.profile&&S.profile.full_name)||'')+' 👋</h2><p>'+todays.length+' class(es) today · '+needAtt+' without attendance</p></div><button class="btn pri" onclick="go(\'attendance\')">Mark attendance</button></div>'
-  +'<div class="grid kpis">'+kpi(T('Today\'s classes'),todays.length,'','classes')+kpi('My students',D('students').length,'','students')+kpi('Attendance due',needAtt,'classes to mark','attendance')+kpi('Materials',D('materials').length,'in the library','materials')+'</div>'
+  +'<div class="grid kpis">'+kpi(T('Today\'s classes'),todays.length,'','classes')+kpi('My students',D('students').length,'','students')+kpi('Attendance due',needAtt,'classes to mark','attendance')+kpi('To review',D('submissions').filter(x=>x.status==='submitted').length,'assignment answers','assignments')+kpi('Materials',D('materials').length,'in the library','materials')+'</div>'
   +'<div class="grid cols2" style="margin-top:14px"><div class="card"><div class="hd"><h3>'+T('Today\'s classes')+'</h3></div>'+(todays.map(classLI).join('')||'<div class="empty">No classes today.</div>')+'</div><div class="card"><div class="hd"><h3>Coming up</h3></div>'+(upcoming.map(classLI).join('')||'<div class="empty">Nothing scheduled.</div>')+'</div></div>';
 }
 function ring(p){return '<div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--orange) '+(p*3.6)+'deg,#efeaf6 0);display:grid;place-items:center"><div style="width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:900">'+p+'%</div></div>'}
 function dashboardFamily(){
   const kids=D('students'),t=todayStr();
   const next=D('classes').filter(c=>c.class_date>=t&&c.status==='scheduled').sort((a,b)=>a.class_date>b.class_date?1:-1).slice(0,5);
-  return '<div class="hero"><div><h2>Hi '+esc((S.profile&&S.profile.full_name)||'')+'! 👋</h2><p>'+(kids.length?'Here is how learning is going.':'Your child\'s profile will appear here once enrolment is complete.')+'</p></div></div>'
-  +'<div class="grid cols3">'+kids.map(k=>'<div class="card"><div class="row" style="flex-wrap:nowrap">'+ring(k.progress_percent||0)+'<div><h3>'+esc(k.full_name)+'</h3><div class="sm muted">'+esc(k.course_name||'')+'</div><div class="sm">'+(k.sessions_completed||0)+' of '+(k.total_sessions||'?')+' sessions</div></div></div>'+(k.progress_notes?'<p class="sm" style="margin:12px 0 0;background:#fff8f2;border-radius:10px;padding:9px">'+esc(k.progress_notes)+'</p>':'')+'</div>').join('')+'</div>'
-  +'<div class="grid cols2" style="margin-top:14px"><div class="card"><div class="hd"><h3>Upcoming classes</h3></div>'+(next.map(classLI).join('')||'<div class="empty">No upcoming classes yet.</div>')+'</div>'
-  +'<div class="card"><div class="hd"><h3>Latest attendance</h3></div>'+(D('attendance').slice(0,6).map(a=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(a.class_title||'Class')+'</b><span class="sm muted">'+esc(a.student_name||'')+' · '+fmtDate(a.class_date)+'</span></div>'+bd(a.status)+'</div>').join('')||'<div class="empty">Attendance will show here.</div>')+'</div></div>';
+  const recs=D('classes').filter(c=>c.recording_url).sort((a,b)=>String(b.class_date).localeCompare(String(a.class_date))).slice(0,5);
+  const todo=pendingWork().slice(0,5);
+  const email=(S.user&&S.user.email)||'';
+  return '<div class="hero"><div><h2>Hi '+esc((S.profile&&S.profile.full_name)||'')+'! 👋</h2><p>'+(kids.length?'Here is how learning is going.':'Your account is not linked to a child yet.')+'</p></div></div>'
+  +(kids.length?'':'<div class="card"><b>Almost there</b><p class="muted" style="margin:6px 0 0">Next Move India needs to add <b>'+esc(email)+'</b> as the parent email on your child\'s profile. Message us on WhatsApp and we will do it right away — this page then fills in automatically.</p></div>')
+  +'<div class="grid cols3">'+kids.map(k=>'<div class="card" style="cursor:pointer" onclick="openStudent(\''+k.id+'\')"><div class="row" style="flex-wrap:nowrap">'+ring(k.progress_percent||0)+'<div><h3>'+esc(k.full_name)+'</h3><div class="sm muted">'+esc(k.course_name||'')+(k.batch_timings?' · '+esc(k.batch_timings):'')+'</div><div class="sm">'+(k.sessions_completed||0)+' of '+(k.total_sessions||'?')+' sessions</div></div></div>'+(k.progress_notes?'<p class="sm" style="margin:12px 0 0;background:#fff8f2;border-radius:10px;padding:9px">'+esc(k.progress_notes)+'</p>':'')+'<div class="sm muted" style="margin-top:8px">Tap for full profile</div></div>').join('')+'</div>'
+  +'<div class="grid cols2" style="margin-top:14px"><div class="grid"><div class="card"><div class="hd"><h3>📝 Assignments to do</h3><button class="btn sm" onclick="go(\'assignments\')">All</button></div>'+(todo.map(w=>'<div class="li" onclick="openSubmitForm(\''+w.a.id+'\',\''+w.k.id+'\')"><div class="grow"><b>'+esc(w.a.title)+'</b><span class="sm muted">'+esc(w.k.full_name)+' · due '+fmtDate(w.a.due_date)+'</span></div>'+bd('pending','o')+'</div>').join('')||'<div class="empty">Nothing pending 🎉</div>')+'</div>'
+  +'<div class="card"><div class="hd"><h3>▶ Class recordings</h3><button class="btn sm" onclick="go(\'classes\')">All classes</button></div>'+(recs.map(c=>'<div class="li" onclick="window.open(\''+esc(c.recording_url)+'\',\'_blank\')"><div class="t">'+fmtDate(c.class_date)+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc(c.teacher_name||c.course_name||'')+'</span></div><span class="b g">Watch</span></div>').join('')||'<div class="empty">Recordings will appear here after each class.</div>')+'</div></div>'
+  +'<div class="grid"><div class="card"><div class="hd"><h3>Upcoming classes</h3></div>'+(next.map(classLI).join('')||'<div class="empty">No upcoming classes yet.</div>')+'</div>'
+  +'<div class="card"><div class="hd"><h3>Latest attendance</h3></div>'+(D('attendance').slice(0,6).map(a=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(a.class_title||'Class')+'</b><span class="sm muted">'+esc(a.student_name||'')+' · '+fmtDate(a.class_date)+'</span></div>'+bd(a.status)+'</div>').join('')||'<div class="empty">Attendance will show here.</div>')+'</div></div></div>';
+}
+/* ================= Assignments ================= */
+function mySubmission(aid,sid){return D('submissions').find(x=>x.assignment_id===aid&&x.student_id===sid)||null}
+function pendingWork(){
+  const out=[];for(const a of D('assignments').filter(x=>x.published!==false))for(const k of D('students')){
+    if(a.course_name&&a.course_name!==k.course_name)continue;if(!mySubmission(a.id,k.id))out.push({a,k})}
+  return out.sort((x,y)=>String(x.a.due_date||'9').localeCompare(String(y.a.due_date||'9')));
+}
+VIEWS.assignments=()=>{
+  if(isFamily()){
+    const rows=[];for(const a of D('assignments').filter(x=>x.published!==false))for(const k of D('students')){if(a.course_name&&a.course_name!==k.course_name)continue;rows.push({a,k,s:mySubmission(a.id,k.id)})}
+    rows.sort((x,y)=>(x.s?1:0)-(y.s?1:0)||String(x.a.due_date||'9').localeCompare(String(y.a.due_date||'9')));
+    return '<div class="card"><div class="hd"><h3>My assignments</h3></div>'+(rows.map(r=>'<div class="li" onclick="openSubmitForm(\''+r.a.id+'\',\''+r.k.id+'\')"><div class="grow"><b>'+esc(r.a.title)+'</b><span class="sm muted">'+esc(r.k.full_name)+' · due '+fmtDate(r.a.due_date)+'</span></div>'+(r.s?(r.s.status==='reviewed'?'<span class="b g">Reviewed'+(r.s.grade?' · '+esc(r.s.grade):'')+'</span>':'<span class="b bl">Submitted</span>'):'<span class="b o">To do</span>')+'</div>').join('')||'<div class="empty">No assignments yet.</div>')+'</div>';
+  }
+  const rev=D('submissions').filter(x=>x.status==='submitted').sort((a,b)=>String(b.submitted_at).localeCompare(String(a.submitted_at)));
+  return '<div class="card" style="margin-bottom:14px"><div class="hd"><h3>To review <span class="b o">'+rev.length+'</span></h3></div>'+(rev.slice(0,12).map(x=>'<div class="li" onclick="openSubmission(\''+x.id+'\')"><div class="grow"><b>'+esc(x.student_name||'Student')+'</b><span class="sm muted">'+esc(x.assignment_title||'')+' · '+fmtDT(x.submitted_at)+'</span></div><span class="b bl">Review</span></div>').join('')||'<div class="empty">No submissions waiting 🎉</div>')+'</div>'+listView('assignments');
+};
+function openSubmission(id){
+  const x=D('submissions').find(r=>r.id===id);if(!x)return;
+  const a=byId('assignments',x.assignment_id)||{};
+  openDrawer('<div class="dh"><div><div class="sm muted">Submission</div><h2>'+esc(x.student_name||'Student')+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="row" style="margin-bottom:10px"><span class="sync">⇄ Synced with Google Sheet</span>'+bd(x.status,x.status==='reviewed'?'g':'bl')+'</div>'
+   +'<div class="card" style="background:#fff8f2;margin-bottom:12px"><b>'+esc(a.title||x.assignment_title||'')+'</b><p class="sm muted" style="margin:6px 0 0">'+esc(a.instructions||'')+'</p></div>'
+   +(x.answer_text?'<b class="sm">Answer</b><p style="white-space:pre-wrap;margin:4px 0 12px">'+esc(x.answer_text)+'</p>':'')
+   +(x.answer_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(x.answer_link)+'" style="text-decoration:none;margin-bottom:12px">▶ Open submitted video / file</a>':'')
+   +'<div class="fg"><label class="full"><span>Feedback for the child</span><textarea id="sbFeed" rows="4">'+esc(x.feedback||'')+'</textarea></label><label><span>Grade / stars</span><input id="sbGrade" value="'+esc(x.grade||'')+'" placeholder="A, 4/5, ⭐⭐⭐⭐"></label></div>'
+   +'<div class="act"><button class="btn pri" onclick="saveReview(\''+id+'\')">💾 Save feedback</button><button class="btn" onclick="closeDrawer()">Cancel</button></div>');
+}
+async function saveReview(id){
+  const {error}=await sb.from('submissions').update({feedback:$('sbFeed').value.trim()||null,grade:$('sbGrade').value.trim()||null}).eq('id',id);
+  if(error){toast('Could not save: '+error.message,5000);return}
+  await loadAll(true);toast('Feedback saved ✓');closeDrawer();
+}
+function openSubmitForm(aid,sid){
+  const a=byId('assignments',aid),k=byId('students',sid),sub=mySubmission(aid,sid);if(!a||!k)return;
+  const t=a.answer_type;
+  openDrawer('<div class="dh"><div><div class="sm muted">Assignment · '+esc(k.full_name)+'</div><h2>'+esc(a.title)+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="row" style="margin-bottom:10px">'+(a.due_date?'<span class="b o">Due '+fmtDate(a.due_date)+'</span>':'')+(sub?(sub.status==='reviewed'?'<span class="b g">Reviewed</span>':'<span class="b bl">Submitted</span>'):'<span class="b">Not submitted</span>')+'</div>'
+   +(a.instructions?'<div class="card" style="background:#fff8f2;margin-bottom:12px"><p style="margin:0;white-space:pre-wrap">'+esc(a.instructions)+'</p></div>':'')
+   +(sub&&(sub.feedback||sub.grade)?'<div class="card" style="background:#e0f6ec;margin-bottom:12px"><b>Teacher feedback'+(sub.grade?' · '+esc(sub.grade):'')+'</b><p style="margin:6px 0 0;white-space:pre-wrap">'+esc(sub.feedback||'')+'</p></div>':'')
+   +'<div class="fg">'+(t!=='link'?'<label class="full"><span>Your answer</span><textarea id="sfText" rows="5">'+esc(sub?sub.answer_text||'':'')+'</textarea></label>':'')
+   +(t!=='text'?'<label class="full"><span>Link to your video or file (Google Drive / YouTube — set to “anyone with the link can view”)</span><input id="sfLink" value="'+esc(sub?sub.answer_link||'':'')+'" placeholder="https://"></label>':'')+'</div>'
+   +'<div class="act"><button class="btn pri" onclick="submitWork(\''+aid+'\',\''+sid+'\')">'+(sub?'Update my answer':'Submit')+'</button><button class="btn" onclick="closeDrawer()">Cancel</button></div>');
+}
+async function submitWork(aid,sid){
+  const txt=$('sfText')?$('sfText').value.trim():'',lnk=$('sfLink')?$('sfLink').value.trim():'';
+  if(!txt&&!lnk){toast('Please add your answer or a link first');return}
+  const {error}=await sb.from('submissions').upsert({assignment_id:aid,student_id:sid,answer_text:txt||null,answer_link:lnk||null},{onConflict:'assignment_id,student_id'});
+  if(error){toast('Could not submit: '+error.message,5000);return}
+  await loadAll(true);toast('Submitted ✓ Well done!');closeDrawer();
 }
 
 /* ================= Leads: board + list + import ================= */
@@ -561,7 +625,6 @@ function leadCard(l){
   const fu=l.next_follow_up,late=fu&&fu<=todayStr();
   return '<div class="kcard" draggable="true" ondragstart="dragStart(event,\''+l.id+'\')" ondragend="this.classList.remove(\'dragging\')" onclick="openLead(\''+l.id+'\')"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><div class="sm muted">'+esc((l.child_name||'—')+(l.child_age?' · '+l.child_age:''))+'</div>'+(l.interested_course?'<div class="sm">'+esc(l.interested_course)+'</div>':'')+'<div class="row" style="margin-top:6px;gap:6px">'+(fu?'<span class="b '+(late?'r':'bl')+'">'+(late?'⏰ ':'')+fmtDate(fu)+'</span>':'')+(l.demo_date?'<span class="b p">Demo '+esc(l.demo_date)+'</span>':'')+'</div></div>';
 }
-const VIEWS={};
 VIEWS.dashboard=()=>S.role==='teacher'?dashboardTeacher():isFamily()?dashboardFamily():dashboardAdmin();
 VIEWS.leads=()=>{
   const m=S.ui.leadMode||'board';
@@ -671,7 +734,7 @@ VIEWS.classes=()=>{
 function openClass(id){
   const c=byId('classes',id);if(!c)return editor('classes',id);
   const att=D('attendance').filter(a=>a.class_id===id);
-  const top='<div class="row" style="margin-bottom:12px">'+(c.meet_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(c.meet_link)+'" style="text-decoration:none">🎥 Join Google Meet</a>':'')+(isStaff()&&S.role!=='counselor'?'<button class="btn" onclick="openAttendance(\''+id+'\')">✅ Attendance ('+att.length+' marked)</button>':'')+'</div>';
+  const top='<div class="row" style="margin-bottom:12px">'+(c.recording_url?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(c.recording_url)+'" style="text-decoration:none">▶ Watch recording</a>':'')+(c.meet_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(c.meet_link)+'" style="text-decoration:none">🎥 Join Google Meet</a>':'')+(isStaff()&&S.role!=='counselor'?'<button class="btn" onclick="openAttendance(\''+id+'\')">✅ Attendance ('+att.length+' marked)</button>':'')+'</div>';
   editor('classes',id,null,top,'');
 }
 VIEWS.attendance=()=>{
@@ -752,7 +815,7 @@ async function setProfile(id,patch){
 VIEWS.sync=()=>{
   const tabs=Object.values(ENT).map(e=>'<tr style="cursor:default"><td><b>'+esc(e.tab)+'</b></td><td>'+esc(e.plural)+'</td></tr>').join('');
   return '<div class="card" style="margin-bottom:14px"><h3>⇄ Everything is two-way</h3><p class="muted" style="margin:6px 0 0">Change anything in the LMS and it shows up in your Google Sheet within minutes. Change a cell in the sheet and it appears here. If both sides were changed at once, the LMS version wins and the sheet row is flagged.</p></div>'
-  +'<div class="grid cols2"><div class="card"><h3>Sheet tabs kept in step</h3><div class="tw" style="margin-top:8px"><table><tbody><tr style="cursor:default"><td><b>Sheet1</b></td><td>Website form → new leads (one-way in)</td></tr>'+tabs+'<tr style="cursor:default"><td><b>LMS Attendance</b></td><td>Attendance (edit status / note)</td></tr></tbody></table></div></div>'
+  +'<div class="grid cols2"><div class="card"><h3>Sheet tabs kept in step</h3><div class="tw" style="margin-top:8px"><table><tbody><tr style="cursor:default"><td><b>Sheet1</b></td><td>Website form → new leads (one-way in)</td></tr>'+tabs+'<tr style="cursor:default"><td><b>LMS Attendance</b></td><td>Attendance (edit status / note)</td></tr><tr style="cursor:default"><td><b>LMS Submissions</b></td><td>Assignment answers (add feedback / grade)</td></tr></tbody></table></div></div>'
   +'<div class="card"><h3>In your Google Sheet</h3><ol class="sm" style="padding-left:18px;line-height:1.7"><li>Open the menu <b>Next Move LMS</b> at the top.</li><li>Choose <b>Sync now</b> to push and pull immediately.</li><li>Choose <b>Auto-sync on</b> and it runs every 5 minutes and after each edit.</li><li>You can <b>add new rows</b> (students, classes, materials, tasks, teachers) in their tabs — leave the <i>id</i> column blank.</li><li>Do not edit the grey columns (id, updated) — they are the link between the sheet and the LMS.</li></ol><p class="sm muted">Leads can be added in the sheet too. Payments and attendance can be edited there, but new payment/attendance rows are created in the LMS.</p></div></div>';
 };
 

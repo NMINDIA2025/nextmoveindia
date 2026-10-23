@@ -60,7 +60,8 @@ var TABS = {
     ['Course', 'course_name', true], ['Batch timings', 'batch_timings', true],
     ['Sessions done', 'sessions_completed', true], ['Total sessions', 'total_sessions', true],
     ['Progress %', 'progress_percent', false], ['Status', 'status', true, ['active', 'on_hold', 'completed', 'discontinued']],
-    ['Joined (YYYY-MM-DD)', 'joined_at', true], ['Progress notes', 'progress_notes', true]] },
+    ['Joined (YYYY-MM-DD)', 'joined_at', true], ['Parent email (their login)', 'parent_email', true],
+    ['Progress notes', 'progress_notes', true]] },
   'LMS Teachers': { table: 'teachers', insert: true, cols: [
     ['Name', 'full_name', true], ['Email', 'email', true], ['Phone', 'phone', true],
     ['Speciality', 'subject', true], ['Status', 'status', true, ['active', 'inactive']]] },
@@ -68,7 +69,8 @@ var TABS = {
     ['Title', 'title', true], ['Course', 'course_name', true], ['Teacher (name)', 'teacher_name', true],
     ['Type', 'kind', true, ['batch', 'demo', 'one_to_one', 'workshop']],
     ['Date (YYYY-MM-DD)', 'class_date', true], ['Time', 'class_time', true], ['Minutes', 'duration_min', true],
-    ['Meet link', 'meet_link', true], ['Status', 'status', true, ['scheduled', 'completed', 'cancelled']],
+    ['Meet link', 'meet_link', true], ['Recording link', 'recording_url', true],
+    ['Status', 'status', true, ['scheduled', 'completed', 'cancelled']],
     ['Notes', 'notes', true]] },
   'LMS Materials': { table: 'materials', insert: true, cols: [
     ['Title', 'title', true], ['Course', 'course_name', true],
@@ -83,6 +85,13 @@ var TABS = {
     ['Student', 'student_name', false], ['Course', 'course_name', true], ['Package', 'package', true],
     ['Amount', 'amount', true], ['Due (YYYY-MM-DD)', 'due_date', true], ['Paid on (YYYY-MM-DD)', 'paid_date', true],
     ['Status', 'status', true, ['pending', 'paid', 'overdue', 'cancelled']]] },
+  'LMS Assignments': { table: 'assignments', insert: true, cols: [
+    ['Title', 'title', true], ['Instructions', 'instructions', true], ['Course (blank = all)', 'course_name', true],
+    ['Due (YYYY-MM-DD)', 'due_date', true], ['Answer by', 'answer_type', true, ['both', 'link', 'text']],
+    ['Visible to families', 'published', true, ['TRUE', 'FALSE']]] },
+  'LMS Submissions': { table: 'submissions', insert: false, cols: [
+    ['Student', 'student_name', false], ['Assignment', 'assignment_title', false], ['Answer', 'answer_text', false],
+    ['Link', 'answer_link', false], ['Status', 'status', false], ['Feedback', 'feedback', true], ['Grade', 'grade', true]] },
   'LMS Attendance': { table: 'attendance', insert: false, cols: [
     ['Date', 'class_date', false], ['Class', 'class_title', false], ['Student', 'student_name', false],
     ['Status', 'status', true, ['present', 'absent', 'late', 'excused']], ['Note', 'note', true]] }
@@ -350,10 +359,18 @@ function tabObjectToRow_(cols, o) {
 function ensureTab_(name, def) {
   var ss = SpreadsheetApp.getActive();
   var sheet = ss.getSheetByName(name);
-  if (sheet) return sheet;
   var cols = tabCols_(def);
-  sheet = ss.insertSheet(name);
-  sheet.getRange(1, 1, 1, cols.length).setValues([cols.map(function (c) { return c[0]; })])
+  var header = cols.map(function (c) { return c[0]; });
+  if (sheet) {
+    // columns changed in a newer version of this script? rebuild the header; the data is refilled right after
+    var cur = sheet.getRange(1, 1, 1, header.length).getValues()[0];
+    if (cur.join('|') === header.join('|')) return sheet;
+    var lastCol = Math.max(sheet.getLastColumn(), header.length);
+    sheet.getRange(1, 1, 1, lastCol).clearContent();
+  } else {
+    sheet = ss.insertSheet(name);
+  }
+  sheet.getRange(1, 1, 1, cols.length).setValues([header])
     .setFontWeight('bold').setBackground('#ffedd5');
   sheet.getRange(2, 1, 1000, cols.length).setNumberFormat('@');
   sheet.setFrozenRows(1);
