@@ -104,6 +104,7 @@ function onOpen() {
     .addItem('1. Connect to the LMS', 'connectToLms')
     .addItem('2. Sync now', 'syncAll')
     .addItem('3. Turn on automatic sync', 'turnOnAutoSync')
+    .addItem('Create Meet links + Calendar events now', 'createMeetLinksNow')
     .addItem('Turn off automatic sync', 'turnOffAutoSync')
     .addToUi();
 }
@@ -151,6 +152,7 @@ function syncAll() {
   if (!lock.tryLock(25000)) return;
   try {
     sendWebsiteLeads_();
+    try { syncCalendar_(); } catch (err) { toast_('Calendar / Meet: ' + err.message); }
     var last = Number(PropertiesService.getScriptProperties().getProperty('LAST_EDIT_MS') || 0);
     if (Date.now() - last > QUIET_AFTER_EDIT_MS) {
       mirrorLeads_();
@@ -330,6 +332,127 @@ function ensureLeadsSheet_() {
   return sheet;
 }
 
+
+
+/* ------------------------------ Google Calendar + Meet for every class */
+/* Needs: Apps Script > Services (+) > "Google Calendar API" > Add (once). */
+
+var CAL_ID = 'primary';
+
+function createMeetLinksNow() {
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(25000)) return;
+  try {
+    var r = syncCalendar_();
+    toast_('Calendar: ' + r.created + ' created, ' + r.updated + ' updated, ' + r.cancelled + ' cancelled' +
+      (r.needTime ? ' · ' + r.needTime + ' class(es) still need a date AND a time' : ''));
+  } catch (err) {
+    SpreadsheetApp.getUi().alert('Could not create Calendar events:\n\n' + err.message);
+  } finally { lock.releaseLock(); }
+}
+
+/** Creates / updates / cancels one Calendar event (with a Google Meet link) per scheduled class. */
+function syncCalendar_() {
+  if (typeof Calendar === 'undefined') {
+    throw new Error('Turn on the Google Calendar service first: Apps Script > Services (+ icon) > Google Calendar API > Add.');
+  }
+  var props = PropertiesService.getScriptProperties();
+  var sigs = JSON.parse(props.getProperty('CAL_SIGS') || '{}');
+  var guests = {};
+  rpc_('sheet_class_guests', {}).forEach(function (g) { guests[g.id] = g.emails || []; });
+  var classes = rpc_('sheet_table_pull', { p_table: 'classes' });
+  var out = { created: 0, updated: 0, cancelled: 0, needTime: 0 };
+
+  classes.forEach(function (c) {
+    var evId = c.calendar_event_id || '';
+    if (c.status === 'cancelled') {
+      if (evId) {
+        try { Calendar.Events.remove(CAL_ID, evId, { sendUpdates: 'all' }); } catch (e) { /* already gone */ }
+        saveClass_(c.id, { calendar_event_id: '' });
+        delete sigs[c.id]; out.cancelled++;
+      }
+      return;
+    }
+    if (c.status !== 'scheduled') return;
+    var when = classWhen_(c);
+    if (!when) { if (!evId && c.class_date) out.needTime++; return; }
+    var emails = cleanEmails_(guests[c.id]);
+    var sig = JSON.stringify([c.title, when.start, when.end, emails]);
+    var attendees = emails.map(function (m) { return { email: m }; });
+
+    if (!evId) {
+      if (c.meet_link) return;                      // you typed your own link: leave it alone
+      var ev = Calendar.Events.insert({
+        summary: c.title || 'Next Move India class',
+        description: 'Next Move India class. Join from the LMS: https://nextmoveindia.org/lms/',
+        start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ },
+        attendees: attendees,
+        conferenceData: { createRequest: { requestId: Utilities.getUuid(), conferenceSolutionKey: { type: 'hangoutsMeet' } } }
+      }, CAL_ID, { conferenceDataVersion: 1, sendUpdates: 'all' });
+      saveClass_(c.id, { calendar_event_id: ev.id, meet_link: meetLink_(ev) });
+      sigs[c.id] = sig; out.created++;
+      return;
+    }
+    if (!c.meet_link) {                             // event exists but the Meet link was not ready yet
+      try { var got = Calendar.Events.get(CAL_ID, evId); var l = meetLink_(got); if (l) saveClass_(c.id, { meet_link: l }); } catch (e) { /* retry next time */ }
+    }
+    if (sigs[c.id] === undefined) { sigs[c.id] = sig; return; }
+    if (sigs[c.id] !== sig) {
+      Calendar.Events.patch({
+        summary: c.title || 'Next Move India class',
+        start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ },
+        attendees: attendees
+      }, CAL_ID, evId, { sendUpdates: 'all' });
+      sigs[c.id] = sig; out.updated++;
+    }
+  });
+  props.setProperty('CAL_SIGS', JSON.stringify(sigs));
+  return out;
+}
+
+function saveClass_(id, fields) {
+  var row = { id: id };
+  Object.keys(fields).forEach(function (k) { row[k] = fields[k]; });
+  rpc_('sheet_table_push', { p_table: 'classes', p_rows: [row] });
+}
+
+function meetLink_(ev) {
+  if (!ev) return '';
+  if (ev.hangoutLink) return ev.hangoutLink;
+  var pts = ev.conferenceData && ev.conferenceData.entryPoints || [];
+  for (var i = 0; i < pts.length; i++) if (pts[i].entryPointType === 'video' && pts[i].uri) return pts[i].uri;
+  return '';
+}
+
+function cleanEmails_(list) {
+  var seen = {}, out = [];
+  (list || []).forEach(function (m) {
+    m = String(m || '').trim().toLowerCase();
+    if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m) && !seen[m]) { seen[m] = 1; out.push(m); }
+  });
+  return out.sort();
+}
+
+/** "5:00 PM", "5pm", "17:30", "5.30 pm" -> {h, m} or null */
+function parseClassTime_(t) {
+  var m = String(t || '').trim().toLowerCase().replace(/\./g, ':').match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/);
+  if (!m) return null;
+  var h = Number(m[1]), min = Number(m[2] || 0);
+  if (m[3] === 'pm' && h < 12) h += 12;
+  if (m[3] === 'am' && h === 12) h = 0;
+  if (h > 23 || min > 59) return null;
+  return { h: h, m: min };
+}
+
+function classWhen_(c) {
+  var d = String(c.class_date || '').slice(0, 10);
+  var tm = parseClassTime_(c.class_time);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || !tm) return null;
+  var p = function (n) { return ('0' + n).slice(-2); };
+  var start = d + 'T' + p(tm.h) + ':' + p(tm.m) + ':00+05:30';
+  var end = Utilities.formatDate(new Date(new Date(start).getTime() + (Number(c.duration_min) || 45) * 60000), TZ, "yyyy-MM-dd'T'HH:mm:ssXXX");
+  return { start: start, end: end };
+}
 
 /* ------------------------------------- other LMS tabs (generic, both ways) */
 
