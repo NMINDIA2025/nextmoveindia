@@ -198,6 +198,7 @@ function money(n){return n==null||n===''?'—':'₹'+Number(n).toLocaleString('e
 function toast(s,ms){const t=$('toast');t.textContent=s;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',ms||2600)}
 function titleCase(s){return String(s||'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
 function initials(s){return String(s||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'?'}
+function safeUrl(u){u=String(u||'').trim();if(!u)return '';return /^(https?:|mailto:|tel:)/i.test(u)?u:'https://'+u.replace(/^\/+/,'')}
 function waLink(phone,parent,child){let d=String(phone||'').replace(/\D/g,'');if(d.length===10)d='91'+d;const m='Hello '+(parent||'')+', this is Next Move India'+(child?' regarding '+child:'')+'. ';return d?'https://wa.me/'+d+'?text='+encodeURIComponent(m):'#'}
 function download(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;a.click()}
 function toCSV(rows,cols){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';return [cols.map(c=>q(c.label)).join(',')].concat(rows.map(r=>cols.map(c=>q(c.csv?c.csv(r):r[c.k])).join(','))).join('\n')}
@@ -384,6 +385,7 @@ function collect(ent){
     if(f.t==='num')v=v===''?null:Number(v);
     else if(el.dataset.bool)v=v==='true';
     else v=String(v).trim()===''?null:String(v).trim();
+    if(v&&['meet_link','recording_url','url'].includes(f.k))v=safeUrl(v);
     p[f.k]=v;
   }
   return p;
@@ -496,7 +498,7 @@ const AFTER={};const VIEWS={};
 
 /* ================= Dashboard ================= */
 function kpi(label,num,sub,go_){return '<div class="card kpi" onclick="'+(go_?"go('"+go_+"')":'')+'"><div class="l">'+esc(label)+'</div><div class="n">'+num+'</div><div class="s">'+esc(sub||'')+'</div></div>'}
-function classLI(c){return '<div class="li" onclick="openClass(\''+c.id+'\')"><div class="t">'+esc(c.class_time||fmtDate(c.class_date))+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.teacher_name,c.course_name].filter(Boolean).join(' • '))+'</span></div>'+bd(c.kind,'p')+'</div>'}
+function classLI(c){return '<div class="li" onclick="openClass(\''+c.id+'\')"><div class="t">'+esc(c.class_time||fmtDate(c.class_date))+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.teacher_name,c.course_name].filter(Boolean).join(' • '))+'</span></div>'+(c.meet_link&&c.status==='scheduled'?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.meet_link))+'" onclick="event.stopPropagation()" style="text-decoration:none">▶ Join</a>':'')+bd(c.kind,'p')+'</div>'}
 function leadLI(l){return '<div class="li" onclick="openLead(\''+l.id+'\')"><div class="grow"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><span class="sm muted">'+esc((l.child_name||'')+(l.child_age?' · '+l.child_age:'')+(l.interested_course?' · '+l.interested_course:''))+'</span></div><div style="text-align:right">'+bd(l.status,LEAD_COLOR[l.status])+'<span class="sm muted">'+(l.next_follow_up?'follow-up '+fmtDate(l.next_follow_up):'')+'</span></div></div>'}
 function taskLI(t){return '<div class="li" onclick="editor(\'tasks\',\''+t.id+'\')"><input type="checkbox" style="width:auto" '+(t.status==='done'?'checked':'')+' onclick="event.stopPropagation();toggleTask(\''+t.id+'\',this.checked)"><div class="grow"><b>'+esc(t.title)+'</b><span class="sm muted">'+esc(t.assignee_name||'')+'</span></div>'+bd(t.priority)+'<span class="sm">'+fmtDate(t.due_date)+'</span></div>'}
 async function toggleTask(id,done){await saveRecord('tasks',id,{status:done?'done':'todo'});render()}
@@ -549,7 +551,7 @@ function dashboardFamily(){
   +(kids.length?'':'<div class="card"><b>Almost there</b><p class="muted" style="margin:6px 0 0">Next Move India needs to add <b>'+esc(email)+'</b> as the parent email on your child\'s profile. Message us on WhatsApp and we will do it right away — this page then fills in automatically.</p></div>')
   +'<div class="grid cols3">'+kids.map(k=>'<div class="card" style="cursor:pointer" onclick="openStudent(\''+k.id+'\')"><div class="row" style="flex-wrap:nowrap">'+ring(k.progress_percent||0)+'<div><h3>'+esc(k.full_name)+'</h3><div class="sm muted">'+esc(k.course_name||'')+(k.batch_timings?' · '+esc(k.batch_timings):'')+'</div><div class="sm">'+(k.sessions_completed||0)+' of '+(k.total_sessions||'?')+' sessions</div></div></div>'+(k.progress_notes?'<p class="sm" style="margin:12px 0 0;background:#fff8f2;border-radius:10px;padding:9px">'+esc(k.progress_notes)+'</p>':'')+'<div class="sm muted" style="margin-top:8px">Tap for full profile</div></div>').join('')+'</div>'
   +'<div class="grid cols2" style="margin-top:14px"><div class="grid"><div class="card"><div class="hd"><h3>📝 Assignments to do</h3><button class="btn sm" onclick="go(\'assignments\')">All</button></div>'+(todo.map(w=>'<div class="li" onclick="openSubmitForm(\''+w.a.id+'\',\''+w.k.id+'\')"><div class="grow"><b>'+esc(w.a.title)+'</b><span class="sm muted">'+esc(w.k.full_name)+' · due '+fmtDate(w.a.due_date)+'</span></div>'+bd('pending','o')+'</div>').join('')||'<div class="empty">Nothing pending 🎉</div>')+'</div>'
-  +'<div class="card"><div class="hd"><h3>▶ Class recordings</h3><button class="btn sm" onclick="go(\'classes\')">All classes</button></div>'+(recs.map(c=>'<div class="li" onclick="window.open(\''+esc(c.recording_url)+'\',\'_blank\')"><div class="t">'+fmtDate(c.class_date)+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc(c.teacher_name||c.course_name||'')+'</span></div><span class="b g">Watch</span></div>').join('')||'<div class="empty">Recordings will appear here after each class.</div>')+'</div></div>'
+  +'<div class="card"><div class="hd"><h3>▶ Class recordings</h3><button class="btn sm" onclick="go(\'classes\')">All classes</button></div>'+(recs.map(c=>'<div class="li" onclick="window.open(\''+esc(safeUrl(c.recording_url))+'\',\'_blank\')"><div class="t">'+fmtDate(c.class_date)+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc(c.teacher_name||c.course_name||'')+'</span></div><span class="b g">Watch</span></div>').join('')||'<div class="empty">Recordings will appear here after each class.</div>')+'</div></div>'
   +'<div class="grid"><div class="card"><div class="hd"><h3>Upcoming classes</h3></div>'+(next.map(classLI).join('')||'<div class="empty">No upcoming classes yet.</div>')+'</div>'
   +'<div class="card"><div class="hd"><h3>Latest attendance</h3></div>'+(D('attendance').slice(0,6).map(a=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(a.class_title||'Class')+'</b><span class="sm muted">'+esc(a.student_name||'')+' · '+fmtDate(a.class_date)+'</span></div>'+bd(a.status)+'</div>').join('')||'<div class="empty">Attendance will show here.</div>')+'</div></div></div>';
 }
@@ -576,7 +578,7 @@ function openSubmission(id){
    +'<div class="row" style="margin-bottom:10px"><span class="sync">⇄ Synced with Google Sheet</span>'+bd(x.status,x.status==='reviewed'?'g':'bl')+'</div>'
    +'<div class="card" style="background:#fff8f2;margin-bottom:12px"><b>'+esc(a.title||x.assignment_title||'')+'</b><p class="sm muted" style="margin:6px 0 0">'+esc(a.instructions||'')+'</p></div>'
    +(x.answer_text?'<b class="sm">Answer</b><p style="white-space:pre-wrap;margin:4px 0 12px">'+esc(x.answer_text)+'</p>':'')
-   +(x.answer_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(x.answer_link)+'" style="text-decoration:none;margin-bottom:12px">▶ Open submitted video / file</a>':'')
+   +(x.answer_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(safeUrl(x.answer_link))+'" style="text-decoration:none;margin-bottom:12px">▶ Open submitted video / file</a>':'')
    +'<div class="fg"><label class="full"><span>Feedback for the child</span><textarea id="sbFeed" rows="4">'+esc(x.feedback||'')+'</textarea></label><label><span>Grade / stars</span><input id="sbGrade" value="'+esc(x.grade||'')+'" placeholder="A, 4/5, ⭐⭐⭐⭐"></label></div>'
    +'<div class="act"><button class="btn pri" onclick="saveReview(\''+id+'\')">💾 Save feedback</button><button class="btn" onclick="closeDrawer()">Cancel</button></div>');
 }
@@ -619,7 +621,7 @@ async function dropCard(ev,col){
   const r=byId(ent,id);if(!r||r[f]===v)return;
   if(!canEdit(ent)){toast('You have view-only access');return}
   r[f]=v;render();
-  const ok=await saveRecord(ent,id,{[f]:v});toast(ok?'Moved to '+(LEAD_LABEL[v]||titleCase(v)):'Move failed');if(!ok)await loadAll();
+  const ok=await saveRecord(ent,id,{[f]:v});toast(ok?(ent==='leads'&&demoHint(v,byId('leads',id))||('Moved to '+(LEAD_LABEL[v]||titleCase(v)))):'Move failed',ok&&ent==='leads'&&demoHint(v,byId('leads',id))?6000:2600);if(!ok)await loadAll();
 }
 function leadCard(l){
   const fu=l.next_follow_up,late=fu&&fu<=todayStr();
@@ -647,9 +649,10 @@ async function openLead(id){
   if(id){const {data,error}=await sb.from('lead_events').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(25);
     const el=$('leadHist');if(el)el.innerHTML=error?'Could not load history':(data&&data.length?data.map(h=>'<div>'+fmtDT(h.created_at)+' — '+esc(LEAD_LABEL[h.from_status]||h.from_status||'')+' → <b>'+esc(LEAD_LABEL[h.to_status]||h.to_status)+'</b></div>').join(''):'No status changes yet')}
 }
+function demoHint(st,l){return (['demo_scheduled','demo_rescheduled'].includes(st)&&l&&(!l.demo_date||!l.demo_time))?'Demo class created. Now add the demo DATE and TIME below — the Google Meet link and Calendar invite are made from them.':''}
 async function quickStatus(id,st){
   const p={status:st};if(!['not_interested','not_reachable'].includes(st))p.lost_reason=null;
-  const ok=await saveRecord('leads',id,p);if(ok){toast('Status: '+LEAD_LABEL[st]);openLead(id)}
+  const ok=await saveRecord('leads',id,p);if(ok){const l=byId('leads',id);toast(demoHint(st,l)||('Status: '+LEAD_LABEL[st]),demoHint(st,l)?6000:2600);openLead(id)}
 }
 async function taskForLead(id){
   const l=byId('leads',id);
@@ -712,8 +715,13 @@ function openStudent(id){
   const bottom='<div style="margin-top:18px"><div class="hd row" style="justify-content:space-between"><b>Payments</b>'+(canEdit('payments')?'<button class="btn sm" onclick="newPayment(\''+id+'\')">＋ Payment</button>':'')+'</div>'
    +(pays.length?pays.map(p=>'<div class="li" onclick="editor(\'payments\',\''+p.id+'\')"><div class="grow"><b>'+money(p.amount)+'</b><span class="sm muted">'+esc(p.package||p.course_name||'')+' · due '+fmtDate(p.due_date)+'</span></div>'+bd(effPay(p))+'</div>').join(''):'<div class="sm muted">No payments recorded.</div>')+'</div>'
    +'<div style="margin-top:18px"><b>Recent attendance</b>'+(att.length?att.slice(0,8).map(a=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(a.class_title||'Class')+'</b><span class="sm muted">'+fmtDate(a.class_date)+'</span></div>'+bd(a.status)+'</div>').join(''):'<div class="sm muted">No attendance yet.</div>')+'</div>';
-  editor('students',id,null,top,bottom);
+  const lead=s.lead_id?byId('leads',s.lead_id):null;
+  const inv=isAdmin()?'<div class="card" style="margin-bottom:14px"><b>Family login</b><p class="sm muted" style="margin:6px 0 8px">'+(s.parent_email?(s.parent_id?'✅ <b>'+esc(s.parent_email)+'</b> has created their account and can see this child.':'⏳ Waiting for <b>'+esc(s.parent_email)+'</b> to create their account.'):'Add the parent\'s email below and save, then send the invite.')+'</p>'+(s.parent_email?'<div class="row"><button class="btn sm pri" onclick="copyInvite(\''+id+'\')">📋 Copy invite message</button>'+(lead&&lead.phone?'<a class="btn sm wa" target="_blank" rel="noopener" style="text-decoration:none" href="'+esc(inviteWA(s,lead))+'">💬 Send on WhatsApp</a>':'')+'</div>':'')+'</div>':'';
+  editor('students',id,null,top+inv,bottom);
 }
+function inviteText(s){return 'Hello! '+s.full_name+'\'s learning space at Next Move India is ready 🎉\n\n1. Open https://nextmoveindia.org/lms/\n2. Tap "Create parent account"\n3. Use THIS email: '+s.parent_email+' and choose a password\n\nYou will see classes (with a Join button), assignments, class recordings and progress.'}
+function inviteWA(s,lead){let d=String(lead.phone||'').replace(/\D/g,'');if(d.length===10)d='91'+d;return 'https://wa.me/'+d+'?text='+encodeURIComponent(inviteText(s))}
+function copyInvite(id){const s=byId('students',id);const t=inviteText(s);try{navigator.clipboard.writeText(t).then(()=>toast('Invite message copied ✓ — paste it into WhatsApp'),()=>toast('Could not copy'))}catch(e){toast('Could not copy')}}
 function newPayment(sid){const s=byId('students',sid);editor('payments',null,{student_id:sid,course_name:s.course_name,status:'pending'})}
 
 /* ================= Classes: calendar + list, class drawer, attendance ================= */
@@ -734,7 +742,7 @@ VIEWS.classes=()=>{
 function openClass(id){
   const c=byId('classes',id);if(!c)return editor('classes',id);
   const att=D('attendance').filter(a=>a.class_id===id);
-  const top='<div class="row" style="margin-bottom:12px">'+(c.recording_url?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(c.recording_url)+'" style="text-decoration:none">▶ Watch recording</a>':'')+(c.meet_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(c.meet_link)+'" style="text-decoration:none">🎥 Join Google Meet</a>':'')+(isStaff()&&S.role!=='counselor'?'<button class="btn" onclick="openAttendance(\''+id+'\')">✅ Attendance ('+att.length+' marked)</button>':'')+'</div>';
+  const top='<div class="row" style="margin-bottom:12px">'+(c.recording_url?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.recording_url))+'" style="text-decoration:none">▶ Watch recording</a>':'')+(c.meet_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.meet_link))+'" style="text-decoration:none">🎥 Join Google Meet</a>':'')+(isStaff()&&S.role!=='counselor'?'<button class="btn" onclick="openAttendance(\''+id+'\')">✅ Attendance ('+att.length+' marked)</button>':'')+'</div>';
   editor('classes',id,null,top,'');
 }
 VIEWS.attendance=()=>{
@@ -794,7 +802,7 @@ VIEWS.materials=()=>{
   const q=(S.ui.matQ||'').toLowerCase();const items=D('materials').filter(x=>!q||[x.title,x.course_name,x.kind,x.description].some(v=>String(v||'').toLowerCase().includes(q)));
   const groups={};items.forEach(x=>(groups[x.course_name||'All courses']=groups[x.course_name||'All courses']||[]).push(x));
   return '<div class="row" style="margin-bottom:12px"><div class="grow"><input placeholder="🔎 Search materials…" value="'+esc(S.ui.matQ||'')+'" oninput="S.ui.matQ=this.value;clearTimeout(S.ui.mt);S.ui.mt=setTimeout(render,250)"></div>'+tb+(isAdmin()?'<button class="btn pri" onclick="addRecord(\'materials\')">＋ '+T('Add')+' material</button>':'')+'</div>'
-   +(Object.keys(groups).sort().map(g=>'<h3 style="margin:18px 0 8px">'+esc(g)+' <span class="b">'+groups[g].length+'</span></h3><div class="grid cols3">'+groups[g].map(x=>'<div class="card"><div class="row" style="flex-wrap:nowrap"><div style="font-size:26px">'+(KIND_ICON[x.kind]||'🔗')+'</div><div class="grow"><b>'+esc(x.title)+'</b><div class="sm muted">'+esc([titleCase(x.kind),x.age_group&&('Ages '+x.age_group),x.language].filter(Boolean).join(' · '))+'</div></div>'+(x.published?'':'<span class="b">Hidden</span>')+'</div>'+(x.description?'<p class="sm" style="margin:10px 0 0">'+esc(x.description)+'</p>':'')+'<div class="row" style="margin-top:12px">'+(x.url?'<a class="btn sm pri" target="_blank" rel="noopener" href="'+esc(x.url)+'" style="text-decoration:none">Open</a>':'<span class="sm muted">No link yet</span>')+(isAdmin()?'<button class="btn sm" onclick="editor(\'materials\',\''+x.id+'\')">Edit</button>':'')+'</div></div>').join('')+'</div>').join('')||'<div class="card empty">No materials yet. '+(isAdmin()?'Click “Add material” and paste a Google Drive link, or add rows in the “LMS Materials” tab of your sheet.':'')+'</div>')
+   +(Object.keys(groups).sort().map(g=>'<h3 style="margin:18px 0 8px">'+esc(g)+' <span class="b">'+groups[g].length+'</span></h3><div class="grid cols3">'+groups[g].map(x=>'<div class="card"><div class="row" style="flex-wrap:nowrap"><div style="font-size:26px">'+(KIND_ICON[x.kind]||'🔗')+'</div><div class="grow"><b>'+esc(x.title)+'</b><div class="sm muted">'+esc([titleCase(x.kind),x.age_group&&('Ages '+x.age_group),x.language].filter(Boolean).join(' · '))+'</div></div>'+(x.published?'':'<span class="b">Hidden</span>')+'</div>'+(x.description?'<p class="sm" style="margin:10px 0 0">'+esc(x.description)+'</p>':'')+'<div class="row" style="margin-top:12px">'+(x.url?'<a class="btn sm pri" target="_blank" rel="noopener" href="'+esc(safeUrl(x.url))+'" style="text-decoration:none">Open</a>':'<span class="sm muted">No link yet</span>')+(isAdmin()?'<button class="btn sm" onclick="editor(\'materials\',\''+x.id+'\')">Edit</button>':'')+'</div></div>').join('')+'</div>').join('')||'<div class="card empty">No materials yet. '+(isAdmin()?'Click “Add material” and paste a Google Drive link, or add rows in the “LMS Materials” tab of your sheet.':'')+'</div>')
    +'<div class="sm muted" style="margin-top:12px"><span class="sync">⇄ Two-way</span> Materials are also in the “LMS Materials” tab of your Google Sheet.</div>';
 };
 
