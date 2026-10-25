@@ -135,13 +135,14 @@ function turnOnAutoSync() {
   var ss = SpreadsheetApp.getActive();
   ScriptApp.newTrigger('onLmsEdit').forSpreadsheet(ss).onEdit().create();
   ScriptApp.newTrigger('syncAll').timeBased().everyMinutes(5).create();
-  toast_('Automatic sync is on: edits go to the LMS within seconds, and the sheet refreshes every 5 minutes.');
+  ScriptApp.newTrigger('calendarTick').timeBased().everyMinutes(1).create();   // Meet links appear within ~1 minute
+  toast_('Automatic sync is on: edits go to the LMS within seconds, the sheet refreshes every 5 minutes, and Meet links / Calendar events are made every minute.');
 }
 
 function turnOffAutoSync() {
   ScriptApp.getProjectTriggers().forEach(function (t) {
     var fn = t.getHandlerFunction();
-    if (fn === 'onLmsEdit' || fn === 'syncAll') ScriptApp.deleteTrigger(t);
+    if (fn === 'onLmsEdit' || fn === 'syncAll' || fn === 'calendarTick') ScriptApp.deleteTrigger(t);
   });
 }
 
@@ -344,69 +345,141 @@ function createMeetLinksNow() {
   if (!lock.tryLock(25000)) return;
   try {
     var r = syncCalendar_();
-    toast_('Calendar: ' + r.created + ' created, ' + r.updated + ' updated, ' + r.cancelled + ' cancelled' +
-      (r.needTime ? ' · ' + r.needTime + ' class(es) still need a date AND a time' : ''));
+    toast_('Calendar: ' + r.created + ' added, ' + r.updated + ' updated, ' + r.cancelled + ' cancelled · ' + r.linkOnly + ' Meet link(s) made for classes still to be confirmed');
   } catch (err) {
     SpreadsheetApp.getUi().alert('Could not create Calendar events:\n\n' + err.message);
   } finally { lock.releaseLock(); }
 }
 
-/** Creates / updates / cancels one Calendar event (with a Google Meet link) per scheduled class. */
+/** Runs every minute (separate from the full sync) so a new demo gets its Meet link quickly. */
+function calendarTick() {
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(3000)) return;
+  try { syncCalendar_(); }
+  catch (err) { PropertiesService.getScriptProperties().setProperty('CAL_LAST_ERROR', String(err.message || err)); }
+  finally { lock.releaseLock(); }
+}
+
+/** A "pending" calendar holds Meet links for classes whose date/time is not confirmed yet. */
+function pendingCalendarId_() {
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('PENDING_CAL');
+  if (id) return id;
+  var cal = Calendar.Calendars.insert({ summary: 'Next Move – demo links (time not confirmed)', timeZone: TZ });
+  props.setProperty('PENDING_CAL', cal.id);
+  return cal.id;
+}
+
+/**
+ * For every scheduled class:
+ *  - Step 1 (as soon as the class exists): a Google Meet link is created and written into the LMS.
+ *    It lives in a hidden-style "pending" calendar, so your main calendar stays clean.
+ *  - Step 2 (once date AND time are confirmed): the event moves to your main calendar with the
+ *    same Meet link, and the teacher and parent are invited.
+ *  - Later changes to the date/time/title/guests update the event; cancelling removes it.
+ */
 function syncCalendar_() {
   if (typeof Calendar === 'undefined') {
     throw new Error('Turn on the Google Calendar service first: Apps Script > Services (+ icon) > Google Calendar API > Add.');
   }
   var props = PropertiesService.getScriptProperties();
   var sigs = JSON.parse(props.getProperty('CAL_SIGS') || '{}');
+  var pending = JSON.parse(props.getProperty('CAL_PENDING') || '{}');
   var guests = {};
   rpc_('sheet_class_guests', {}).forEach(function (g) { guests[g.id] = g.emails || []; });
   var classes = rpc_('sheet_table_pull', { p_table: 'classes' });
-  var out = { created: 0, updated: 0, cancelled: 0, needTime: 0 };
+  var out = { created: 0, updated: 0, cancelled: 0, linkOnly: 0 };
+  var title = function (c) { return c.title || 'Next Move India class'; };
+  var desc = 'Next Move India class. Join from the LMS: https://nextmoveindia.org/lms/';
+  var newMeet = function () { return { createRequest: { requestId: Utilities.getUuid(), conferenceSolutionKey: { type: 'hangoutsMeet' } } }; };
 
   classes.forEach(function (c) {
     var evId = c.calendar_event_id || '';
+    var isPending = !!pending[c.id];
+    var calOf = function () { return isPending ? pendingCalendarId_() : CAL_ID; };
+
     if (c.status === 'cancelled') {
       if (evId) {
-        try { Calendar.Events.remove(CAL_ID, evId, { sendUpdates: 'all' }); } catch (e) { /* already gone */ }
+        try { Calendar.Events.remove(calOf(), evId, { sendUpdates: isPending ? 'none' : 'all' }); } catch (e) { /* already gone */ }
         saveClass_(c.id, { calendar_event_id: '' });
-        delete sigs[c.id]; out.cancelled++;
+        delete sigs[c.id]; delete pending[c.id]; out.cancelled++;
       }
       return;
     }
     if (c.status !== 'scheduled') return;
+
     var when = classWhen_(c);
-    if (!when) { if (!evId && c.class_date) out.needTime++; return; }
     var emails = cleanEmails_(guests[c.id]);
-    var sig = JSON.stringify([c.title, when.start, when.end, emails]);
     var attendees = emails.map(function (m) { return { email: m }; });
 
+    /* ---- no event yet ---- */
     if (!evId) {
-      if (c.meet_link) return;                      // you typed your own link: leave it alone
-      var ev = Calendar.Events.insert({
-        summary: c.title || 'Next Move India class',
-        description: 'Next Move India class. Join from the LMS: https://nextmoveindia.org/lms/',
-        start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ },
-        attendees: attendees,
-        conferenceData: { createRequest: { requestId: Utilities.getUuid(), conferenceSolutionKey: { type: 'hangoutsMeet' } } }
-      }, CAL_ID, { conferenceDataVersion: 1, sendUpdates: 'all' });
-      saveClass_(c.id, { calendar_event_id: ev.id, meet_link: meetLink_(ev) });
-      sigs[c.id] = sig; out.created++;
+      if (c.meet_link) return;                              // you typed your own link: leave it alone
+      if (when) {                                           // confirmed: straight onto the main calendar
+        var ev = Calendar.Events.insert({
+          summary: title(c), description: desc, attendees: attendees, conferenceData: newMeet(),
+          start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ }
+        }, CAL_ID, { conferenceDataVersion: 1, sendUpdates: 'all' });
+        saveClass_(c.id, { calendar_event_id: ev.id, meet_link: meetLink_(ev) });
+        sigs[c.id] = JSON.stringify([title(c), when.start, when.end, emails]); out.created++;
+      } else {                                              // not confirmed: make the Meet link only
+        var t0 = new Date(Date.now() + 24 * 3600 * 1000);
+        var ph = Utilities.formatDate(t0, TZ, "yyyy-MM-dd'T'09:00:00XXX");
+        var phEnd = Utilities.formatDate(t0, TZ, "yyyy-MM-dd'T'09:30:00XXX");
+        var pev = Calendar.Events.insert({
+          summary: '⏳ ' + title(c) + ' (time to be confirmed)', description: desc, conferenceData: newMeet(),
+          start: { dateTime: ph, timeZone: TZ }, end: { dateTime: phEnd, timeZone: TZ }
+        }, pendingCalendarId_(), { conferenceDataVersion: 1, sendUpdates: 'none' });
+        saveClass_(c.id, { calendar_event_id: pev.id, meet_link: meetLink_(pev) });
+        pending[c.id] = 1; out.linkOnly++;
+      }
       return;
     }
-    if (!c.meet_link) {                             // event exists but the Meet link was not ready yet
-      try { var got = Calendar.Events.get(CAL_ID, evId); var l = meetLink_(got); if (l) saveClass_(c.id, { meet_link: l }); } catch (e) { /* retry next time */ }
+
+    /* ---- event exists, but its Meet link was not ready earlier ---- */
+    if (!c.meet_link) {
+      try { var got = Calendar.Events.get(calOf(), evId); var l = meetLink_(got); if (l) saveClass_(c.id, { meet_link: l }); } catch (e) { /* retry next time */ }
     }
+
+    /* ---- pending -> confirmed: move to the main calendar, keep the same link ---- */
+    if (isPending) {
+      if (!when) return;
+      var moved = null;
+      try { moved = Calendar.Events.move(pendingCalendarId_(), evId, CAL_ID, { sendUpdates: 'none' }); } catch (e) { moved = null; }
+      var keep = moved && meetLink_(moved) ? moved : null;
+      if (keep) {
+        Calendar.Events.patch({
+          summary: title(c), description: desc, attendees: attendees,
+          start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ }
+        }, CAL_ID, evId, { sendUpdates: 'all', conferenceDataVersion: 1 });
+        out.updated++;
+      } else {                                              // could not move: create fresh (new Meet link) and drop the pending one
+        try { Calendar.Events.remove(pendingCalendarId_(), evId, { sendUpdates: 'none' }); } catch (e) { /* ignore */ }
+        var fresh = Calendar.Events.insert({
+          summary: title(c), description: desc, attendees: attendees, conferenceData: newMeet(),
+          start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ }
+        }, CAL_ID, { conferenceDataVersion: 1, sendUpdates: 'all' });
+        saveClass_(c.id, { calendar_event_id: fresh.id, meet_link: meetLink_(fresh) });
+        evId = fresh.id; out.created++;
+      }
+      delete pending[c.id];
+      sigs[c.id] = JSON.stringify([title(c), when.start, when.end, emails]);
+      return;
+    }
+
+    /* ---- confirmed event: keep it in step with the LMS ---- */
+    if (!when) return;
+    var sig = JSON.stringify([title(c), when.start, when.end, emails]);
     if (sigs[c.id] === undefined) { sigs[c.id] = sig; return; }
     if (sigs[c.id] !== sig) {
       Calendar.Events.patch({
-        summary: c.title || 'Next Move India class',
-        start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ },
-        attendees: attendees
+        summary: title(c), start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ }, attendees: attendees
       }, CAL_ID, evId, { sendUpdates: 'all' });
       sigs[c.id] = sig; out.updated++;
     }
   });
   props.setProperty('CAL_SIGS', JSON.stringify(sigs));
+  props.setProperty('CAL_PENDING', JSON.stringify(pending));
   return out;
 }
 
