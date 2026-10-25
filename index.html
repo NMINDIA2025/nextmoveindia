@@ -566,7 +566,10 @@
         let timer;
         function goTo(index) {
           active = (index + cards.length) % cards.length;
-          cards[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+          // Scroll only the horizontal gallery, never the whole page.
+          const trackLeft = track.getBoundingClientRect().left;
+          const cardLeft = cards[active].getBoundingClientRect().left;
+          track.scrollTo({ left: track.scrollLeft + (cardLeft - trackLeft), behavior: 'smooth' });
           if (count) count.textContent = (active + 1) + ' / ' + cards.length;
           dots.forEach((dot, i) => {
             if (i === active) dot.setAttribute('aria-current', 'true');
