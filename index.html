@@ -503,6 +503,100 @@
       </div>
     </section>
 
+
+    <!-- LIVE CLASS GALLERY: illustrative stock imagery until real class screenshots are approved -->
+    <section class="live-gallery-section" aria-labelledby="live-gallery-title">
+      <div class="container">
+        <div class="live-gallery-heading">
+          <span class="section-tag">See how learning happens</span>
+          <h2 class="section-title" id="live-gallery-title">Inside Our Live Classes</h2>
+          <p>Interactive lessons, guided speaking practice and individual attention, all from home.</p>
+        </div>
+        <div class="live-gallery-controls">
+          <button class="gallery-arrow" type="button" id="galleryPrev" aria-label="Previous classroom example">&#8592;</button>
+          <span id="galleryCount" aria-live="polite">1 / 5</span>
+          <button class="gallery-arrow" type="button" id="galleryNext" aria-label="Next classroom example">&#8594;</button>
+        </div>
+        <div class="live-gallery-track" id="liveGalleryTrack" tabindex="0" aria-label="Classroom examples carousel">
+          <article class="live-gallery-card">
+            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=80" alt="Teacher guiding students in a learning environment" loading="lazy" width="900" height="600">
+            <div class="live-gallery-card-copy"><span class="gallery-kicker">01 · Learn</span><h3>Interactive Teaching</h3><p>Teachers explain concepts step by step and invite questions.</p></div>
+          </article>
+          <article class="live-gallery-card">
+            <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80" alt="Child practising and expressing ideas" loading="lazy" width="900" height="600">
+            <div class="live-gallery-card-copy"><span class="gallery-kicker">02 · Speak</span><h3>Speaking Practice</h3><p>Learners practise sentences, stories and short presentations.</p></div>
+          </article>
+          <article class="live-gallery-card">
+            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80" alt="Children engaged in a classroom activity" loading="lazy" width="900" height="600">
+            <div class="live-gallery-card-copy"><span class="gallery-kicker">03 · Participate</span><h3>Activity-Based Learning</h3><p>Visual prompts and fun tasks help learners take part actively.</p></div>
+          </article>
+          <article class="live-gallery-card">
+            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=900&q=80" alt="Student learning with a notebook and study materials" loading="lazy" width="900" height="600">
+            <div class="live-gallery-card-copy"><span class="gallery-kicker">04 · Create</span><h3>Creative Expression</h3><p>Children share ideas through stories, drawings and projects.</p></div>
+          </article>
+          <article class="live-gallery-card">
+            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=900&q=80" alt="Teacher supporting students during a lesson" loading="lazy" width="900" height="600">
+            <div class="live-gallery-card-copy"><span class="gallery-kicker">05 · Improve</span><h3>Guidance &amp; Feedback</h3><p>Specific encouragement helps learners understand what to practise next.</p></div>
+          </article>
+        </div>
+        <div class="live-gallery-dots" id="liveGalleryDots" aria-label="Choose classroom example">
+          <button type="button" aria-label="Show example 1" aria-current="true"></button>
+          <button type="button" aria-label="Show example 2"></button>
+          <button type="button" aria-label="Show example 3"></button>
+          <button type="button" aria-label="Show example 4"></button>
+          <button type="button" aria-label="Show example 5"></button>
+        </div>
+        <p class="live-gallery-disclaimer">Illustrative classroom photos are used in this preview. We recommend replacing them with approved screenshots from actual NextMove India classes before publishing this section to parents.</p>
+      </div>
+    </section>
+    <script>
+      (function () {
+        const track = document.getElementById('liveGalleryTrack');
+        const cards = track ? Array.from(track.querySelectorAll('.live-gallery-card')) : [];
+        const count = document.getElementById('galleryCount');
+        const dotsWrap = document.getElementById('liveGalleryDots');
+        const dots = dotsWrap ? Array.from(dotsWrap.querySelectorAll('button')) : [];
+        const prev = document.getElementById('galleryPrev');
+        const next = document.getElementById('galleryNext');
+        if (!track || !cards.length) return;
+        let active = 0;
+        let timer;
+        function goTo(index) {
+          active = (index + cards.length) % cards.length;
+          cards[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+          if (count) count.textContent = (active + 1) + ' / ' + cards.length;
+          dots.forEach((dot, i) => {
+            if (i === active) dot.setAttribute('aria-current', 'true');
+            else dot.removeAttribute('aria-current');
+          });
+        }
+        function startAuto() {
+          window.clearInterval(timer);
+          timer = window.setInterval(() => goTo(active + 1), 5000);
+        }
+        prev && prev.addEventListener('click', () => { goTo(active - 1); startAuto(); });
+        next && next.addEventListener('click', () => { goTo(active + 1); startAuto(); });
+        dots.forEach((dot, i) => dot.addEventListener('click', () => { goTo(i); startAuto(); }));
+        track.addEventListener('mouseenter', () => window.clearInterval(timer));
+        track.addEventListener('mouseleave', startAuto);
+        track.addEventListener('focusin', () => window.clearInterval(timer));
+        track.addEventListener('focusout', startAuto);
+        track.addEventListener('scroll', () => {
+          const center = track.getBoundingClientRect().left + track.clientWidth / 2;
+          let nearest = 0, distance = Infinity;
+          cards.forEach((card, i) => {
+            const cardCenter = card.getBoundingClientRect().left + card.getBoundingClientRect().width / 2;
+            const d = Math.abs(center - cardCenter);
+            if (d < distance) { distance = d; nearest = i; }
+          });
+          active = nearest;
+          if (count) count.textContent = (active + 1) + ' / ' + cards.length;
+          dots.forEach((dot, i) => i === active ? dot.setAttribute('aria-current', 'true') : dot.removeAttribute('aria-current'));
+        }, { passive: true });
+        startAuto();
+      })();
+    </script>
+
     <!-- PROGRAM CHOOSER — resolves "what does NextMove India actually do" up front -->
     <section class="chooser-section section-pad" aria-labelledby="chooser-heading">
       <div class="container">
