@@ -300,9 +300,9 @@ const effPay=r=>r.status==='pending'&&r.due_date&&r.due_date<todayStr()?'overdue
 
 /* ================= Data layer ================= */
 const TABLES_BY_ROLE={
- admin:['leads','students','teachers','classes','materials','tasks','payments','attendance','assignments','submissions','profiles','courses','demos'],
- counselor:['leads','teachers','classes','materials','tasks','courses'],
- teacher:['classes','students','materials','tasks','attendance','assignments','submissions','teachers','courses'],
+ admin:['leads','students','teachers','classes','class_materials','materials','tasks','payments','attendance','assignments','submissions','profiles','courses','demos'],
+ counselor:['leads','teachers','classes','class_materials','materials','tasks','courses'],
+ teacher:['classes','class_materials','students','materials','tasks','attendance','assignments','submissions','teachers','courses'],
  parent:['students','classes','materials','payments','attendance','assignments','submissions','courses'],
  student:['students','classes','materials','attendance','assignments','submissions','courses']};
 const LIMIT=2000;
@@ -409,7 +409,8 @@ async function submitEditor(ent,id){
   if(ent==='tasks'&&!id&&!p.assignee_id)p.assignee_id=S.user.id;
   if(ent==='classes'&&p.teacher_id===null)p.teacher_name=null;
   if(ent==='students'&&'teacher_id' in p){}
-  const ok=await saveRecord(ent,id,p);if(ok){toast('Saved ✓');closeDrawer()}
+  const was=ent==='leads'&&id?(byId('leads',id)||{}).status:null;
+  const ok=await saveRecord(ent,id,p);if(ok){toast('Saved ✓');if(ent==='leads'&&isDemoSt(p.status)&&was!==p.status){const lid=id||(ok&&ok.id);if(lid){openDemoPlanner(lid);return}}closeDrawer()}
 }
 async function removeFromEditor(ent,id){if(await deleteRecord(ent,id)){toast('Deleted');closeDrawer()}}
 
@@ -621,7 +622,7 @@ async function dropCard(ev,col){
   const r=byId(ent,id);if(!r||r[f]===v)return;
   if(!canEdit(ent)){toast('You have view-only access');return}
   r[f]=v;render();
-  const ok=await saveRecord(ent,id,{[f]:v});toast(ok?(ent==='leads'&&demoHint(v,byId('leads',id))||('Moved to '+(LEAD_LABEL[v]||titleCase(v)))):'Move failed',ok&&ent==='leads'&&demoHint(v,byId('leads',id))?6000:2600);if(!ok)await loadAll();
+  const ok=await saveRecord(ent,id,{[f]:v});toast(ok?('Moved to '+(LEAD_LABEL[v]||titleCase(v))):'Move failed');if(!ok)await loadAll();else if(ent==='leads'&&isDemoSt(v))openDemoPlanner(id);
 }
 function leadCard(l){
   const fu=l.next_follow_up,late=fu&&fu<=todayStr();
@@ -651,10 +652,84 @@ async function openLead(id){
   if(id){const {data,error}=await sb.from('lead_events').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(25);
     const el=$('leadHist');if(el)el.innerHTML=error?'Could not load history':(data&&data.length?data.map(h=>'<div>'+fmtDT(h.created_at)+' — '+esc(LEAD_LABEL[h.from_status]||h.from_status||'')+' → <b>'+esc(LEAD_LABEL[h.to_status]||h.to_status)+'</b></div>').join(''):'No status changes yet')}
 }
+
+/* ================= Demo planner (opens when a lead becomes "Demo scheduled") ================= */
+const isDemoSt=st=>st==='demo_scheduled'||st==='demo_rescheduled';
+const to12h=v=>{const m=String(v||'').match(/^(\d{1,2}):(\d{2})$/);if(!m)return v||'';let h=+m[1];const ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+m[2]+' '+ap};
+const to24h=v=>{const m=String(v||'').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([ap]m)?$/i);if(!m)return '';let h=+m[1];const ap=(m[3]||'').toLowerCase();if(ap==='pm'&&h<12)h+=12;if(ap==='am'&&h===12)h=0;return String(h).padStart(2,'0')+':'+(m[2]||'00')};
+const demoIso=v=>/^\d{4}-\d{2}-\d{2}$/.test(String(v||''))?v:'';
+function demoClassOf(id){return D('classes').find(c=>c.lead_id===id&&c.kind==='demo'&&c.status==='scheduled')||null}
+function classMats(cid){return D('class_materials').filter(x=>x.class_id===cid).map(x=>byId('materials',x.material_id)||D('materials').find(m=>m.id===x.material_id)).filter(Boolean)}
+async function matUrl(m){if(m.file_path){const {data,error}=await sb.storage.from('materials').createSignedUrl(m.file_path,3600);if(error){toast('Could not open file: '+error.message,4000);return ''}return data.signedUrl}return safeUrl(m.url)}
+async function openMat(id){const m=D('materials').find(x=>x.id===id);if(!m)return;const u=await matUrl(m);if(u)window.open(u,'_blank','noopener')}
+async function openDemoPlanner(id,tries){
+  tries=tries||0;await loadAll(true);
+  const l=byId('leads',id);if(!l)return;
+  let c=demoClassOf(id);
+  if(!c&&tries<4){openDrawer('<div class="empty">Setting up the demo class…</div>');setTimeout(()=>openDemoPlanner(id,tries+1),700);return}
+  if(!c){toast('Demo class was not created — check the lead status and try again',5000);return openLead(id)}
+  const dr={};['dpDate','dpTime','dpTeacher','dpNotes','dpDur'].forEach(k=>{const e=$(k);if(e&&e.value!=='')dr[k]=e.value});
+  const mats=classMats(c.id);
+  const libs=D('materials').filter(m=>!mats.some(x=>x.id===m.id)&&(!l.interested_course||!m.course_name||m.course_name===l.interested_course));
+  const dt=dr.dpDate||demoIso(c.class_date)||demoIso(l.demo_date),tm=dr.dpTime||to24h(c.class_time||l.demo_time);
+  const ready=!!(dt&&tm&&c.teacher_id);
+  const meet=c.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.meet_link))+'" style="text-decoration:none">▶ Open Meet link</a><button class="btn sm" onclick="navigator.clipboard.writeText(\''+esc(safeUrl(c.meet_link))+'\').then(()=>toast(\'Meet link copied ✓\'))">📋 Copy</button><span class="b g">Meet link ready</span>':(dt&&tm?'<span class="b o">⏳ Creating Meet link and Calendar event — usually under a minute</span><button class="btn sm" onclick="openDemoPlanner(\''+id+'\')">↻ Check again</button>':'<span class="b">Meet link is created as soon as you save date + time</span>');
+  openDrawer('<div class="dh"><div><div class="sm muted">Demo class</div><h2>Schedule demo — '+esc(l.child_name||l.parent_name||'new lead')+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="card" style="background:#fff8f2;margin-bottom:12px"><div class="sm"><b>'+esc(l.child_name||'Child')+'</b>'+(l.child_age?' · age '+esc(l.child_age):'')+(l.interested_course?' · '+esc(l.interested_course):'')+'</div></div>'
+   +'<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label class="sm"><b>Preferred date</b></label><input type="date" id="dpDate" value="'+esc(dt)+'" min="'+todayStr()+'"></div><div><label class="sm"><b>Time (IST)</b></label><input type="time" id="dpTime" value="'+esc(tm)+'"></div>'
+   +'<div><label class="sm"><b>Teacher</b></label><select id="dpTeacher">'+['<option value="">— choose teacher —</option>'].concat(D('teachers').filter(t=>t.status!=='inactive').map(t=>'<option value="'+esc(t.id)+'"'+((dr.dpTeacher||c.teacher_id)===t.id?' selected':'')+'>'+esc(t.full_name)+'</option>')).join('')+'</select></div>'
+   +'<div><label class="sm"><b>Length (minutes)</b></label><input type="number" id="dpDur" value="'+esc(dr.dpDur||c.duration_min||30)+'"></div></div>'
+   +'<div class="row" style="margin:12px 0;gap:8px">'+meet+'</div>'
+   +'<div class="card"><b>📎 Teaching material for the teacher</b><div class="sm muted" style="margin:4px 0 8px">Add what the teacher needs to run this demo — worksheet, slides, short video or a link. Families do not see these.</div>'
+   +(mats.length?mats.map(m=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(m.title)+'</b><span class="sm muted">'+esc(m.file_name||m.url||'')+'</span></div><button class="btn sm" onclick="openMat(\''+m.id+'\')">Open</button><button class="btn sm" onclick="detachMat(\''+c.id+'\',\''+m.id+'\',\''+id+'\')">Remove</button></div>').join(''):'<div class="sm muted" style="margin-bottom:8px">Nothing attached yet.</div>')
+   +(libs.length?'<div class="row" style="margin:8px 0"><select id="dpLib" class="grow"><option value="">Pick from your library…</option>'+libs.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.title+(m.course_name?' · '+m.course_name:''))+'</option>').join('')+'</select><button class="btn sm" onclick="attachLib(\''+c.id+'\',\''+id+'\')">Attach</button></div>':'')
+   +'<div style="margin:8px 0"><label class="sm"><b>Upload a file</b> (PDF, slides, worksheet, short video · up to 50 MB)</label><input type="file" id="dpFile" onchange="uploadMat(\''+c.id+'\',\''+id+'\')"></div>'
+   +'<div class="row" style="gap:6px"><input id="dpLT" placeholder="Title" style="flex:1"><input id="dpLU" placeholder="Drive / YouTube link" style="flex:2"><button class="btn sm" onclick="addLinkMat(\''+c.id+'\',\''+id+'\')">Add link</button></div></div>'
+   +'<div style="margin-top:12px"><label class="sm"><b>Note for the teacher</b> (goals, child\'s level, what to cover)</label><textarea id="dpNotes" rows="4">'+esc(dr.dpNotes!=null?dr.dpNotes:(c.notes||''))+'</textarea></div>'
+   +'<div class="act"><button class="btn pri" onclick="saveDemoPlan(\''+id+'\',\''+c.id+'\')">'+(ready?'Save changes':'Save & create Meet link')+'</button><button class="btn" onclick="closeDrawer();openLead(\''+id+'\')">Back to lead</button></div>'
+   +'<div class="sm muted" style="margin-top:6px">Saving puts the demo on the Google Calendar, creates the Meet link and emails the family and teacher.</div>');
+}
+async function saveDemoPlan(lid,cid){
+  const d=$('dpDate').value,t=$('dpTime').value,tid=$('dpTeacher').value;
+  if(!d||!t){toast('Please choose the demo date and time');return}
+  if(!tid){toast('Please choose a teacher');return}
+  const dur=Math.max(10,parseInt($('dpDur').value,10)||30),notes=$('dpNotes').value;
+  const lead=await saveRecord('leads',lid,{demo_date:d,demo_time:to12h(t)});if(!lead)return;
+  const cl=await saveRecord('classes',cid,{class_date:d,class_time:to12h(t),teacher_id:tid,duration_min:dur,notes});if(!cl)return;
+  toast('Saved ✓ Meet link will appear here shortly');openDemoPlanner(lid);
+}
+async function attachMat(cid,mid){const {error}=await sb.from('class_materials').upsert({class_id:cid,material_id:mid},{onConflict:'class_id,material_id'});if(error){toast('Could not attach: '+error.message,5000);return false}return true}
+async function attachLib(cid,lid){const v=$('dpLib').value;if(!v)return;if(await attachMat(cid,v)){await loadAll(true);openDemoPlanner(lid)}}
+async function detachMat(cid,mid,lid){const {error}=await sb.from('class_materials').delete().eq('class_id',cid).eq('material_id',mid);if(error){toast('Could not remove: '+error.message,5000);return}await loadAll(true);openDemoPlanner(lid)}
+async function newMat(payload,cid,lid){
+  const c=byId('classes',cid)||{};
+  const {data,error}=await sb.from('materials').insert(Object.assign({published:false,course_name:c.course_name||null,sort_order:0},payload)).select().maybeSingle();
+  if(error||!data){toast('Could not save material: '+(error?error.message:'no permission'),5000);return}
+  if(await attachMat(cid,data.id)){await loadAll(true);toast('Material attached ✓');openDemoPlanner(lid)}
+}
+async function uploadMat(cid,lid){
+  const f=$('dpFile').files[0];if(!f)return;
+  if(f.size>52428800){toast('File is over 50 MB — please add it as a Drive link instead',5000);return}
+  toast('Uploading…',8000);
+  const safe=f.name.replace(/[^A-Za-z0-9._-]+/g,'_');const path='demo/'+cid+'/'+Date.now()+'_'+safe;
+  const {error}=await sb.storage.from('materials').upload(path,f,{upsert:false});
+  if(error){toast('Upload failed: '+error.message,6000);return}
+  const ext=(f.name.split('.').pop()||'').toLowerCase();const kind=['mp4','mov','webm'].includes(ext)?'video':ext==='pdf'?'pdf':['ppt','pptx'].includes(ext)?'slides':'worksheet';
+  await newMat({title:f.name.replace(/\.[^.]+$/,''),kind,file_path:path,file_name:f.name},cid,lid);
+}
+async function addLinkMat(cid,lid){
+  const t=$('dpLT').value.trim(),u=$('dpLU').value.trim();if(!u){toast('Paste the link first');return}
+  await newMat({title:t||'Teaching link',kind:'link',url:safeUrl(u)},cid,lid);
+}
+function demoBriefing(c){
+  const mats=classMats(c.id);
+  return '<div class="card" style="background:#f4f9ff;margin-bottom:12px"><b>📋 Demo briefing</b><div class="sm" style="margin:6px 0;white-space:pre-wrap">'+esc(c.notes||'No notes added.')+'</div>'
+   +(mats.length?mats.map(m=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(m.title)+'</b><span class="sm muted">'+esc(titleCase(m.kind||'link'))+'</span></div><button class="btn sm pink" onclick="openMat(\''+m.id+'\')">Open</button></div>').join(''):'<div class="sm muted">No teaching material attached.</div>')+'</div>';
+}
 function demoHint(st,l){return (['demo_scheduled','demo_rescheduled'].includes(st)&&l&&(!l.demo_date||!l.demo_time))?'Demo class created — its Google Meet link appears here within a minute. Add the demo DATE and TIME to put it on the Calendar and invite the family.':''}
 async function quickStatus(id,st){
   const p={status:st};if(!['not_interested','not_reachable'].includes(st))p.lost_reason=null;
-  const ok=await saveRecord('leads',id,p);if(ok){const l=byId('leads',id);toast(demoHint(st,l)||('Status: '+LEAD_LABEL[st]),demoHint(st,l)?6000:2600);openLead(id)}
+  const ok=await saveRecord('leads',id,p);if(ok){toast('Status: '+LEAD_LABEL[st]);if(isDemoSt(st))openDemoPlanner(id);else openLead(id)}
 }
 async function taskForLead(id){
   const l=byId('leads',id);
@@ -745,7 +820,7 @@ function openClass(id){
   const c=byId('classes',id);if(!c)return editor('classes',id);
   const att=D('attendance').filter(a=>a.class_id===id);
   const top='<div class="row" style="margin-bottom:12px">'+(c.recording_url?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.recording_url))+'" style="text-decoration:none">▶ Watch recording</a>':'')+(c.meet_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.meet_link))+'" style="text-decoration:none">🎥 Join Google Meet</a>':'')+(isStaff()&&S.role!=='counselor'?'<button class="btn" onclick="openAttendance(\''+id+'\')">✅ Attendance ('+att.length+' marked)</button>':'')+'</div>';
-  editor('classes',id,null,top,'');
+  editor('classes',id,null,top+(c.kind==='demo'?demoBriefing(c):''),'');
 }
 VIEWS.attendance=()=>{
   const t=todayStr();
