@@ -219,7 +219,7 @@ const isFamily=()=>['parent','student'].includes(S.role);
 function canEdit(ent){
   const r=S.role;if(r==='admin')return true;
   if(r==='counselor')return ['leads','tasks'].includes(ent);
-  if(r==='teacher')return ['classes','attendance','tasks','assignments'].includes(ent);
+  if(r==='teacher')return ['classes','attendance','tasks','assignments','leads'].includes(ent);
   return false;
 }
 function canDelete(ent){return isAdmin()}
@@ -302,7 +302,7 @@ const effPay=r=>r.status==='pending'&&r.due_date&&r.due_date<todayStr()?'overdue
 const TABLES_BY_ROLE={
  admin:['leads','students','teachers','classes','class_materials','materials','tasks','payments','attendance','assignments','submissions','profiles','courses','demos'],
  counselor:['leads','teachers','classes','class_materials','materials','tasks','courses'],
- teacher:['classes','class_materials','students','materials','tasks','attendance','assignments','submissions','teachers','courses'],
+ teacher:['classes','class_materials','leads','students','materials','tasks','attendance','assignments','submissions','teachers','courses'],
  parent:['students','classes','materials','payments','attendance','assignments','submissions','courses'],
  student:['students','classes','materials','attendance','assignments','submissions','courses']};
 const LIMIT=2000;
@@ -464,7 +464,7 @@ function openRecord(ent,id){
 const NAV={
  admin:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['students','🎓','Students'],['classes','📅','Classes'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['Manage'],['materials','📚','Materials'],['tasks','☑','Tasks'],['payments','₹','Payments'],['teachers','👩‍🏫','Teachers'],['team','🔑','Team & Access'],['sync','⇄','Sheet Sync']],
  counselor:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['classes','📅','Classes'],['tasks','☑','Tasks'],['materials','📚','Materials'],['sync','⇄','Sheet Sync']],
- teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['classes','📅','My Classes'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
+ teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','My Leads'],['classes','📅','My Classes'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
  parent:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['assignments','📝','Assignments'],['materials','📚','Materials'],['payments','₹','Payments']],
  student:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['assignments','📝','Assignments'],['materials','📚','Materials']]};
 const SUBS={dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',assignments:'Set work, collect answers, give feedback',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
@@ -533,13 +533,16 @@ function dashboardAdmin(){
   +'<div class="card"><div class="hd"><h3>☑ '+T('Open tasks')+'</h3><button class="btn sm" onclick="go(\'tasks\')">Board</button></div>'+(openT.slice(0,5).map(taskLI).join('')||'<div class="empty">No open tasks.</div>')+'</div>'
   +'</div></div>';
 }
+function leadsToCall(){const t=todayStr();return D('leads').filter(l=>['new','contacted','interested','call_back_later','follow_up'].includes(l.status)).sort((a,b)=>(a.next_follow_up||'0').localeCompare(b.next_follow_up||'0'))}
+function leadCallLI(l){const late=l.next_follow_up&&l.next_follow_up<=todayStr();return '<div class="li" onclick="openLead(\''+l.id+'\')"><div class="grow"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><span class="sm muted">'+esc([l.child_name,l.interested_course,LEAD_LABEL[l.status]].filter(Boolean).join(' • '))+'</span></div>'+(late?'<span class="b r">⏰ due</span>':'')+(l.phone?'<a class="btn sm" href="tel:'+esc(l.phone)+'" onclick="event.stopPropagation()" style="text-decoration:none">📞</a>':'')+'<a class="btn sm wa" target="_blank" rel="noopener" href="'+waLink(l.phone,l.parent_name,l.child_name)+'" onclick="event.stopPropagation()" style="text-decoration:none">💬</a></div>'}
 function dashboardTeacher(){
   const demos=D('classes').filter(c=>c.kind==='demo'&&c.status==='scheduled').sort((x,y)=>String(x.class_date||'9').localeCompare(String(y.class_date||'9')));
   const t=todayStr(),todays=D('classes').filter(c=>c.class_date===t&&c.status!=='cancelled');
   const upcoming=D('classes').filter(c=>c.class_date>t&&c.status==='scheduled').sort((a,b)=>a.class_date>b.class_date?1:-1).slice(0,5);
   const needAtt=D('classes').filter(c=>c.class_date<=t&&c.status!=='cancelled'&&!D('attendance').some(a=>a.class_id===c.id)).length;
   return '<div class="hero"><div><h2>'+greeting()+', '+esc((S.profile&&S.profile.full_name)||'')+' 👋</h2><p>'+todays.length+' class(es) today · '+needAtt+' without attendance</p></div><button class="btn pri" onclick="go(\'attendance\')">Mark attendance</button></div>'
-  +'<div class="grid kpis">'+kpi(T('Today\'s classes'),todays.length,'','classes')+kpi('My students',D('students').length,'','students')+kpi('Attendance due',needAtt,'classes to mark','attendance')+kpi('To review',D('submissions').filter(x=>x.status==='submitted').length,'assignment answers','assignments')+kpi('My demos',demos.length,'free demos assigned','classes')+kpi('Materials',D('materials').length,'in the library','materials')+'</div>'
+  +'<div class="grid kpis">'+kpi(T('Today\'s classes'),todays.length,'','classes')+kpi('My students',D('students').length,'','students')+kpi('Attendance due',needAtt,'classes to mark','attendance')+kpi('To review',D('submissions').filter(x=>x.status==='submitted').length,'assignment answers','assignments')+kpi('My leads',D('leads').length,leadsToCall().length+' to call','leads')+kpi('My demos',demos.length,'free demos assigned','classes')+kpi('Materials',D('materials').length,'in the library','materials')+'</div>'
+  +'<div class="card" style="margin-top:14px"><div class="hd"><h3>📞 Leads to call</h3><button class="btn sm" onclick="go(\'leads\')">All my leads</button></div>'+(leadsToCall().slice(0,6).map(leadCallLI).join('')||'<div class="empty">No leads assigned to you right now.</div>')+'</div>'
   +'<div class="card" style="margin-top:14px"><div class="hd"><h3>🎥 My demo classes</h3></div>'+(demos.map(c=>'<div class="li" onclick="openClass(\''+c.id+'\')"><div class="t">'+esc(c.class_date?fmtDate(c.class_date):'Date TBC')+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.class_time||'time to be confirmed',c.course_name,classMats(c.id).length?classMats(c.id).length+' material(s)':''].filter(Boolean).join(' • '))+'</span></div>'+(c.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.meet_link))+'" onclick="event.stopPropagation()" style="text-decoration:none">▶ Join</a>':'<span class="b o">Link soon</span>')+'</div>').join('')||'<div class="empty">No demo classes assigned yet. When the admin assigns you a demo, it shows here with the child\'s details and material.</div>')+'</div>'
   +'<div class="grid cols2" style="margin-top:14px"><div class="card"><div class="hd"><h3>'+T('Today\'s classes')+'</h3></div>'+(todays.map(classLI).join('')||'<div class="empty">No classes today.</div>')+'</div><div class="card"><div class="hd"><h3>Coming up</h3></div>'+(upcoming.map(classLI).join('')||'<div class="empty">Nothing scheduled.</div>')+'</div></div>';
 }
@@ -626,22 +629,23 @@ async function dropCard(ev,col){
   r[f]=v;render();
   const ok=await saveRecord(ent,id,{[f]:v});toast(ok?('Moved to '+(LEAD_LABEL[v]||titleCase(v))):'Move failed');if(!ok)await loadAll();else if(ent==='leads'&&isDemoSt(v))openDemoPlanner(id);
 }
+function ownerName(id){const p=D('profiles').find(x=>x.id===id);return p?(p.full_name||p.email||'Staff').split(' ')[0]:'Assigned'}
+async function assignLead(id,v){const ok=await saveRecord('leads',id,{assigned_to:v||null});if(ok){toast(v?'Assigned to '+ownerName(v)+' — a call task was added for them':'Unassigned');openLead(id)}}
 function leadCard(l){
   const fu=l.next_follow_up,late=fu&&fu<=todayStr();
-  return '<div class="kcard" draggable="true" ondragstart="dragStart(event,\''+l.id+'\')" ondragend="this.classList.remove(\'dragging\')" onclick="openLead(\''+l.id+'\')"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><div class="sm muted">'+esc((l.child_name||'—')+(l.child_age?' · '+l.child_age:''))+'</div>'+(l.interested_course?'<div class="sm">'+esc(l.interested_course)+'</div>':'')+'<div class="row" style="margin-top:6px;gap:6px">'+(fu?'<span class="b '+(late?'r':'bl')+'">'+(late?'⏰ ':'')+fmtDate(fu)+'</span>':'')+(l.demo_date?'<span class="b p">Demo '+esc(l.demo_date)+'</span>':'')+'</div></div>';
+  return '<div class="kcard" draggable="true" ondragstart="dragStart(event,\''+l.id+'\')" ondragend="this.classList.remove(\'dragging\')" onclick="openLead(\''+l.id+'\')"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><div class="sm muted">'+esc((l.child_name||'—')+(l.child_age?' · '+l.child_age:''))+'</div>'+(l.interested_course?'<div class="sm">'+esc(l.interested_course)+'</div>':'')+'<div class="row" style="margin-top:6px;gap:6px">'+(fu?'<span class="b '+(late?'r':'bl')+'">'+(late?'⏰ ':'')+fmtDate(fu)+'</span>':'')+(l.demo_date?'<span class="b p">Demo '+esc(l.demo_date)+'</span>':'')+(isAdmin()?'<span class="b '+(l.assigned_to?'':'o')+'">'+esc(l.assigned_to?ownerName(l.assigned_to):'Unassigned')+'</span>':'')+'</div></div>';
 }
 VIEWS.dashboard=()=>S.role==='teacher'?dashboardTeacher():isFamily()?dashboardFamily():dashboardAdmin();
 VIEWS.leads=()=>{
   const m=S.ui.leadMode||'board';
   const tb='<div class="seg"><button class="'+(m==='board'?'on':'')+'" onclick="S.ui.leadMode=\'board\';render()">'+T('Board')+'</button><button class="'+(m==='list'?'on':'')+'" onclick="S.ui.leadMode=\'list\';render()">'+T('List')+'</button></div>'
-   +'<button class="btn" onclick="openImport()">⬆ Import</button>';
+   +(S.role==='teacher'?'':'<button class="btn" onclick="openImport()">⬆ Import</button>');
   if(m==='list')return listView('leads',{toolbar:tb});
   const q=(S.ui.leadQ||'').toLowerCase();
-  const ff=q?(l=>[l.parent_name,l.phone,l.child_name,l.city,l.interested_course].some(v=>String(v||'').toLowerCase().includes(q))):null;
-  return '<div class="row" style="margin-bottom:12px"><div class="grow"><input placeholder="🔎 Search leads…" value="'+esc(S.ui.leadQ||'')+'" oninput="S.ui.leadQ=this.value;clearTimeout(S.ui.lt);S.ui.lt=setTimeout(()=>{const k=$(\'kanWrap\');if(k)k.innerHTML=kanbanLeads()},250)"></div>'+tb+'<button class="btn pri" onclick="addRecord(\'leads\')">＋ '+T('Add')+' lead</button></div>'
+  return '<div class="row" style="margin-bottom:12px">'+(isAdmin()?'<select style="width:auto" onchange="S.ui.leadAs=this.value;$(\'kanWrap\').innerHTML=kanbanLeads()"><option value="">All owners</option><option value="none"'+(S.ui.leadAs==='none'?' selected':'')+'>Unassigned</option>'+staffList().map(p=>'<option value="'+esc(p.id)+'"'+(S.ui.leadAs===p.id?' selected':'')+'>'+esc(p.full_name||p.email)+'</option>').join('')+'</select>':'')+'<div class="grow"><input placeholder="🔎 Search leads…" value="'+esc(S.ui.leadQ||'')+'" oninput="S.ui.leadQ=this.value;clearTimeout(S.ui.lt);S.ui.lt=setTimeout(()=>{const k=$(\'kanWrap\');if(k)k.innerHTML=kanbanLeads()},250)"></div>'+tb+(S.role==='teacher'?'':'<button class="btn pri" onclick="addRecord(\'leads\')">＋ '+T('Add')+' lead</button>')+'</div>'
    +'<div id="kanWrap">'+kanbanLeads()+'</div><div class="sm muted" style="margin-top:6px">Drag a card to another column to change its status. <span class="sync">⇄ Two-way with Google Sheet</span></div>';
 };
-function kanbanLeads(){const q=(S.ui.leadQ||'').toLowerCase();const ff=q?(l=>[l.parent_name,l.phone,l.child_name,l.city,l.interested_course].some(v=>String(v||'').toLowerCase().includes(q))):null;return kanban('leads','status',LEAD_ST.map(x=>[x[0],x[1]]),leadCard,ff)}
+function kanbanLeads(){const q=(S.ui.leadQ||'').toLowerCase();const as=S.ui.leadAs||'';const ff=(q||as)?(l=>(!q||[l.parent_name,l.phone,l.child_name,l.city,l.interested_course].some(v=>String(v||'').toLowerCase().includes(q)))&&(!as||(as==='none'?!l.assigned_to:l.assigned_to===as))):null;return kanban('leads','status',LEAD_ST.map(x=>[x[0],x[1]]),leadCard,ff)}
 
 async function openLead(id){
   const r=byId('leads',id)||{};
@@ -649,8 +653,9 @@ async function openLead(id){
   const contact=id?'<div class="row" style="margin-bottom:12px"><a class="btn wa" target="_blank" rel="noopener" href="'+waLink(r.phone,r.parent_name,r.child_name)+'" style="text-decoration:none">💬 WhatsApp</a>'+(r.phone?'<a class="btn" href="tel:'+esc(r.phone)+'" style="text-decoration:none">📞 Call</a>':'')+'<button class="btn" onclick="taskForLead(\''+id+'\')">☑ Add follow-up task</button>'+(r.status!=='enrolled'&&!r.converted_student_id&&canEdit('students')?'<button class="btn pink" onclick="enrolLead(\''+id+'\')">🎓 Enrol as student</button>':'')+'</div>':'';
   const dc=id?D('classes').filter(c=>c.lead_id===id&&c.status==='scheduled')[0]:null;
   const demoBox=dc?'<div class="card" style="background:#fff8f2;margin-bottom:12px"><b>🎥 Demo class</b><div class="sm muted" style="margin:4px 0 8px">'+(dc.class_date&&dc.class_time?'On the Calendar: '+fmtDate(dc.class_date)+' · '+esc(dc.class_time)+(dc.teacher_name?' · '+esc(dc.teacher_name):' · <b>no teacher picked yet</b>'):'Time not confirmed yet — add the demo date and time below.')+'</div><div class="row">'+(dc.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(dc.meet_link))+'" style="text-decoration:none">▶ Open Meet link</a><button class="btn sm" onclick="navigator.clipboard.writeText(\''+esc(safeUrl(dc.meet_link))+'\').then(()=>toast(\'Meet link copied ✓\'))">📋 Copy link</button>':'<span class="sm muted">Meet link is being created…</span>')+'<button class="btn sm" onclick="closeDrawer();openClass(\''+dc.id+'\')">Choose teacher / edit class</button></div></div>':'';
+  const assignBox=id&&isAdmin()?'<div class="card" style="margin-bottom:12px"><b>👤 Assigned to</b><div class="row" style="margin-top:6px"><select class="grow" onchange="assignLead(\''+id+'\',this.value)"><option value="">Unassigned</option>'+staffList().map(p=>'<option value="'+esc(p.id)+'"'+(r.assigned_to===p.id?' selected':'')+'>'+esc((p.full_name||p.email)+' ('+p.role+')')+'</option>').join('')+'</select></div><div class="sm muted" style="margin-top:4px">They see this lead with phone number, can call or WhatsApp, and update the status. A "call" task is added for them.</div></div>':'';
   const bottom=id?'<div style="margin-top:16px"><b class="sm">History</b><div class="hist" id="leadHist">Loading…</div></div>':'';
-  editor('leads',id,null,chips+contact+demoBox,bottom);
+  editor('leads',id,null,assignBox+chips+contact+demoBox,bottom);
   if(id){const {data,error}=await sb.from('lead_events').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(25);
     const el=$('leadHist');if(el)el.innerHTML=error?'Could not load history':(data&&data.length?data.map(h=>'<div>'+fmtDT(h.created_at)+' — '+esc(LEAD_LABEL[h.from_status]||h.from_status||'')+' → <b>'+esc(LEAD_LABEL[h.to_status]||h.to_status)+'</b></div>').join(''):'No status changes yet')}
 }
