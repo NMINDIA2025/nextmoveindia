@@ -169,7 +169,7 @@ tr:last-child td{border-bottom:0}
   <aside class="side">
     <div class="brand"><div class="logo">N</div><div><b>Next Move India</b><span>Learn • Lead • Rise</span></div></div>
     <div class="nav" id="nav"></div>
-    <div class="sidefoot"><div class="me"><div class="av" id="meAv">N</div><div style="min-width:0"><b id="meName">…</b><span id="meRole"></span></div><button title="Sign out" onclick="signOut()">⎋</button></div></div>
+    <div class="sidefoot"><div class="me"><div class="av" id="meAv">N</div><div style="min-width:0"><b id="meName" style="cursor:pointer" title="Click to change your name" onclick="editMyName()">…</b><span id="meRole"></span></div><button title="Sign out" onclick="signOut()">⎋</button></div></div>
   </aside>
   <div class="main">
     <div class="topbar">
@@ -210,6 +210,13 @@ const addDays=(s,n)=>{const d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);r
 function fmtDate(v){if(!v)return '—';const d=new Date(String(v).length<=10?v+'T00:00:00':v);return isNaN(d)?esc(v):d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'})}
 function fmtDT(v){if(!v)return '';const d=new Date(v);return isNaN(d)?'':d.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
 function money(n){return n==null||n===''?'—':'₹'+Number(n).toLocaleString('en-IN')}
+async function editMyName(){
+  const cur=(S.profile&&S.profile.full_name)||'';const nm=prompt('Your name (shown in greetings):',cur);
+  if(nm===null||!nm.trim()||nm.trim()===cur)return;
+  const {error}=await sb.from('profiles').update({full_name:nm.trim()}).eq('id',S.user.id);
+  if(error){toast('Could not save: '+error.message,5000);return}
+  S.profile.full_name=nm.trim();$('meName').textContent=nm.trim();$('meAv').textContent=initials(nm.trim());toast('Name updated ✓');render();
+}
 function toast(s,ms){const t=$('toast');t.textContent=s;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',ms||2600)}
 function titleCase(s){return String(s||'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
 function initials(s){return String(s||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'?'}
