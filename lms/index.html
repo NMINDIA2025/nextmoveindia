@@ -59,7 +59,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid #ff7a1a55;border-color
 .card .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
 .muted{color:var(--muted)}.sm{font-size:12px}
 .grid{display:grid;gap:14px}
-.kpis{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 .kpi{position:relative;overflow:hidden;cursor:pointer}
 .kpi .l{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
 .kpi .n{font-size:30px;font-weight:900;letter-spacing:-.04em;margin-top:6px}
@@ -68,6 +68,21 @@ input:focus,select:focus,textarea:focus{outline:2px solid #ff7a1a55;border-color
 .cols2{grid-template-columns:1.5fr 1fr}.cols3{grid-template-columns:repeat(3,1fr)}
 .hero{border-radius:22px;padding:24px 28px;color:#fff;background:linear-gradient(120deg,#ff8a1f,#ff4f7b 60%,#d9328f);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px;box-shadow:0 16px 40px #ff4f7b30}
 .hero h2{margin:0 0 4px;font-size:22px}.hero p{margin:0;opacity:.92}
+.hero.big{background:radial-gradient(900px 300px at 100% 0,#ff4f7b88,#0000),linear-gradient(120deg,#2a0f3a,#4a1766 55%,#8a2a8f);padding:28px 32px;box-shadow:0 20px 50px #2a0f3a40}
+.hero.big h2{font-size:28px;letter-spacing:-.02em}.hero.big p{font-size:14px}
+.hero .btn{border-color:#ffffff40}.hero.big .btn:not(.pri){background:#ffffff1a;color:#fff}
+.kpi.k{padding:18px 18px 16px;border-top:4px solid var(--kc,#ff7a1a)}
+.kpi.k .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:color-mix(in srgb,var(--kc,#ff7a1a) 15%,#fff);margin-bottom:8px}
+.kpi.k .n{font-size:34px;color:var(--ink)}
+.alerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:14px 0}
+.alert{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:16px;cursor:pointer;color:#fff;font-weight:700;box-shadow:var(--shadow);transition:transform .12s}
+.alert:hover{transform:translateY(-2px)}.alert b{font-size:28px;line-height:1;letter-spacing:-.03em}.alert span{font-size:12px;opacity:.95;line-height:1.25}
+.alert.a1{background:linear-gradient(135deg,#ff7a1a,#ff4f7b)}.alert.a2{background:linear-gradient(135deg,#e0475b,#a3213f)}.alert.a3{background:linear-gradient(135deg,#7a4dff,#4d7cff)}.alert.a4{background:linear-gradient(135deg,#12a36b,#0b7a50)}.alert.zero{background:#fff;color:var(--muted);border:1px solid var(--line);box-shadow:none}.alert.zero b{color:var(--ink)}
+.funx{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px}.funx>span{width:132px;flex:none;font-weight:600}.funx .bar{flex:1;height:14px;border-radius:8px;background:#f3eef8;overflow:hidden}.funx .bar i{display:block;height:100%;border-radius:8px}.funx b{width:34px;text-align:right}
+.team{width:100%;font-size:13px}.team th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:6px 8px}.team td{padding:9px 8px}.team tr{cursor:pointer}.team tbody tr:hover{background:#faf5ff}
+.pill{display:inline-block;min-width:26px;text-align:center;padding:2px 8px;border-radius:99px;font-weight:800;font-size:12px;background:#f3eef8}.pill.r{background:#fde4e8;color:#b3263f}.pill.o{background:#fff0e2;color:#c25a00}
+.tl{border-left:2px solid var(--line);margin:6px 0 0 6px;padding-left:14px}.tl>div{position:relative;margin:0 0 10px;font-size:13px}.tl>div:before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--c,#ff7a1a);border:2px solid #fff}
+@media(max-width:760px){.hero.big{padding:20px}.hero.big h2{font-size:22px}.funx>span{width:96px}.team{font-size:12px}}
 /* table */
 .tw{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
 table{width:100%;border-collapse:collapse}
@@ -498,7 +513,7 @@ function render(){
 const AFTER={};const VIEWS={};
 
 /* ================= Dashboard ================= */
-function kpi(label,num,sub,go_){return '<div class="card kpi" onclick="'+(go_?"go('"+go_+"')":'')+'"><div class="l">'+esc(label)+'</div><div class="n">'+num+'</div><div class="s">'+esc(sub||'')+'</div></div>'}
+function kpi(label,num,sub,go_,ic,col){return '<div class="card kpi'+(ic?' k':'')+'"'+(col?' style="--kc:'+col+'"':'')+' onclick="'+(go_?"go('"+go_+"')":'')+'">'+(ic?'<div class="ic">'+ic+'</div>':'')+'<div class="l">'+esc(label)+'</div><div class="n">'+num+'</div><div class="s">'+esc(sub||'')+'</div></div>'}
 function classLI(c){return '<div class="li" onclick="openClass(\''+c.id+'\')"><div class="t">'+esc(c.class_time||fmtDate(c.class_date))+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.teacher_name,c.course_name].filter(Boolean).join(' • '))+'</span></div>'+(c.meet_link&&c.status==='scheduled'?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.meet_link))+'" onclick="event.stopPropagation()" style="text-decoration:none">▶ Join</a>':'')+bd(c.kind,'p')+'</div>'}
 function leadLI(l){return '<div class="li" onclick="openLead(\''+l.id+'\')"><div class="grow"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><span class="sm muted">'+esc((l.child_name||'')+(l.child_age?' · '+l.child_age:'')+(l.interested_course?' · '+l.interested_course:''))+'</span></div><div style="text-align:right">'+bd(l.status,LEAD_COLOR[l.status])+'<span class="sm muted">'+(l.next_follow_up?'follow-up '+fmtDate(l.next_follow_up):'')+'</span></div></div>'}
 function taskLI(t){return '<div class="li" onclick="editor(\'tasks\',\''+t.id+'\')"><input type="checkbox" style="width:auto" '+(t.status==='done'?'checked':'')+' onclick="event.stopPropagation();toggleTask(\''+t.id+'\',this.checked)"><div class="grow"><b>'+esc(t.title)+'</b><span class="sm muted">'+esc(t.assignee_name||'')+'</span></div>'+bd(t.priority)+'<span class="sm">'+fmtDate(t.due_date)+'</span></div>'}
@@ -506,30 +521,54 @@ async function toggleTask(id,done){await saveRecord('tasks',id,{status:done?'don
 function dueLeads(){const t=todayStr();return D('leads').filter(l=>l.next_follow_up&&l.next_follow_up<=t&&!['enrolled','not_interested'].includes(l.status)).sort((a,b)=>a.next_follow_up>b.next_follow_up?1:-1)}
 function greeting(){const h=new Date().getHours();return T('Good morning').replace('Good morning',h<12?'Good morning':h<17?'Good afternoon':'Good evening')}
 
+const OPEN_ST=['new','contacted','interested','call_back_later','follow_up','demo_scheduled','demo_rescheduled','demo_completed'];
+function staleLeads(){const lim=Date.now()-3*864e5;return D('leads').filter(l=>['new','contacted','interested','call_back_later','follow_up'].includes(l.status)&&new Date(l.last_contact_at||l.created_at||0).getTime()<lim)}
+function filterLeads(v){S.ui.leadAs=v==='none'||/^[0-9a-f-]{20,}$/.test(v)?v:'';S.ui.leadMode='board';go('leads')}
+function sparkInflow(L){const days=[];for(let i=13;i>=0;i--)days.push(addDays(todayStr(),-i));const c=days.map(d=>L.filter(l=>String(l.created_at||'').slice(0,10)===d).length);const m=Math.max(1,...c);
+  return '<svg viewBox="0 0 280 70" style="width:100%;height:80px">'+c.map((n,i)=>'<rect x="'+(i*20+2)+'" y="'+(62-n/m*56)+'" width="14" height="'+(n/m*56+2)+'" rx="4" fill="'+(i===13?'#ff4f7b':'#d8c6ee')+'"><title>'+days[i]+': '+n+'</title></rect>').join('')+'</svg><div class="sm muted">New leads per day, last 14 days · '+c.reduce((x,y)=>x+y,0)+' total</div>'}
+function teamTable(){
+  const L=D('leads'),t=todayStr(),st=staleLeads();
+  const rows=staffList().map(p=>{const mine=L.filter(l=>l.assigned_to===p.id);const open=mine.filter(l=>!['enrolled','not_interested','not_reachable'].includes(l.status));const od=open.filter(l=>l.next_follow_up&&l.next_follow_up<t).length;const sl=st.filter(l=>l.assigned_to===p.id).length;const dm=mine.filter(l=>isDemoSt(l.status)).length;const en=mine.filter(l=>l.status==='enrolled').length;
+    return {p,n:mine.length,open:open.length,od,sl,dm,en}}).filter(r=>r.n||r.p.role!=='admin').sort((a,b)=>b.open-a.open);
+  return '<table class="team"><thead><tr><th>Team member</th><th>Open</th><th>Overdue</th><th>No contact 3d+</th><th>Demos</th><th>Enrolled</th></tr></thead><tbody>'
+   +(rows.map(r=>'<tr onclick="filterLeads(\''+r.p.id+'\')"><td><b>'+esc(r.p.full_name||r.p.email)+'</b> <span class="sm muted">'+esc(r.p.role)+'</span></td><td><span class="pill">'+r.open+'</span></td><td><span class="pill'+(r.od?' r':'')+'">'+r.od+'</span></td><td><span class="pill'+(r.sl?' o':'')+'">'+r.sl+'</span></td><td><span class="pill">'+r.dm+'</span></td><td><span class="pill">'+r.en+'</span></td></tr>').join('')||'<tr><td colspan="6" class="muted">No team members yet. Add them under Team.</td></tr>')+'</tbody></table>';
+}
 function dashboardAdmin(){
-  const t=todayStr(),L=D('leads'),due=dueLeads();
+  const t=todayStr(),L=D('leads'),due=dueLeads(),isA=isAdmin();
   const todays=D('classes').filter(c=>c.class_date===t&&c.status!=='cancelled').sort((a,b)=>String(a.class_time).localeCompare(String(b.class_time)));
   const pend=D('payments').filter(p=>['pending','overdue'].includes(p.status));
   const pendSum=pend.reduce((s,p)=>s+Number(p.amount||0),0);
   const openT=D('tasks').filter(x=>x.status!=='done');
-  const active=L.filter(l=>!['enrolled','not_interested','not_reachable'].includes(l.status));
   const conv=L.length?Math.round(100*L.filter(l=>l.status==='enrolled').length/L.length):0;
-  const isA=isAdmin();
+  const unassigned=L.filter(l=>!l.assigned_to&&!['enrolled','not_interested','not_reachable'].includes(l.status));
+  const overdue=due.filter(l=>l.next_follow_up<t),stale=staleLeads();
+  const demos=D('classes').filter(c=>c.kind==='demo'&&c.status==='scheduled').sort((x,y)=>String(x.class_date||'9').localeCompare(String(y.class_date||'9')));
   const mx=Math.max(1,...LEAD_ST.map(s=>L.filter(l=>l.status===s[0]).length));
-  return '<div class="hero"><div><h2>'+greeting()+', '+esc((S.profile&&S.profile.full_name)||'')+' 👋</h2><p>'+due.length+' follow-up'+(due.length===1?'':'s')+' due · '+todays.length+' class'+(todays.length===1?'':'es')+' today · '+L.filter(l=>l.status==='new').length+' new lead(s) waiting</p></div><div class="row"><button class="btn pri" onclick="go(\'leads\')">Open leads</button>'+(isA?'<button class="btn" onclick="addRecord(\'classes\')">＋ Class</button>':'')+'<button class="btn" onclick="addRecord(\'tasks\')">＋ Task</button></div></div>'
+  const FC={new:'#4d7cff',contacted:'#7a4dff',interested:'#ff7a1a',call_back_later:'#e0a200',demo_scheduled:'#d9328f',demo_rescheduled:'#d9328f',demo_completed:'#12a36b',follow_up:'#ff7a1a',enrolled:'#0b7a50',not_interested:'#e0475b',not_reachable:'#a3213f'};
+  const al=(cls,n,txt,fn)=>'<div class="alert '+(n?cls:'zero')+'" onclick="'+fn+'"><b>'+n+'</b><span>'+txt+'</span></div>';
+  const src={};L.forEach(l=>{const k=l.source||'unknown';src[k]=(src[k]||0)+1});const srcs=Object.entries(src).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  return '<div class="hero big"><div><div class="sm" style="opacity:.8;letter-spacing:.08em;text-transform:uppercase;font-weight:800">'+new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})+'</div><h2>'+greeting()+', '+esc((S.profile&&S.profile.full_name)||'')+'</h2><p>'+L.filter(l=>l.status==='new').length+' new lead(s) · '+due.length+' follow-up'+(due.length===1?'':'s')+' due · '+todays.length+' class'+(todays.length===1?'':'es')+' today</p></div><div class="row"><button class="btn pri" onclick="go(\'leads\')">🎯 Open leads</button>'+(isA?'<button class="btn" onclick="openBulkAssign()">👥 Assign leads</button><button class="btn" onclick="addRecord(\'classes\')">＋ Class</button>':'')+'<button class="btn" onclick="addRecord(\'tasks\')">＋ Task</button></div></div>'
+  +'<div class="alerts">'
+  +(isA?al('a1',unassigned.length,'Leads not assigned to anyone','openBulkAssign()'):'')
+  +al('a2',overdue.length,'Follow-ups overdue','go(\'leads\')')
+  +al('a3',stale.length,'Leads with no contact for 3+ days','go(\'leads\')')
+  +al('a4',todays.filter(c=>c.kind==='demo').length,'Demo classes today','go(\'classes\')')
+  +'</div>'
   +'<div class="grid kpis">'
-  +kpi(T('New leads'),L.filter(l=>l.status==='new').length,L.length+' total leads','leads')
-  +kpi(T('Follow-ups due'),due.length,'today or overdue','leads')
-  +kpi('Conversion',conv+'%',L.filter(l=>l.status==='enrolled').length+' enrolled','leads')
-  +(isA?kpi(T('Active students'),D('students').filter(s=>s.status==='active').length,D('students').length+' on record','students'):'')
-  +(isA?kpi(T('Pending payments'),money(pendSum),pend.length+' record(s)','payments'):'')
-  +kpi(T('Open tasks'),openT.length,openT.filter(x=>x.due_date&&x.due_date<t).length+' overdue','tasks')
-  +kpi('To review',D('submissions').filter(x=>x.status==='submitted').length,'assignment answers','assignments')
+  +kpi(T('New leads'),L.filter(l=>l.status==='new').length,L.length+' total leads','leads','🆕','#4d7cff')
+  +kpi('Conversion',conv+'%',L.filter(l=>l.status==='enrolled').length+' enrolled','leads','📈','#12a36b')
+  +(isA?kpi(T('Active students'),D('students').filter(s=>s.status==='active').length,D('students').length+' on record','students','🎓','#7a4dff'):'')
+  +(isA?kpi(T('Pending payments'),money(pendSum),pend.length+' record(s)','payments','₹','#e0475b'):'')
+  +kpi(T('Open tasks'),openT.length,openT.filter(x=>x.due_date&&x.due_date<t).length+' overdue','tasks','☑','#ff7a1a')
+  +kpi('To review',D('submissions').filter(x=>x.status==='submitted').length,'assignment answers','assignments','📝','#d9328f')
   +'</div><div class="grid cols2" style="margin-top:14px"><div class="grid">'
+  +(isA?'<div class="card"><div class="hd"><h3>👥 Team workload</h3><button class="btn sm" onclick="openBulkAssign()">Assign leads</button></div>'+teamTable()+'<div class="sm muted" style="margin-top:6px">Click a person to see their leads.</div></div>':'')
   +'<div class="card"><div class="hd"><h3>📞 '+T('Follow-ups due')+'</h3><button class="btn sm" onclick="go(\'leads\')">All leads</button></div>'+(due.slice(0,6).map(leadLI).join('')||'<div class="empty">You are all caught up 🎉</div>')+'</div>'
   +(S.role==='counselor'?'':'<div class="card"><div class="hd"><h3>📅 '+T('Today\'s classes')+'</h3><button class="btn sm" onclick="go(\'classes\')">Calendar</button></div>'+(todays.map(classLI).join('')||'<div class="empty">No classes today.</div>')+'</div>')
   +'</div><div class="grid">'
-  +'<div class="card"><div class="hd"><h3>Lead funnel</h3></div>'+LEAD_ST.map(s=>{const n=L.filter(l=>l.status===s[0]).length;return '<div class="fun"><span>'+esc(s[1])+'</span><div class="bar"><i style="width:'+Math.round(100*n/mx)+'%"></i></div><b>'+n+'</b></div>'}).join('')+'</div>'
+  +'<div class="card"><div class="hd"><h3>Lead funnel</h3></div>'+LEAD_ST.map(s=>{const n=L.filter(l=>l.status===s[0]).length;return '<div class="funx"><span>'+esc(s[1])+'</span><div class="bar"><i style="width:'+Math.round(100*n/mx)+'%;background:'+FC[s[0]]+'"></i></div><b>'+n+'</b></div>'}).join('')+'</div>'
+  +'<div class="card"><div class="hd"><h3>New leads</h3></div>'+sparkInflow(L)+(srcs.length?'<div style="margin-top:10px">'+srcs.map(([k,n])=>'<div class="funx"><span>'+esc(titleCase(k))+'</span><div class="bar"><i style="width:'+Math.round(100*n/srcs[0][1])+'%;background:#ff7a1a"></i></div><b>'+n+'</b></div>').join('')+'</div>':'')+'</div>'
+  +'<div class="card"><div class="hd"><h3>🎥 Upcoming demos</h3><button class="btn sm" onclick="go(\'classes\')">Classes</button></div>'+(demos.slice(0,5).map(c=>'<div class="li" onclick="openClass(\''+c.id+'\')"><div class="t">'+esc(c.class_date?fmtDate(c.class_date):'TBC')+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.class_time,c.teacher_name||'no teacher yet'].filter(Boolean).join(' • '))+'</span></div>'+(c.meet_link?'<span class="b g">Meet ✓</span>':'<span class="b o">Link soon</span>')+'</div>').join('')||'<div class="empty">No demos booked.</div>')+'</div>'
   +'<div class="card"><div class="hd"><h3>☑ '+T('Open tasks')+'</h3><button class="btn sm" onclick="go(\'tasks\')">Board</button></div>'+(openT.slice(0,5).map(taskLI).join('')||'<div class="empty">No open tasks.</div>')+'</div>'
   +'</div></div>';
 }
@@ -626,8 +665,28 @@ async function dropCard(ev,col){
   const ent=col.dataset.ent,f=col.dataset.field,v=col.dataset.val;
   const r=byId(ent,id);if(!r||r[f]===v)return;
   if(!canEdit(ent)){toast('You have view-only access');return}
+  let extra={};if(ent==='leads'&&['not_interested','not_reachable'].includes(v)){const why=r.lost_reason||prompt('Why is this lead lost? (required)','');if(!why||!why.trim()){toast('A reason is needed to mark a lead as lost');return}extra={lost_reason:why.trim()}}
   r[f]=v;render();
-  const ok=await saveRecord(ent,id,{[f]:v});toast(ok?('Moved to '+(LEAD_LABEL[v]||titleCase(v))):'Move failed');if(!ok)await loadAll();else if(ent==='leads'&&isDemoSt(v))openDemoPlanner(id);
+  const ok=await saveRecord(ent,id,Object.assign({[f]:v},extra));toast(ok?('Moved to '+(LEAD_LABEL[v]||titleCase(v))):'Move failed');if(!ok)await loadAll();else if(ent==='leads'&&isDemoSt(v))openDemoPlanner(id);
+}
+
+/* ================= Bulk assign (admin) ================= */
+function openBulkAssign(){
+  if(!isAdmin())return;
+  const mode=S.ui.bulkMode||'unassigned';
+  const rows=D('leads').filter(l=>!['enrolled','not_interested','not_reachable'].includes(l.status)&&(mode==='all'||!l.assigned_to)).sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at))).slice(0,200);
+  openDrawer('<div class="dh"><div><div class="sm muted">Leads</div><h2>Assign leads</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="row" style="margin-bottom:10px"><div class="seg"><button class="'+(mode==='unassigned'?'on':'')+'" onclick="S.ui.bulkMode=\'unassigned\';openBulkAssign()">Not assigned</button><button class="'+(mode==='all'?'on':'')+'" onclick="S.ui.bulkMode=\'all\';openBulkAssign()">All open leads</button></div><label class="sm"><input type="checkbox" onchange="document.querySelectorAll(\'.bk\').forEach(x=>x.checked=this.checked)"> Select all ('+rows.length+')</label></div>'
+   +'<div style="max-height:52vh;overflow:auto;border:1px solid var(--line);border-radius:12px">'+(rows.map(l=>'<label class="li" style="cursor:pointer"><input type="checkbox" class="bk" value="'+l.id+'"><div class="grow"><b>'+esc(l.parent_name||l.phone||'Lead')+'</b><span class="sm muted">'+esc([l.child_name,l.interested_course,LEAD_LABEL[l.status],l.assigned_to?'→ '+ownerName(l.assigned_to):''].filter(Boolean).join(' • '))+'</span></div></label>').join('')||'<div class="empty">Every open lead is already assigned 🎉</div>')+'</div>'
+   +'<div class="row" style="margin-top:12px"><select id="bkTo" class="grow"><option value="">Choose who gets these leads…</option>'+staffList().map(p=>'<option value="'+esc(p.id)+'">'+esc((p.full_name||p.email)+' ('+p.role+')')+'</option>').join('')+'</select><button class="btn pri" onclick="doBulkAssign()">Assign selected</button></div>'
+   +'<div class="sm muted" style="margin-top:6px">Each person gets a "call this lead" task for every lead assigned to them.</div>');
+}
+async function doBulkAssign(){
+  const ids=[...document.querySelectorAll('.bk:checked')].map(x=>x.value),to=$('bkTo').value;
+  if(!ids.length){toast('Tick at least one lead');return}if(!to){toast('Choose who should get them');return}
+  const {error}=await sb.from('leads').update({assigned_to:to}).in('id',ids);
+  if(error){toast('Could not assign: '+error.message,5000);return}
+  await loadAll(true);toast(ids.length+' lead(s) assigned to '+ownerName(to)+' ✓');openBulkAssign();
 }
 function ownerName(id){const p=D('profiles').find(x=>x.id===id);return p?(p.full_name||p.email||'Staff').split(' ')[0]:'Assigned'}
 async function assignLead(id,v){const ok=await saveRecord('leads',id,{assigned_to:v||null});if(ok){toast(v?'Assigned to '+ownerName(v)+' — a call task was added for them':'Unassigned');openLead(id)}}
@@ -639,7 +698,7 @@ VIEWS.dashboard=()=>S.role==='teacher'?dashboardTeacher():isFamily()?dashboardFa
 VIEWS.leads=()=>{
   const m=S.ui.leadMode||'board';
   const tb='<div class="seg"><button class="'+(m==='board'?'on':'')+'" onclick="S.ui.leadMode=\'board\';render()">'+T('Board')+'</button><button class="'+(m==='list'?'on':'')+'" onclick="S.ui.leadMode=\'list\';render()">'+T('List')+'</button></div>'
-   +(S.role==='teacher'?'':'<button class="btn" onclick="openImport()">⬆ Import</button>');
+   +(isAdmin()?'<button class="btn" onclick="openBulkAssign()">👥 Bulk assign</button>':'')+(S.role==='teacher'?'':'<button class="btn" onclick="openImport()">⬆ Import</button>');
   if(m==='list')return listView('leads',{toolbar:tb});
   const q=(S.ui.leadQ||'').toLowerCase();
   return '<div class="row" style="margin-bottom:12px">'+(isAdmin()?'<select style="width:auto" onchange="S.ui.leadAs=this.value;$(\'kanWrap\').innerHTML=kanbanLeads()"><option value="">All owners</option><option value="none"'+(S.ui.leadAs==='none'?' selected':'')+'>Unassigned</option>'+staffList().map(p=>'<option value="'+esc(p.id)+'"'+(S.ui.leadAs===p.id?' selected':'')+'>'+esc(p.full_name||p.email)+'</option>').join('')+'</select>':'')+'<div class="grow"><input placeholder="🔎 Search leads…" value="'+esc(S.ui.leadQ||'')+'" oninput="S.ui.leadQ=this.value;clearTimeout(S.ui.lt);S.ui.lt=setTimeout(()=>{const k=$(\'kanWrap\');if(k)k.innerHTML=kanbanLeads()},250)"></div>'+tb+(S.role==='teacher'?'':'<button class="btn pri" onclick="addRecord(\'leads\')">＋ '+T('Add')+' lead</button>')+'</div>'
@@ -654,10 +713,31 @@ async function openLead(id){
   const dc=id?D('classes').filter(c=>c.lead_id===id&&c.status==='scheduled')[0]:null;
   const demoBox=dc?'<div class="card" style="background:#fff8f2;margin-bottom:12px"><b>🎥 Demo class</b><div class="sm muted" style="margin:4px 0 8px">'+(dc.class_date&&dc.class_time?'On the Calendar: '+fmtDate(dc.class_date)+' · '+esc(dc.class_time)+(dc.teacher_name?' · '+esc(dc.teacher_name):' · <b>no teacher picked yet</b>'):'Time not confirmed yet — add the demo date and time below.')+'</div><div class="row">'+(dc.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(dc.meet_link))+'" style="text-decoration:none">▶ Open Meet link</a><button class="btn sm" onclick="navigator.clipboard.writeText(\''+esc(safeUrl(dc.meet_link))+'\').then(()=>toast(\'Meet link copied ✓\'))">📋 Copy link</button>':'<span class="sm muted">Meet link is being created…</span>')+'<button class="btn sm" onclick="closeDrawer();openClass(\''+dc.id+'\')">Choose teacher / edit class</button></div></div>':'';
   const assignBox=id&&isAdmin()?'<div class="card" style="margin-bottom:12px"><b>👤 Assigned to</b><div class="row" style="margin-top:6px"><select class="grow" onchange="assignLead(\''+id+'\',this.value)"><option value="">Unassigned</option>'+staffList().map(p=>'<option value="'+esc(p.id)+'"'+(r.assigned_to===p.id?' selected':'')+'>'+esc((p.full_name||p.email)+' ('+p.role+')')+'</option>').join('')+'</select></div><div class="sm muted" style="margin-top:4px">They see this lead with phone number, can call or WhatsApp, and update the status. A "call" task is added for them.</div></div>':'';
-  const bottom=id?'<div style="margin-top:16px"><b class="sm">History</b><div class="hist" id="leadHist">Loading…</div></div>':'';
-  editor('leads',id,null,assignBox+chips+contact+demoBox,bottom);
-  if(id){const {data,error}=await sb.from('lead_events').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(25);
-    const el=$('leadHist');if(el)el.innerHTML=error?'Could not load history':(data&&data.length?data.map(h=>'<div>'+fmtDT(h.created_at)+' — '+esc(LEAD_LABEL[h.from_status]||h.from_status||'')+' → <b>'+esc(LEAD_LABEL[h.to_status]||h.to_status)+'</b></div>').join(''):'No status changes yet')}
+  const logBox=id?'<div class="card" style="margin-bottom:12px;border-color:#ffd9b8"><b>📞 Log this call</b><div class="row" style="margin:8px 0"><select id="lgOut" class="grow" onchange="lgDef()">'+OUTCOMES.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join('')+'</select><input type="date" id="lgNext" value="'+esc(r.next_follow_up&&r.next_follow_up>=todayStr()?r.next_follow_up:addDays(todayStr(),2))+'" title="Next follow-up"></div><textarea id="lgNote" rows="2" placeholder="What was said? (parent\'s concern, budget, best time to call…)"></textarea><div class="act" style="margin-top:8px"><button class="btn pri" onclick="logCall(\''+id+'\')">Save call</button><span class="sm muted">Next follow-up date is saved on the lead.</span></div></div>':'';
+  const bottom=id?'<div style="margin-top:16px"><b class="sm">Timeline</b><div class="tl" id="leadHist">Loading…</div></div>':'';
+  editor('leads',id,null,assignBox+chips+contact+logBox+demoBox,bottom);
+  if(id)loadTimeline(id);
+}
+const OUTCOMES=[['spoke_interested','Spoke — interested'],['spoke_callback','Spoke — call back later'],['no_answer','No answer'],['wrong_number','Wrong number'],['not_interested','Spoke — not interested'],['sent_message','Sent WhatsApp / message'],['note','Note only']];
+const OUT_LABEL=Object.fromEntries(OUTCOMES.map(o=>[o[0],o[1]]));
+function lgDef(){const v=$('lgOut').value;if(v==='not_interested'||v==='note')$('lgNext').value=''; else if(!$('lgNext').value)$('lgNext').value=addDays(todayStr(),2)}
+async function loadTimeline(id){
+  const [ev,ac]=await Promise.all([sb.from('lead_events').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(40),sb.from('lead_activities').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(60)]);
+  const items=[].concat((ev.data||[]).map(h=>({t:h.created_at,c:'#4d7cff',h:'Status: '+esc(LEAD_LABEL[h.from_status]||h.from_status||'—')+' → <b>'+esc(LEAD_LABEL[h.to_status]||h.to_status)+'</b>'})),(ac.data||[]).map(a=>({t:a.created_at,c:'#ff7a1a',h:'<b>'+esc(a.actor_name||'Team')+'</b> · '+esc(OUT_LABEL[a.outcome]||titleCase(a.kind))+(a.note?'<div class="muted">'+esc(a.note)+'</div>':'')+(a.next_follow_up?'<div class="sm muted">Next follow-up: '+esc(fmtDate(a.next_follow_up))+'</div>':'')})));
+  items.sort((a,b)=>String(b.t).localeCompare(String(a.t)));
+  const el=$('leadHist');if(el)el.innerHTML=items.length?items.map(i=>'<div style="--c:'+i.c+'"><div class="sm muted">'+fmtDT(i.t)+'</div>'+i.h+'</div>').join(''):'No activity yet. Log the first call above.';
+}
+async function logCall(id){
+  const out=$('lgOut').value,nx=$('lgNext').value,note=$('lgNote').value.trim();
+  if(!['not_interested','wrong_number','note'].includes(out)&&!nx){toast('Choose the next follow-up date');return}
+  const row={lead_id:id,actor_id:S.user.id,kind:out==='sent_message'?'whatsapp':out==='note'?'note':'call',outcome:out,note:note||null,next_follow_up:nx||null};
+  const {error}=await sb.from('lead_activities').insert(row);
+  if(error){toast('Could not save: '+error.message+(/does not exist/.test(error.message)?' — run phase9_followup_control.sql first':''),6000);return}
+  const l=byId('leads',id);
+  if(out==='not_interested'&&l&&l.status!=='not_interested'){const why=prompt('Reason this lead is lost (required):',note||'');if(why&&why.trim()){await saveRecord('leads',id,{status:'not_interested',lost_reason:why.trim()})}}
+  else if(out==='spoke_interested'&&l&&['new','contacted'].includes(l.status))await saveRecord('leads',id,{status:'interested'});
+  else if(out==='spoke_callback'&&l&&['new','contacted'].includes(l.status))await saveRecord('leads',id,{status:'call_back_later'});
+  await loadAll(true);toast('Call saved ✓');openLead(id);
 }
 
 /* ================= Demo planner (opens when a lead becomes "Demo scheduled") ================= */
@@ -701,6 +781,8 @@ async function saveDemoPlan(lid,cid){
   if(!d||!t){toast('Please choose the demo date and time');return}
   if(!tid){toast('Please choose a teacher');return}
   const dur=Math.max(10,parseInt($('dpDur').value,10)||30),notes=$('dpNotes').value;
+  const clash=D('classes').find(x=>x.id!==cid&&x.teacher_id===tid&&x.class_date===d&&x.status==='scheduled'&&to24h(x.class_time)===t);
+  if(clash&&!confirm('This teacher already has "'+clash.title+'" at '+to12h(t)+' on that day. Book anyway?'))return;
   const lead=await saveRecord('leads',lid,{demo_date:d,demo_time:to12h(t)});if(!lead)return;
   const cl=await saveRecord('classes',cid,{class_date:d,class_time:to12h(t),teacher_id:tid,duration_min:dur,notes});if(!cl)return;
   toast('Saved ✓ Meet link will appear here shortly');openDemoPlanner(lid);
@@ -736,6 +818,7 @@ function demoBriefing(c){
 function demoHint(st,l){return (['demo_scheduled','demo_rescheduled'].includes(st)&&l&&(!l.demo_date||!l.demo_time))?'Demo class created — its Google Meet link appears here within a minute. Add the demo DATE and TIME to put it on the Calendar and invite the family.':''}
 async function quickStatus(id,st){
   const p={status:st};if(!['not_interested','not_reachable'].includes(st))p.lost_reason=null;
+  else{const cur=byId('leads',id)||{};const why=cur.lost_reason||prompt('Why is this lead lost? (required)','');if(!why||!why.trim()){toast('A reason is needed to mark a lead as lost');return}p.lost_reason=why.trim()}
   const ok=await saveRecord('leads',id,p);if(ok){toast('Status: '+LEAD_LABEL[st]);if(isDemoSt(st))openDemoPlanner(id);else openLead(id)}
 }
 async function taskForLead(id){
