@@ -345,7 +345,7 @@ function createMeetLinksNow() {
   if (!lock.tryLock(25000)) return;
   try {
     var r = syncCalendar_();
-    toast_('Calendar: ' + r.created + ' added, ' + r.updated + ' updated, ' + r.cancelled + ' cancelled · ' + r.linkOnly + ' Meet link(s) made for classes still to be confirmed');
+    toast_('Calendar: ' + r.created + ' added, ' + r.updated + ' updated, ' + r.cancelled + ' cancelled · ' + r.linkOnly + ' Meet link(s) made for classes still to be confirmed · ' + (r.series || 0) + ' course schedule(s) updated');
   } catch (err) {
     SpreadsheetApp.getUi().alert('Could not create Calendar events:\n\n' + err.message);
   } finally { lock.releaseLock(); }
@@ -388,7 +388,10 @@ function syncCalendar_() {
   var guests = {};
   rpc_('sheet_class_guests', {}).forEach(function (g) { guests[g.id] = g.emails || []; });
   var classes = rpc_('sheet_table_pull', { p_table: 'classes' });
-  var out = { created: 0, updated: 0, cancelled: 0, linkOnly: 0 };
+  var inSchedule = {};
+  try { rpc_('sheet_class_nocal', {}).forEach(function (id) { inSchedule[id] = 1; }); } catch (e) { /* older database: no schedules yet */ }
+  classes = classes.filter(function (c) { return !inSchedule[c.id]; });
+  var out = { created: 0, updated: 0, cancelled: 0, linkOnly: 0, series: 0 };
   var title = function (c) { return c.title || 'Next Move India class'; };
   var desc = 'Next Move India class. Join from the LMS: https://nextmoveindia.org/lms/';
   var newMeet = function () { return { createRequest: { requestId: Utilities.getUuid(), conferenceSolutionKey: { type: 'hangoutsMeet' } } }; };
@@ -480,8 +483,114 @@ function syncCalendar_() {
   });
   props.setProperty('CAL_SIGS', JSON.stringify(sigs));
   props.setProperty('CAL_PENDING', JSON.stringify(pending));
+  try { out.series = syncSchedules_(); } catch (e) { if (/sheet_schedule_pull|does not exist|Could not find/i.test(String(e.message))) out.series = 0; else throw e; }
   return out;
 }
+
+/* ------------------------------------------------ course schedules (repeating events) */
+
+var BYDAY_ = { 1: 'MO', 2: 'TU', 3: 'WE', 4: 'TH', 5: 'FR', 6: 'SA', 7: 'SU' };
+
+function isoDow_(ymd) { var d = new Date(ymd + 'T00:00:00Z'); var n = d.getUTCDay(); return n === 0 ? 7 : n; }
+function addDaysYmd_(ymd, n) { var d = new Date(ymd + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+
+/** Build the repeating-event recurrence rules from the dates the course was first locked to. */
+function seriesRules_(sch) {
+  var dates = (sch.orig_dates || []).map(function (d) { return String(d).slice(0, 10); }).sort();
+  if (!dates.length) return null;
+  var first = dates[0], last = dates[dates.length - 1], have = {};
+  dates.forEach(function (d) { have[d] = 1; });
+  var days = {}; (sch.weekdays || []).forEach(function (w) { days[w] = 1; });
+  var pattern = 0, ex = [], cur = first, guard = 0;
+  while (cur <= last && guard++ < 2000) {
+    if (days[isoDow_(cur)]) { pattern++; if (!have[cur]) ex.push(cur); }
+    cur = addDaysYmd_(cur, 1);
+  }
+  var tm = parseClassTime_(sch.class_time);
+  var p = function (n) { return ('0' + n).slice(-2); };
+  var rules = ['RRULE:FREQ=WEEKLY;COUNT=' + pattern + ';BYDAY=' + (sch.weekdays || []).slice().sort().map(function (w) { return BYDAY_[w]; }).join(',')];
+  if (ex.length && tm) rules.push('EXDATE;TZID=' + TZ + ':' + ex.map(function (d) { return d.replace(/-/g, '') + 'T' + p(tm.h) + p(tm.m) + '00'; }).join(','));
+  return { first: first, rules: rules };
+}
+
+function syncSchedules_() {
+  var props = PropertiesService.getScriptProperties();
+  var sigs = JSON.parse(props.getProperty('SCH_SIGS') || '{}');
+  var list = rpc_('sheet_schedule_pull', {});
+  var n = 0;
+  list.forEach(function (sch) {
+    var evId = sch.calendar_event_id || '';
+    var emails = cleanEmails_(sch.emails);
+    var attendees = emails.map(function (m) { return { email: m }; });
+
+    if (sch.status === 'cancelled') {
+      if (evId) {
+        try { Calendar.Events.remove(CAL_ID, evId, { sendUpdates: 'all' }); } catch (e) { /* already gone */ }
+        rpc_('sheet_schedule_save', { p_id: sch.id, p_event: '', p_meet: '' });
+        delete sigs['S' + sch.id]; n++;
+      }
+      return;
+    }
+    var rr = seriesRules_(sch);
+    var when = rr && classWhen_({ class_date: rr.first, class_time: sch.class_time, duration_min: sch.duration_min });
+    if (!rr || !when) return;                                // time not understood yet
+    var title = sch.title || 'Next Move India course';
+    var desc = 'Next Move India course. Join from the LMS: https://nextmoveindia.org/lms/';
+    var ssig = JSON.stringify([title, when.start, when.end, rr.rules, emails]);
+
+    if (!evId) {
+      var ev = Calendar.Events.insert({
+        summary: title, description: desc, attendees: attendees, recurrence: rr.rules,
+        conferenceData: { createRequest: { requestId: Utilities.getUuid(), conferenceSolutionKey: { type: 'hangoutsMeet' } } },
+        start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ }
+      }, CAL_ID, { conferenceDataVersion: 1, sendUpdates: 'all' });
+      rpc_('sheet_schedule_save', { p_id: sch.id, p_event: ev.id, p_meet: meetLink_(ev) });
+      sigs['S' + sch.id] = ssig;
+      (sch.classes || []).forEach(function (c) { sigs['C' + c.id] = classSig_(c); });
+      n++; return;
+    }
+    if (sigs['S' + sch.id] === undefined) { sigs['S' + sch.id] = ssig; }
+    else if (sigs['S' + sch.id] !== ssig) {                  // time / teacher / parents / session count changed for the whole course
+      Calendar.Events.patch({
+        summary: title, attendees: attendees, recurrence: rr.rules,
+        start: { dateTime: when.start, timeZone: TZ }, end: { dateTime: when.end, timeZone: TZ }
+      }, CAL_ID, evId, { sendUpdates: 'all' });
+      sigs['S' + sch.id] = ssig;
+      (sch.classes || []).forEach(function (c) { sigs['C' + c.id] = classSig_(c); });   // the new pattern is the baseline
+      n++;
+    }
+    if (!sch.meet_link) {
+      try { var got = Calendar.Events.get(CAL_ID, evId); var l = meetLink_(got); if (l) rpc_('sheet_schedule_save', { p_id: sch.id, p_event: evId, p_meet: l }); } catch (e) { /* next time */ }
+    }
+
+    /* one session moved or cancelled on its own -> change just that occurrence */
+    var changed = (sch.classes || []).filter(function (c) {
+      var k = 'C' + c.id; if (sigs[k] === undefined) { sigs[k] = classSig_(c); return false; }
+      return sigs[k] !== classSig_(c);
+    });
+    if (changed.length) {
+      var inst = [];
+      try { inst = Calendar.Events.instances(CAL_ID, evId, { showDeleted: true, maxResults: 250 }).items || []; } catch (e) { inst = []; }
+      inst.sort(function (a, b) { return String((a.originalStartTime || a.start).dateTime).localeCompare(String((b.originalStartTime || b.start).dateTime)); });
+      changed.forEach(function (c) {
+        var one = inst[(c.session_no || 0) - 1];
+        if (!one) return;
+        if (c.status === 'cancelled') {
+          if (one.status !== 'cancelled') Calendar.Events.remove(CAL_ID, one.id, { sendUpdates: 'all' });
+        } else {
+          var w = classWhen_(c);
+          if (w) Calendar.Events.patch({ start: { dateTime: w.start, timeZone: TZ }, end: { dateTime: w.end, timeZone: TZ }, status: 'confirmed' }, CAL_ID, one.id, { sendUpdates: 'all' });
+        }
+        sigs['C' + c.id] = classSig_(c); n++;
+      });
+    }
+  });
+  props.setProperty('SCH_SIGS', JSON.stringify(sigs));
+  return n;
+}
+
+function classSig_(c) { return JSON.stringify([String(c.class_date || '').slice(0, 10), c.class_time || '', Number(c.duration_min) || 0, c.status]); }
+
 
 function saveClass_(id, fields) {
   var row = { id: id };

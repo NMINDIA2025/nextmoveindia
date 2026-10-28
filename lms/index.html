@@ -51,6 +51,8 @@ a{color:var(--pink)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 input,select,textarea{border:1px solid #e3dcee;border-radius:11px;padding:9px 12px;background:#fff;width:100%}
 input:focus,select:focus,textarea:focus{outline:2px solid #ff7a1a55;border-color:var(--orange)}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;padding:0;flex:none;accent-color:var(--orange)}
+label.li{display:flex;align-items:center;gap:10px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .grow{flex:1;min-width:0}
 /* cards */
@@ -322,11 +324,11 @@ const effPay=r=>r.status==='pending'&&r.due_date&&r.due_date<todayStr()?'overdue
 
 /* ================= Data layer ================= */
 const TABLES_BY_ROLE={
- admin:['leads','students','teachers','classes','class_materials','materials','tasks','payments','attendance','assignments','submissions','profiles','courses','demos'],
+ admin:['leads','students','teachers','classes','schedules','schedule_students','class_materials','materials','tasks','payments','attendance','assignments','submissions','profiles','courses','demos'],
  counselor:['leads','teachers','classes','class_materials','materials','tasks','courses'],
- teacher:['classes','class_materials','leads','students','materials','tasks','attendance','assignments','submissions','teachers','courses'],
- parent:['students','classes','materials','payments','attendance','assignments','submissions','courses'],
- student:['students','classes','materials','attendance','assignments','submissions','courses']};
+ teacher:['classes','schedules','schedule_students','class_materials','leads','students','materials','tasks','attendance','assignments','submissions','teachers','courses'],
+ parent:['students','classes','schedules','schedule_students','materials','payments','attendance','assignments','submissions','courses'],
+ student:['students','classes','schedules','schedule_students','materials','attendance','assignments','submissions','courses']};
 const LIMIT=2000;
 async function loadTable(t){
   let q=sb.from(t).select('*').limit(LIMIT);
@@ -484,12 +486,12 @@ function openRecord(ent,id){
 <script>
 /* ================= Navigation ================= */
 const NAV={
- admin:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['students','🎓','Students'],['classes','📅','Classes'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['Manage'],['materials','📚','Materials'],['tasks','☑','Tasks'],['payments','₹','Payments'],['teachers','👩‍🏫','Teachers'],['team','🔑','Team & Access'],['sync','⇄','Sheet Sync']],
+ admin:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['students','🎓','Students'],['classes','📅','Classes'],['schedules','🗓','Course Schedules'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['Manage'],['materials','📚','Materials'],['tasks','☑','Tasks'],['payments','₹','Payments'],['teachers','👩‍🏫','Teachers'],['team','🔑','Team & Access'],['sync','⇄','Sheet Sync']],
  counselor:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['classes','📅','Classes'],['tasks','☑','Tasks'],['materials','📚','Materials'],['sync','⇄','Sheet Sync']],
- teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','My Leads'],['classes','📅','My Classes'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
+ teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','My Leads'],['classes','📅','My Classes'],['schedules','🗓','My Courses'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
  parent:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['assignments','📝','Assignments'],['materials','📚','Materials'],['payments','₹','Payments']],
  student:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['assignments','📝','Assignments'],['materials','📚','Materials']]};
-const SUBS={dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',assignments:'Set work, collect answers, give feedback',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
+const SUBS={schedules:'Lock days and times for a whole course — classes, Calendar and Meet are created for you',dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',assignments:'Set work, collect answers, give feedback',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
 function myNav(){return NAV[S.role]||NAV.student}
 function renderNav(){
   const items=myNav();let h='';
@@ -748,11 +750,121 @@ async function logCall(id){
 }
 
 /* ================= Demo planner (opens when a lead becomes "Demo scheduled") ================= */
+
+/* ================= Course schedules ================= */
+const dow=ymd=>{const n=new Date(ymd+'T00:00:00').getDay();return n===0?7:n};
+const mins=t=>{const h=to24h(t);if(!h)return null;const [a,b]=h.split(':');return (+a)*60+(+b)};
+function schedMembers(id){return D('schedule_students').filter(x=>x.schedule_id===id).map(x=>byId('students',x.student_id)||{id:x.student_id,full_name:'Student'})}
+function schedClasses(id){return D('classes').filter(c=>c.schedule_id===id).sort((a,b)=>(a.session_no||0)-(b.session_no||0))}
+function schedStats(sc){const cl=schedClasses(sc.id);const done=cl.filter(c=>c.status==='completed'||(c.status==='scheduled'&&c.class_date<todayStr())).length;const next=cl.find(c=>c.status==='scheduled'&&c.class_date>=todayStr());return {cl,done,next,total:cl.filter(c=>c.status!=='cancelled').length}}
+function calBadge(sc){return sc.status==='cancelled'?'<span class="b r">Cancelled</span>':sc.calendar_event_id?'<span class="b g">📅 On Google Calendar</span>':'<span class="b o">⏳ Adding to Calendar (≈1 min)</span>'}
+VIEWS.schedules=()=>{
+  const list=D('schedules').slice().sort((a,b)=>(a.status==='cancelled')-(b.status==='cancelled')||String(b.created_at).localeCompare(String(a.created_at)));
+  const head='<div class="row" style="margin-bottom:12px"><div class="grow muted">'+(isAdmin()?'Lock the days, time and teacher once — every class, the Calendar event and one Meet link are created automatically.':'Courses you teach, with every session.')+'</div>'+(isAdmin()?'<button class="btn pri" onclick="openScheduleForm()">＋ New course schedule</button>':'')+'</div>';
+  if(!list.length)return head+'<div class="card"><div class="empty">No course schedules yet.'+(isAdmin()?' Click <b>＋ New course schedule</b> to lock the timetable for an enrolled batch or student.':'')+'</div></div>';
+  return head+'<div class="grid cols3" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">'+list.map(sc=>{const st=schedStats(sc),tch=byId('teachers',sc.teacher_id),pct=st.total?Math.round(100*st.done/st.total):0;
+    return '<div class="card" style="cursor:pointer;opacity:'+(sc.status==='cancelled'?.6:1)+'" onclick="openSchedule(\''+sc.id+'\')"><div class="hd"><h3>'+esc(sc.title)+'</h3>'+bd(sc.kind==='one_to_one'?'one_to_one':'batch','p')+'</div>'
+     +'<div class="sm muted">'+esc((sc.weekdays||[]).slice().sort().map(w=>WD[w]).join(' · '))+' · '+esc(sc.class_time)+' · '+sc.duration_min+' min</div>'
+     +'<div class="sm" style="margin:4px 0">'+esc(sc.course_name||'')+(tch?' · 👩‍🏫 '+esc(tch.full_name):'')+' · 🎓 '+schedMembers(sc.id).length+'</div>'
+     +'<div class="funx" style="margin:8px 0"><div class="bar"><i style="width:'+pct+'%;background:#12a36b"></i></div><b style="width:auto">'+st.done+'/'+st.total+'</b></div>'
+     +'<div class="sm muted">'+(st.next?'Next: '+fmtDate(st.next.class_date)+' · '+esc(st.next.class_time||''):'No upcoming sessions')+'</div><div style="margin-top:8px">'+calBadge(sc)+'</div></div>'}).join('')+'</div>';
+};
+function openScheduleForm(){
+  if(!isAdmin())return;
+  const courses=D('courses'),teachers=D('teachers').filter(t=>t.status!=='inactive'),studs=D('students').filter(x=>x.status==='active');
+  openDrawer('<div class="dh"><div><div class="sm muted">Course schedules</div><h2>New course schedule</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+  +'<div class="fg" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
+  +'<div style="grid-column:1/-1"><label class="sm"><b>Name</b></label><input id="scTitle" placeholder="e.g. Young Orators – Batch A" oninput="S.ui.scTitleSet=1"></div>'
+  +'<div><label class="sm"><b>Course</b></label><select id="scCourse" onchange="scCourseChanged()"><option value="">—</option>'+courses.map(c=>'<option>'+esc(c.name)+'</option>').join('')+'</select></div>'
+  +'<div><label class="sm"><b>Type</b></label><select id="scKind"><option value="batch">Batch (group)</option><option value="one_to_one">One-to-one</option></select></div>'
+  +'<div><label class="sm"><b>Teacher</b></label><select id="scTeacher" onchange="schedPreview()"><option value="">— choose —</option>'+teachers.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.full_name)+'</option>').join('')+'</select></div>'
+  +'<div><label class="sm"><b>Total sessions</b></label><input type="number" id="scTotal" value="12" min="1" max="200" oninput="schedPreview()"></div>'
+  +'<div style="grid-column:1/-1"><label class="sm"><b>Days of the week</b></label><div class="row" style="gap:6px">'+[1,2,3,4,5,6,7].map(d=>'<label class="btn sm" style="cursor:pointer"><input type="checkbox" class="scDay" value="'+d+'" onchange="schedPreview()" style="margin-right:4px">'+WD[d]+'</label>').join('')+'</div></div>'
+  +'<div><label class="sm"><b>Time (IST)</b></label><input type="time" id="scTime" value="17:00" onchange="schedPreview()"></div>'
+  +'<div><label class="sm"><b>Length (minutes)</b></label><input type="number" id="scDur" value="45" min="10" max="240" oninput="schedPreview()"></div>'
+  +'<div><label class="sm"><b>First class on</b></label><input type="date" id="scStart" value="'+addDays(todayStr(),1)+'" onchange="schedPreview()"></div>'
+  +'<div><label class="sm"><b>Skip dates (holidays)</b></label><div class="row"><input type="date" id="scSkipIn" class="grow"><button class="btn sm" type="button" onclick="scAddSkip()">Add</button></div><div id="scSkips" class="sm muted"></div></div>'
+  +'</div>'
+  +'<div style="margin-top:12px"><label class="sm"><b>Students in this course</b> <span class="muted" id="scPick"></span></label><div id="scStudents" style="max-height:170px;overflow:auto;border:1px solid var(--line);border-radius:12px">'+(studs.map(x=>'<label class="li" style="cursor:pointer" data-course="'+esc(x.course_name||'')+'"><input type="checkbox" class="scStu" value="'+x.id+'" onchange="scPicked()"><div class="grow"><b>'+esc(x.full_name)+'</b><span class="sm muted">'+esc([x.course_name,x.age?'age '+x.age:''].filter(Boolean).join(' • '))+'</span></div></label>').join('')||'<div class="empty">No active students yet. Enrol a lead first.</div>')+'</div></div>'
+  +'<div style="margin-top:10px"><label class="sm"><b>Notes for the teacher</b></label><textarea id="scNotes" rows="2" placeholder="Goals, level, anything the teacher should know"></textarea></div>'
+  +'<div class="card" style="margin-top:12px;background:#f7f4ff"><b>Preview</b><div id="scPrev" class="sm" style="margin-top:6px">Choose days and time to see the dates.</div></div>'
+  +'<div class="act"><button class="btn pri" onclick="saveScheduleForm()">🔒 Lock schedule &amp; create classes</button><button class="btn" onclick="closeDrawer()">Cancel</button></div>'
+  +'<div class="sm muted" style="margin-top:6px">After saving: classes appear for the teacher and families, and one repeating event with a single Meet link is added to Google Calendar within about a minute. Teacher and parents are invited once.</div>');
+  S.ui.scSkip=[];S.ui.scTitleSet=0;schedPreview();
+}
+function scCourseChanged(){
+  const c=$('scCourse').value;
+  document.querySelectorAll('#scStudents label').forEach(l=>{l.style.display=(!c||!l.dataset.course||l.dataset.course===c)?'':'none'});
+  if(!S.ui.scTitleSet&&c)$('scTitle').value=c+' – Batch '+String.fromCharCode(65+D('schedules').filter(x=>x.course_name===c).length%26);
+  schedPreview();
+}
+function scAddSkip(){const v=$('scSkipIn').value;if(!v)return;if(!S.ui.scSkip.includes(v))S.ui.scSkip.push(v);S.ui.scSkip.sort();$('scSkipIn').value='';$('scSkips').innerHTML=S.ui.scSkip.map(d=>'<span class="b">'+fmtDate(d)+' <a onclick="scDelSkip(\''+d+'\')" style="cursor:pointer">✕</a></span> ').join('');schedPreview()}
+function scDelSkip(d){S.ui.scSkip=S.ui.scSkip.filter(x=>x!==d);$('scSkips').innerHTML=S.ui.scSkip.map(d=>'<span class="b">'+fmtDate(d)+' <a onclick="scDelSkip(\''+d+'\')" style="cursor:pointer">✕</a></span> ').join('');schedPreview()}
+function scPicked(){const n=document.querySelectorAll('.scStu:checked').length;$('scPick').textContent='· '+n+' selected'}
+function schedDates(){
+  const days=[...document.querySelectorAll('.scDay:checked')].map(x=>+x.value),total=Math.max(0,parseInt($('scTotal').value,10)||0),start=$('scStart').value;
+  const out=[];if(!days.length||!total||!start)return out;let d=start,g=0;
+  while(out.length<total&&g++<1500){if(days.includes(dow(d))&&!S.ui.scSkip.includes(d))out.push(d);d=addDays(d,1)}return out;
+}
+function schedPreview(){
+  const el=$('scPrev');if(!el)return;const dates=schedDates();if(!dates.length){el.textContent='Choose days, time and number of sessions to see the dates.';return}
+  const t=$('scTime').value,dur=parseInt($('scDur').value,10)||45,tid=$('scTeacher').value,a=mins(t);
+  const clash=d=>tid?D('classes').find(c=>c.teacher_id===tid&&c.status==='scheduled'&&c.class_date===d&&mins(c.class_time)!=null&&a!=null&&mins(c.class_time)<a+dur&&a<mins(c.class_time)+(c.duration_min||45)):null;
+  const bad=dates.filter(clash);
+  el.innerHTML='<b>'+dates.length+' sessions</b> · '+fmtDate(dates[0])+' → '+fmtDate(dates[dates.length-1])+' · '+esc(to12h(t))+' IST'
+   +(bad.length?'<div style="color:#b3263f;margin-top:4px">⚠ Teacher already has a class on: '+bad.slice(0,6).map(d=>fmtDate(d)).join(', ')+(bad.length>6?' …':'')+'</div>':(tid?'<div style="color:#0b7a50;margin-top:4px">✓ No teacher clashes</div>':''))
+   +'<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">'+dates.map((d,i)=>'<span class="b '+(clash(d)?'r':'bl')+'">'+(i+1)+'. '+WD[dow(d)]+' '+fmtDate(d)+'</span>').join('')+'</div>';
+}
+async function saveScheduleForm(){
+  const title=$('scTitle').value.trim(),days=[...document.querySelectorAll('.scDay:checked')].map(x=>+x.value),time=$('scTime').value,tid=$('scTeacher').value;
+  const stu=[...document.querySelectorAll('.scStu:checked')].map(x=>x.value),dates=schedDates();
+  if(!title){toast('Give the schedule a name');return}if(!days.length){toast('Choose at least one day of the week');return}
+  if(!time){toast('Choose the class time');return}if(!tid){toast('Choose a teacher');return}if(!stu.length){toast('Select at least one student');return}
+  if(!dates.length){toast('Check the number of sessions and start date');return}
+  const {data,error}=await sb.rpc('create_schedule',{p_title:title,p_course:$('scCourse').value||null,p_teacher:tid,p_kind:$('scKind').value,p_start:$('scStart').value,p_weekdays:days,p_time:to12h(time),p_duration:parseInt($('scDur').value,10)||45,p_total:parseInt($('scTotal').value,10),p_skip:S.ui.scSkip,p_students:stu,p_notes:$('scNotes').value||null});
+  if(error){toast('Could not create: '+error.message+(/function|does not exist/.test(error.message)?' — run phase11_schedules.sql first':''),7000);return}
+  await loadAll(true);toast('Schedule locked ✓ '+dates.length+' classes created');go('schedules');openSchedule(data);
+}
+function openSchedule(id){
+  const sc=byId('schedules',id);if(!sc)return;const st=schedStats(sc),adm=isAdmin(),tch=byId('teachers',sc.teacher_id),mem=schedMembers(id);
+  const sessions=st.cl.map(c=>'<div class="li" onclick="closeDrawer();openClass(\''+c.id+'\')"><div class="t">'+(c.session_no||'')+'</div><div class="grow"><b>'+fmtDate(c.class_date)+'</b> <span class="sm muted">'+WD[dow(c.class_date)]+' · '+esc(c.class_time||'')+'</span></div>'+bd(c.status)+'</div>').join('');
+  openDrawer('<div class="dh"><div><div class="sm muted">Course schedule</div><h2>'+esc(sc.title)+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+  +'<div class="card" style="background:#fff8f2;margin-bottom:12px"><div class="sm">'+esc((sc.weekdays||[]).slice().sort().map(w=>WD[w]).join(' · '))+' · <b>'+esc(sc.class_time)+'</b> · '+sc.duration_min+' min'+(tch?' · 👩‍🏫 '+esc(tch.full_name):'')+'</div><div class="sm muted" style="margin:4px 0">'+st.done+' of '+st.total+' sessions done'+(sc.course_name?' · '+esc(sc.course_name):'')+'</div>'
+  +'<div class="row" style="margin-top:8px">'+calBadge(sc)+(sc.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(sc.meet_link))+'" style="text-decoration:none">▶ Open Meet link</a><button class="btn sm" onclick="navigator.clipboard.writeText(\''+esc(safeUrl(sc.meet_link))+'\').then(()=>toast(\'Meet link copied ✓\'))">📋 Copy</button>':'')+'</div></div>'
+  +(adm&&sc.status!=='cancelled'?'<div class="row" style="margin-bottom:12px"><button class="btn" onclick="schedChange(\''+id+'\')">🕒 Change time for remaining</button><button class="btn" onclick="schedExtend(\''+id+'\')">＋ Add sessions</button><button class="btn" onclick="schedCancel(\''+id+'\')" style="color:#b3263f">✕ Stop course</button></div>':'')
+  +'<div class="card" style="margin-bottom:12px"><div class="hd"><b>🎓 Students ('+mem.length+')</b>'+(adm&&sc.status!=='cancelled'?'<select id="scAdd" onchange="schedAddStudent(\''+id+'\',this.value)" style="width:auto"><option value="">＋ Add student…</option>'+D('students').filter(x=>x.status==='active'&&!mem.some(m=>m.id===x.id)).map(x=>'<option value="'+x.id+'">'+esc(x.full_name)+'</option>').join('')+'</select>':'')+'</div>'
+  +(mem.map(m=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(m.full_name)+'</b></div>'+(adm&&sc.status!=='cancelled'?'<button class="btn sm" onclick="schedRemoveStudent(\''+id+'\',\''+m.id+'\')">Remove</button>':'')+'</div>').join('')||'<div class="sm muted">No students yet.</div>')+'</div>'
+  +'<div class="card"><div class="hd"><b>🗓 Sessions</b><span class="sm muted">Tap one to move it, add a recording or take attendance</span></div>'+(sessions||'<div class="empty">No sessions.</div>')+'</div>'
+  +(sc.notes?'<div class="card" style="margin-top:12px"><b>Notes</b><div class="sm" style="white-space:pre-wrap;margin-top:4px">'+esc(sc.notes)+'</div></div>':''));
+}
+async function schedAddStudent(id,sid){if(!sid)return;const {error}=await sb.from('schedule_students').insert({schedule_id:id,student_id:sid});if(error){toast('Could not add: '+error.message,5000);return}await loadAll(true);toast('Student added — parent will be invited to the Calendar series');openSchedule(id)}
+async function schedRemoveStudent(id,sid){if(!confirm('Remove this student from the course?'))return;const {error}=await sb.from('schedule_students').delete().eq('schedule_id',id).eq('student_id',sid);if(error){toast('Could not remove: '+error.message,5000);return}await loadAll(true);openSchedule(id)}
+function schedChange(id){
+  const sc=byId('schedules',id);
+  openDrawer('<div class="dh"><div><div class="sm muted">'+esc(sc.title)+'</div><h2>Change remaining sessions</h2></div><button class="btn sm" onclick="openSchedule(\''+id+'\')">✕</button></div><p class="muted">Applies to every session from today onwards. Past sessions are not touched, and the Google Calendar series updates automatically.</p>'
+  +'<label class="sm"><b>New time (IST)</b></label><input type="time" id="chTime" value="'+esc(to24h(sc.class_time))+'"><label class="sm" style="display:block;margin-top:8px"><b>Length (minutes)</b></label><input type="number" id="chDur" value="'+sc.duration_min+'"><label class="sm" style="display:block;margin-top:8px"><b>Teacher</b></label><select id="chTeacher">'+D('teachers').filter(t=>t.status!=='inactive').map(t=>'<option value="'+esc(t.id)+'"'+(sc.teacher_id===t.id?' selected':'')+'>'+esc(t.full_name)+'</option>').join('')+'</select>'
+  +'<div class="act"><button class="btn pri" onclick="schedChangeSave(\''+id+'\')">Save for remaining sessions</button><button class="btn" onclick="openSchedule(\''+id+'\')">Back</button></div>');
+}
+async function schedChangeSave(id){
+  const {data,error}=await sb.rpc('schedule_change_future',{p_id:id,p_time:to12h($('chTime').value),p_duration:parseInt($('chDur').value,10)||null,p_teacher:$('chTeacher').value||null});
+  if(error){toast('Could not change: '+error.message,5000);return}await loadAll(true);toast((data||0)+' upcoming session(s) updated ✓');openSchedule(id);
+}
+async function schedExtend(id){
+  const v=prompt('How many more sessions to add after the last one?','4');const n=parseInt(v,10);if(!n||n<1)return;
+  const {data,error}=await sb.rpc('schedule_extend',{p_id:id,p_more:n});if(error){toast('Could not add: '+error.message,5000);return}
+  await loadAll(true);toast((data||0)+' session(s) added ✓');openSchedule(id);
+}
+async function schedCancel(id){
+  if(!confirm('Stop this course? All upcoming sessions are cancelled and the repeating Calendar event is removed. Past sessions stay in the records.'))return;
+  const {data,error}=await sb.rpc('schedule_cancel',{p_id:id});if(error){toast('Could not stop: '+error.message,5000);return}
+  await loadAll(true);toast((data||0)+' session(s) cancelled');openSchedule(id);
+}
 const isDemoSt=st=>st==='demo_scheduled'||st==='demo_rescheduled';
 const to12h=v=>{const m=String(v||'').match(/^(\d{1,2}):(\d{2})$/);if(!m)return v||'';let h=+m[1];const ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+m[2]+' '+ap};
 const to24h=v=>{const m=String(v||'').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([ap]m)?$/i);if(!m)return '';let h=+m[1];const ap=(m[3]||'').toLowerCase();if(ap==='pm'&&h<12)h+=12;if(ap==='am'&&h===12)h=0;return String(h).padStart(2,'0')+':'+(m[2]||'00')};
 const demoIso=v=>/^\d{4}-\d{2}-\d{2}$/.test(String(v||''))?v:'';
 function demoClassOf(id){return D('classes').find(c=>c.lead_id===id&&c.kind==='demo'&&c.status==='scheduled')||null}
+const WD=['','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 function classMats(cid){return D('class_materials').filter(x=>x.class_id===cid).map(x=>byId('materials',x.material_id)||D('materials').find(m=>m.id===x.material_id)).filter(Boolean)}
 async function matUrl(m){if(m.file_path){const {data,error}=await sb.storage.from('materials').createSignedUrl(m.file_path,3600);if(error){toast('Could not open file: '+error.message,4000);return ''}return data.signedUrl}return safeUrl(m.url)}
 async function openMat(id){const m=D('materials').find(x=>x.id===id);if(!m)return;const u=await matUrl(m);if(u)window.open(u,'_blank','noopener')}
@@ -891,7 +1003,9 @@ function openStudent(id){
    +'<div style="margin-top:18px"><b>Recent attendance</b>'+(att.length?att.slice(0,8).map(a=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(a.class_title||'Class')+'</b><span class="sm muted">'+fmtDate(a.class_date)+'</span></div>'+bd(a.status)+'</div>').join(''):'<div class="sm muted">No attendance yet.</div>')+'</div>';
   const lead=s.lead_id?byId('leads',s.lead_id):null;
   const inv=isAdmin()?'<div class="card" style="margin-bottom:14px"><b>Family login</b><p class="sm muted" style="margin:6px 0 8px">'+(s.parent_email?(s.parent_id?'✅ <b>'+esc(s.parent_email)+'</b> has created their account and can see this child.':'⏳ Waiting for <b>'+esc(s.parent_email)+'</b> to create their account.'):'Add the parent\'s email below and save, then send the invite.')+'</p>'+(s.parent_email?'<div class="row"><button class="btn sm pri" onclick="copyInvite(\''+id+'\')">📋 Copy invite message</button>'+(lead&&lead.phone?'<a class="btn sm wa" target="_blank" rel="noopener" style="text-decoration:none" href="'+esc(inviteWA(s,lead))+'">💬 Send on WhatsApp</a>':'')+'</div>':'')+'</div>':'';
-  editor('students',id,null,top+inv,bottom);
+  const mine=D('schedules').filter(sc=>D('schedule_students').some(x=>x.schedule_id===sc.id&&x.student_id===id));
+  const sch='<div class="card" style="margin-bottom:14px"><div class="hd"><b>🗓 Class schedule</b>'+(isAdmin()?'<button class="btn sm" onclick="closeDrawer();openScheduleForm()">＋ New schedule</button>':'')+'</div>'+(mine.length?mine.map(sc=>{const st=schedStats(sc);return '<div class="li" onclick="closeDrawer();go(\'schedules\');openSchedule(\''+sc.id+'\')"><div class="grow"><b>'+esc(sc.title)+'</b><span class="sm muted">'+esc((sc.weekdays||[]).slice().sort().map(w=>WD[w]).join(" · "))+' · '+esc(sc.class_time)+' · '+st.done+'/'+st.total+' done'+(st.next?' · next '+fmtDate(st.next.class_date):'')+'</span></div>'+(sc.meet_link?'<span class="b g">Meet ✓</span>':'')+'</div>'}).join(''):'<div class="sm muted">No fixed schedule yet'+(isAdmin()?' — lock days and time for the whole course.':'.')+'</div>')+'</div>';
+  editor('students',id,null,top+sch+inv,bottom);
 }
 function inviteText(s){return 'Hello! '+s.full_name+'\'s learning space at Next Move India is ready 🎉\n\n1. Open https://nextmoveindia.org/lms/\n2. Tap "Create parent account"\n3. Use THIS email: '+s.parent_email+' and choose a password\n\nYou will see classes (with a Join button), assignments, class recordings and progress.'}
 function inviteWA(s,lead){let d=String(lead.phone||'').replace(/\D/g,'');if(d.length===10)d='91'+d;return 'https://wa.me/'+d+'?text='+encodeURIComponent(inviteText(s))}
@@ -925,6 +1039,7 @@ VIEWS.attendance=()=>{
   return '<div class="card"><div class="hd"><h3>Choose a class to mark attendance</h3></div>'+(cl.map(c=>{const n=D('attendance').filter(a=>a.class_id===c.id).length;return '<div class="li" onclick="openAttendance(\''+c.id+'\')"><div class="t">'+fmtDate(c.class_date)+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.class_time,c.teacher_name,c.course_name].filter(Boolean).join(' • '))+'</span></div>'+(n?'<span class="b g">'+n+' marked</span>':'<span class="b o">Not marked</span>')+'</div>'}).join('')||'<div class="empty">No classes yet. Add one under Classes.</div>')+'</div>';
 };
 function classRoster(c){
+  if(c.schedule_id){const ids=D('schedule_students').filter(x=>x.schedule_id===c.schedule_id).map(x=>x.student_id);const m=D('students').filter(s=>ids.includes(s.id));if(m.length)return m}
   const st=D('students').filter(s=>s.status==='active'||D('attendance').some(a=>a.class_id===c.id&&a.student_id===s.id));
   const m=st.filter(s=>c.course_name&&s.course_name===c.course_name);return m.length?m:st;
 }

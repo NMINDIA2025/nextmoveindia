@@ -18,3 +18,11 @@ After step 5 the script also creates and keeps in step these tabs: **LMS Student
 LMS Materials, LMS Tasks, LMS Payments, LMS Attendance**. Edit white columns freely. To add a new student,
 teacher, class, material or task, type a new row (leave the hidden ID cell empty). New payments and
 attendance rows are created in the LMS; their status/amount can be edited in the sheet.
+
+## Course schedules (phase 11)
+
+Run `supabase/phase11_schedules.sql`, then paste the latest `Code.gs` into the `LMS` script file and save.
+In the LMS, **Course Schedules → New course schedule** locks days + time + teacher + students for a whole
+course. The script then adds ONE repeating Google Calendar event with ONE Meet link (teacher and parents are
+invited once), and keeps it in step when you move or cancel a single session, change the time for the remaining
+sessions, add sessions, or stop the course. Run **Create Meet links + Calendar events now** to force it.
