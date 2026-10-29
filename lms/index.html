@@ -55,6 +55,16 @@ input[type=checkbox],input[type=radio]{width:18px;height:18px;padding:0;flex:non
 label.li{display:flex;align-items:center;gap:10px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .grow{flex:1;min-width:0}
+/* data protection for non-admin users */
+body.guard .app,body.guard .page,body.guard .drawer,body.guard .side,body.guard .topbar{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body.guard input,body.guard textarea,body.guard select{-webkit-user-select:text;user-select:text}
+body.guard img{-webkit-user-drag:none;pointer-events:none}
+#wm{position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden;opacity:.05;display:none}
+body.guard #wm{display:block}
+#wm div{position:absolute;inset:-50%;transform:rotate(-24deg);display:flex;flex-wrap:wrap;gap:46px 70px;align-content:flex-start;font-weight:800;font-size:15px;color:#2a0f3a;white-space:nowrap}
+#privacyVeil{position:fixed;inset:0;background:#2a0f3a;color:#fff;display:none;place-items:center;z-index:9999;font-weight:700;text-align:center;padding:20px}
+body.guard.hidden-win #privacyVeil{display:grid}
+@media print{body.guard{display:none!important}}
 /* cards */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
 .card h3{margin:0 0 4px;font-size:15px}
@@ -224,7 +234,7 @@ function titleCase(s){return String(s||'').replace(/_/g,' ').replace(/\b\w/g,c=>
 function initials(s){return String(s||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'?'}
 function safeUrl(u){u=String(u||'').trim();if(!u)return '';return /^(https?:|mailto:|tel:)/i.test(u)?u:'https://'+u.replace(/^\/+/,'')}
 function waLink(phone,parent,child){let d=String(phone||'').replace(/\D/g,'');if(d.length===10)d='91'+d;const m='Hello '+(parent||'')+', this is Next Move India'+(child?' regarding '+child:'')+'. ';return d?'https://wa.me/'+d+'?text='+encodeURIComponent(m):'#'}
-function download(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;a.click()}
+function download(name,text){if(!isAdmin()){toast('Downloads are available to the admin only');return}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;a.click()}
 function toCSV(rows,cols){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';return [cols.map(c=>q(c.label)).join(',')].concat(rows.map(r=>cols.map(c=>q(c.csv?c.csv(r):r[c.k])).join(','))).join('\n')}
 
 /* ================= Language (English / हिन्दी) ================= */
@@ -378,7 +388,7 @@ async function deleteRecord(ent,id){
 
 /* ================= Drawer + generic editor ================= */
 function openDrawer(html){$('drawer').innerHTML=html;$('ov').classList.add('on')}
-function closeDrawer(){$('ov').classList.remove('on');$('drawer').innerHTML='';render()}
+function closeDrawer(){S.curPlanner=null;$('ov').classList.remove('on');$('drawer').innerHTML='';render()}
 function optionsFor(f,val){
   const sel=v=>String(v)===String(val??'')?' selected':'';
   let o=[];
@@ -447,7 +457,7 @@ function listView(ent,opts){
    +'<div class="grow" style="min-width:200px"><input placeholder="🔎 '+T('Search')+' '+esc(e.plural.toLowerCase())+'…" value="'+esc(u.q)+'" oninput="S.ui[\''+ent+'\'].q=this.value;refreshRows(\''+ent+'\')"></div>'
    +(e.filter?'<select style="width:auto" onchange="S.ui[\''+ent+'\'].f=this.value;refreshRows(\''+ent+'\')"><option value="">All</option>'+e.filter.o.map(o=>'<option value="'+esc(o[0])+'"'+(u.f===o[0]?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>':'')
    +(opts.toolbar||'')
-   +'<button class="btn" onclick="exportEnt(\''+ent+'\')">⬇ CSV</button>'
+   +(isAdmin()?'<button class="btn" onclick="exportEnt(\''+ent+'\')">⬇ CSV</button>':'')
    +(canAdd?'<button class="btn pri" onclick="addRecord(\''+ent+'\')">＋ '+T('Add')+' '+esc(e.label.toLowerCase())+'</button>':'')
    +'</div><div class="tw" id="tw_'+ent+'">'+tableHTML(ent,rows)+'</div>'
    +'<div class="sm muted" style="margin-top:8px"><span class="sync">⇄ Two-way</span> &nbsp;Every change here appears in the Google Sheet tab “'+esc(e.tab)+'”, and edits made in that tab come back here.</div>';
@@ -486,12 +496,12 @@ function openRecord(ent,id){
 <script>
 /* ================= Navigation ================= */
 const NAV={
- admin:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['students','🎓','Students'],['classes','📅','Classes'],['schedules','🗓','Course Schedules'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['Manage'],['materials','📚','Materials'],['tasks','☑','Tasks'],['payments','₹','Payments'],['teachers','👩‍🏫','Teachers'],['team','🔑','Team & Access'],['sync','⇄','Sheet Sync']],
- counselor:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['classes','📅','Classes'],['tasks','☑','Tasks'],['materials','📚','Materials'],['sync','⇄','Sheet Sync']],
- teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','My Leads'],['classes','📅','My Classes'],['schedules','🗓','My Courses'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
+ admin:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['demodesk','🎥','Demo Desk'],['students','🎓','Students'],['classes','📅','Classes'],['schedules','🗓','Course Schedules'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['Manage'],['materials','📚','Materials'],['tasks','☑','Tasks'],['payments','₹','Payments'],['teachers','👩‍🏫','Teachers'],['team','🔑','Team & Access'],['sync','⇄','Sheet Sync']],
+ counselor:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','Leads'],['demodesk','🎥','Demo Desk'],['classes','📅','Classes'],['tasks','☑','Tasks'],['materials','📚','Materials'],['sync','⇄','Sheet Sync']],
+ teacher:[['Workspace'],['dashboard','⌂','Dashboard'],['leads','🎯','My Leads'],['demodesk','🎥','Demo Desk'],['classes','📅','My Classes'],['schedules','🗓','My Courses'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['students','🎓','Students'],['materials','📚','Materials'],['tasks','☑','Tasks']],
  parent:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['assignments','📝','Assignments'],['materials','📚','Materials'],['payments','₹','Payments']],
  student:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes'],['assignments','📝','Assignments'],['materials','📚','Materials']]};
-const SUBS={schedules:'Lock days and times for a whole course — classes, Calendar and Meet are created for you',dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',assignments:'Set work, collect answers, give feedback',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
+const SUBS={demodesk:'Pick a demo, call the parent, confirm the time, run it, record the result',schedules:'Lock days and times for a whole course — classes, Calendar and Meet are created for you',dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',assignments:'Set work, collect answers, give feedback',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
 function myNav(){return NAV[S.role]||NAV.student}
 function renderNav(){
   const items=myNav();let h='';
@@ -588,7 +598,7 @@ function dashboardTeacher(){
   const t=todayStr(),todays=D('classes').filter(c=>c.class_date===t&&c.status!=='cancelled');
   const upcoming=D('classes').filter(c=>c.class_date>t&&c.status==='scheduled').sort((a,b)=>a.class_date>b.class_date?1:-1).slice(0,5);
   const needAtt=D('classes').filter(c=>c.class_date<=t&&c.status!=='cancelled'&&!D('attendance').some(a=>a.class_id===c.id)).length;
-  return '<div class="hero"><div><h2>'+greeting()+', '+esc((S.profile&&S.profile.full_name)||'')+' 👋</h2><p>'+todays.length+' class(es) today · '+needAtt+' without attendance</p></div><button class="btn pri" onclick="go(\'attendance\')">Mark attendance</button></div>'
+  return '<div class="hero"><div><h2>'+greeting()+', '+esc((S.profile&&S.profile.full_name)||'')+' 👋</h2><p>'+todays.length+' class(es) today · '+needAtt+' without attendance</p></div><div class="row"><button class="btn pri" onclick="go(\'demodesk\')">🎥 Demo Desk</button><button class="btn" onclick="go(\'attendance\')">Mark attendance</button></div></div>'
   +'<div class="grid kpis">'+kpi(T('Today\'s classes'),todays.length,'','classes')+kpi('My students',D('students').length,'','students')+kpi('Attendance due',needAtt,'classes to mark','attendance')+kpi('To review',D('submissions').filter(x=>x.status==='submitted').length,'assignment answers','assignments')+kpi('My leads',D('leads').length,leadsToCall().length+' to call','leads')+kpi('My demos',demos.length,'free demos assigned','classes')+kpi('Materials',D('materials').length,'in the library','materials')+'</div>'
   +'<div class="card" style="margin-top:14px"><div class="hd"><h3>📞 Leads to call</h3><button class="btn sm" onclick="go(\'leads\')">All my leads</button></div>'+(leadsToCall().slice(0,6).map(leadCallLI).join('')||'<div class="empty">No leads assigned to you right now.</div>')+'</div>'
   +'<div class="card" style="margin-top:14px"><div class="hd"><h3>🎥 My demo classes</h3></div>'+(demos.map(c=>'<div class="li" onclick="openClass(\''+c.id+'\')"><div class="t">'+esc(c.class_date?fmtDate(c.class_date):'Date TBC')+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc([c.class_time||'time to be confirmed',c.course_name,classMats(c.id).length?classMats(c.id).length+' material(s)':''].filter(Boolean).join(' • '))+'</span></div>'+(c.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.meet_link))+'" onclick="event.stopPropagation()" style="text-decoration:none">▶ Join</a>':'<span class="b o">Link soon</span>')+'</div>').join('')||'<div class="empty">No demo classes assigned yet. When the admin assigns you a demo, it shows here with the child\'s details and material.</div>')+'</div>'
@@ -720,11 +730,11 @@ async function openLead(id){
   const chips=id?'<div class="row" style="gap:6px;margin-bottom:12px">'+LEAD_ST.map(s=>'<button class="btn sm" style="'+(r.status===s[0]?'background:var(--plum);color:#fff;border-color:var(--plum)':'')+'" onclick="quickStatus(\''+id+'\',\''+s[0]+'\')">'+esc(s[1])+'</button>').join('')+'</div>':'';
   const contact=id?'<div class="row" style="margin-bottom:12px"><a class="btn wa" target="_blank" rel="noopener" href="'+waLink(r.phone,r.parent_name,r.child_name)+'" style="text-decoration:none">💬 WhatsApp</a>'+(r.phone?'<a class="btn" href="tel:'+esc(r.phone)+'" style="text-decoration:none">📞 Call</a>':'')+'<button class="btn" onclick="taskForLead(\''+id+'\')">☑ Add follow-up task</button>'+(r.status!=='enrolled'&&!r.converted_student_id&&canEdit('students')?'<button class="btn pink" onclick="enrolLead(\''+id+'\')">🎓 Enrol as student</button>':'')+'</div>':'';
   const dc=id?D('classes').filter(c=>c.lead_id===id&&c.status==='scheduled')[0]:null;
-  const demoBox=dc?'<div class="card" style="background:#fff8f2;margin-bottom:12px"><b>🎥 Demo class</b><div class="sm muted" style="margin:4px 0 8px">'+(dc.class_date&&dc.class_time?'On the Calendar: '+fmtDate(dc.class_date)+' · '+esc(dc.class_time)+(dc.teacher_name?' · '+esc(dc.teacher_name):' · <b>no teacher picked yet</b>'):'Time not confirmed yet — add the demo date and time below.')+'</div><div class="row">'+(dc.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(dc.meet_link))+'" style="text-decoration:none">▶ Open Meet link</a><button class="btn sm" onclick="navigator.clipboard.writeText(\''+esc(safeUrl(dc.meet_link))+'\').then(()=>toast(\'Meet link copied ✓\'))">📋 Copy link</button>':'<span class="sm muted">Meet link is being created…</span>')+'<button class="btn sm" onclick="closeDrawer();openClass(\''+dc.id+'\')">Choose teacher / edit class</button></div></div>':'';
+  const demoBox=dc?'<div class="card" style="background:#fff8f2;margin-bottom:12px"><b>🎥 Demo class</b><div class="sm muted" style="margin:4px 0 8px">'+(dc.class_date&&dc.class_time?'On the Calendar: '+fmtDate(dc.class_date)+' · '+esc(dc.class_time)+(dc.teacher_name?' · '+esc(dc.teacher_name):' · <b>no teacher picked yet</b>'):'Time not confirmed yet — add the demo date and time below.')+'</div><div class="row">'+(dc.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(dc.meet_link))+'" style="text-decoration:none">▶ Open Meet link</a><button class="btn sm" onclick="navigator.clipboard.writeText(\''+esc(safeUrl(dc.meet_link))+'\').then(()=>toast(\'Meet link copied ✓\'))">📋 Copy link</button>':'<span class="sm muted">Meet link is being created…</span>')+'<button class="btn sm" onclick="closeDrawer();openClass(\''+dc.id+'\')">Choose teacher / edit class</button><button class="btn sm pri" onclick="openDemoPlanner(\''+id+'\')">🕒 Schedule &amp; share</button></div>'+shareBar(id,dc.id)+'</div>':'';
   const assignBox=id&&isAdmin()?'<div class="card" style="margin-bottom:12px"><b>👤 Assigned to</b><div class="row" style="margin-top:6px"><select class="grow" onchange="assignLead(\''+id+'\',this.value)"><option value="">Unassigned</option>'+staffList().map(p=>'<option value="'+esc(p.id)+'"'+(r.assigned_to===p.id?' selected':'')+'>'+esc((p.full_name||p.email)+' ('+p.role+')')+'</option>').join('')+'</select></div><div class="sm muted" style="margin-top:4px">They see this lead with phone number, can call or WhatsApp, and update the status. A "call" task is added for them.</div></div>':'';
   const logBox=id?'<div class="card" style="margin-bottom:12px;border-color:#ffd9b8"><b>📞 Log this call</b><div class="row" style="margin:8px 0"><select id="lgOut" class="grow" onchange="lgDef()">'+OUTCOMES.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join('')+'</select><input type="date" id="lgNext" value="'+esc(r.next_follow_up&&r.next_follow_up>=todayStr()?r.next_follow_up:addDays(todayStr(),2))+'" title="Next follow-up"></div><textarea id="lgNote" rows="2" placeholder="What was said? (parent\'s concern, budget, best time to call…)"></textarea><div class="act" style="margin-top:8px"><button class="btn pri" onclick="logCall(\''+id+'\')">Save call</button><span class="sm muted">Next follow-up date is saved on the lead.</span></div></div>':'';
   const bottom=id?'<div style="margin-top:16px"><b class="sm">Timeline</b><div class="tl" id="leadHist">Loading…</div></div>':'';
-  editor('leads',id,null,assignBox+chips+contact+logBox+demoBox,bottom);
+  editor('leads',id,null,assignBox+chips+demoBox+contact+logBox,bottom);
   if(id)loadTimeline(id);
 }
 const OUTCOMES=[['spoke_interested','Spoke — interested'],['spoke_callback','Spoke — call back later'],['no_answer','No answer'],['wrong_number','Wrong number'],['not_interested','Spoke — not interested'],['sent_message','Sent WhatsApp / message'],['note','Note only']];
@@ -859,6 +869,77 @@ async function schedCancel(id){
   const {data,error}=await sb.rpc('schedule_cancel',{p_id:id});if(error){toast('Could not stop: '+error.message,5000);return}
   await loadAll(true);toast((data||0)+' session(s) cancelled');openSchedule(id);
 }
+
+/* ================= Demo Desk ================= */
+const DEMO_MSG={
+ en:(o)=>'Hello'+(o.parent?' '+o.parent:'')+'! 🌟\nThis is '+o.who+' from *Next Move India*. '+o.child+'\'s *FREE demo class* is scheduled:\n\n📅 '+o.date+'\n🕒 '+o.time+' IST ('+o.dur+' min)\n'+(o.course?'📚 '+o.course+'\n':'')+(o.teacher?'👩‍🏫 Teacher: '+o.teacher+'\n':'')+'🔗 Google Meet: '+(o.link||'(link will be shared shortly)')+'\n\nPlease:\n• Join 5 minutes early on a phone/laptop with camera & mic\n• Keep a quiet corner and a notebook ready\n• A parent nearby for the first few minutes helps the child settle\n\nReply *YES* to confirm. Looking forward to meeting '+o.child+'! 😊',
+ hi:(o)=>'नमस्ते'+(o.parent?' '+o.parent:'')+'! 🌟\nमैं '+o.who+', *Next Move India* से। '+o.child+' की *फ्री डेमो क्लास* तय हुई है:\n\n📅 '+o.date+'\n🕒 '+o.time+' (IST) · '+o.dur+' मिनट\n'+(o.course?'📚 '+o.course+'\n':'')+(o.teacher?'👩‍🏫 टीचर: '+o.teacher+'\n':'')+'🔗 Google Meet: '+(o.link||'(लिंक जल्द भेजा जाएगा)')+'\n\nकृपया:\n• 5 मिनट पहले कैमरा और माइक वाले फ़ोन/लैपटॉप से जुड़ें\n• शांत जगह और कॉपी-पेन तैयार रखें\n• शुरुआत में कोई पैरेंट पास रहें तो बच्चा आराम से जुड़ता है\n\nकन्फ़र्म करने के लिए *YES* लिखें। '+o.child+' से मिलने का इंतज़ार रहेगा! 😊'};
+function demoMsg(l,c,lang){
+  const d=c&&c.class_date?new Date(c.class_date+'T00:00:00').toLocaleDateString(lang==='hi'?'hi-IN':'en-IN',{weekday:'long',day:'numeric',month:'long'}):'date to be confirmed';
+  const o={parent:String((l&&l.parent_name)||'').split(' ')[0],child:String((l&&l.child_name)||'your child').split(' ')[0],who:(S.profile&&S.profile.full_name)||'our team',date:d,time:(c&&c.class_time)||'time to be confirmed',dur:(c&&c.duration_min)||30,course:(c&&c.course_name)||(l&&l.interested_course)||'',teacher:(c&&c.teacher_name)||'',link:c&&c.meet_link?safeUrl(c.meet_link):''};
+  return DEMO_MSG[lang==='hi'?'hi':'en'](o);
+}
+function shareBar(lid,cid){
+  const l=byId('leads',lid),c=byId('classes',cid);if(!l||!c)return '';
+  const lang=S.ui.demoLang||'en';
+  return '<div class="card" style="margin:10px 0;background:#f0fbf6;border-color:#bfe9d6"><b>📤 Share with the parent</b><div class="sm muted" style="margin:3px 0 8px">'+(c.meet_link&&c.class_date&&c.class_time?'Everything is ready — copy or send on WhatsApp.':'Add date, time and wait for the Meet link, then share.')+'</div>'
+   +'<div class="row" style="gap:6px"><select style="width:auto" onchange="S.ui.demoLang=this.value;openDemoShareRefresh()"><option value="en"'+(lang==='en'?' selected':'')+'>English</option><option value="hi"'+(lang==='hi'?' selected':'')+'>हिन्दी</option></select>'
+   +'<button class="btn sm pri" onclick="copyDemoMsg(\''+lid+'\',\''+cid+'\')">📋 Copy message</button><a class="btn sm wa" target="_blank" rel="noopener" href="'+waDemoLink(lid,cid)+'" style="text-decoration:none">💬 WhatsApp</a>'+(c.meet_link?'<button class="btn sm" onclick="navigator.clipboard.writeText(\''+esc(safeUrl(c.meet_link))+'\').then(()=>toast(\'Meet link copied ✓\'))">🔗 Copy link only</button>':'')+'</div></div>';
+}
+function openDemoShareRefresh(){const v=S.view;render();if(S.curPlanner)openDemoPlanner(S.curPlanner)}
+function waDemoLink(lid,cid){const l=byId('leads',lid),c=byId('classes',cid);let d=String((l&&l.phone)||'').replace(/\D/g,'');if(d.length===10)d='91'+d;return 'https://wa.me/'+d+'?text='+encodeURIComponent(demoMsg(l,c,S.ui.demoLang||'en'))}
+function copyDemoMsg(lid,cid){const t=demoMsg(byId('leads',lid),byId('classes',cid),S.ui.demoLang||'en');try{navigator.clipboard.writeText(t).then(()=>toast('Message copied ✓ — paste it into WhatsApp'),()=>toast('Could not copy'))}catch(e){toast('Could not copy')}}
+function queueRefresh(force){
+  if(S.queueLoading)return;if(!force&&S.queueAt&&Date.now()-S.queueAt<20000)return;
+  S.queueLoading=1;sb.rpc('demo_queue').then(r=>{S.queue=(r&&!r.error&&r.data)||[];S.queueErr=r&&r.error?r.error.message:'';S.queueAt=Date.now();S.queueLoading=0;if(S.view==='demodesk'&&!$('ov').classList.contains('on'))render()}).catch(()=>{S.queueAt=Date.now();S.queueLoading=0});
+}
+VIEWS.demodesk=()=>{
+  queueRefresh();
+  const tab=S.ui.ddTab||'open',isT=S.role==='teacher',q=S.queue||[];
+  const mine=D('classes').filter(c=>c.kind==='demo'&&c.status==='scheduled'&&(isT?c.teacher_id:true)&&c.lead_id).sort((a,b)=>String(a.class_date||'9').localeCompare(String(b.class_date||'9'))+String(a.class_time||'').localeCompare(String(b.class_time||''))*0.001);
+  const done=D('classes').filter(c=>c.kind==='demo'&&c.status==='completed'&&c.lead_id).sort((a,b)=>String(b.class_date).localeCompare(String(a.class_date))).slice(0,15);
+  const seg='<div class="seg" style="margin-bottom:12px"><button class="'+(tab==='open'?'on':'')+'" onclick="S.ui.ddTab=\'open\';render()">Open demos ('+q.length+')</button><button class="'+(tab==='mine'?'on':'')+'" onclick="S.ui.ddTab=\'mine\';render()">'+(isT?'My demos':'Booked demos')+' ('+mine.length+')</button><button class="'+(tab==='done'?'on':'')+'" onclick="S.ui.ddTab=\'done\';render()">Done ('+done.length+')</button></div>';
+  if(tab==='open')return seg+(isT?'<div class="sm muted" style="margin-bottom:10px">Pick a demo that suits you. The parent\'s name and number appear only after you pick it. You can hold up to 5 open demos.</div>':'')
+    +(q.length?'<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">'+q.map(x=>'<div class="card"><div class="hd"><h3>'+esc(x.child||'New child')+(x.age?' · age '+esc(x.age):'')+'</h3><span class="b p">Demo</span></div><div class="sm">'+esc(x.course||'Course not set')+'</div><div class="sm muted" style="margin:6px 0">📅 '+(x.class_date?fmtDate(x.class_date):'date to be confirmed')+' · 🕒 '+esc(x.class_time||'time to be confirmed')+(x.city?' · '+esc(x.city):'')+'</div>'+(isT?'<button class="btn pri" onclick="pickDemo(\''+x.class_id+'\')">✋ Pick this demo</button>':'<span class="sm muted">Waiting for a teacher</span>')+'</div>').join('')+'</div>':'<div class="card"><div class="empty">'+(S.queueErr?'Could not load: '+esc(S.queueErr)+' — run phase12_demo_desk.sql first.':'No open demos right now. New ones appear here as soon as a lead is set to Demo scheduled.')+'</div></div>');
+  if(tab==='mine')return seg+(mine.length?'<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(310px,1fr))">'+mine.map(demoCard).join('')+'</div>':'<div class="card"><div class="empty">'+(isT?'You have not picked a demo yet. Open the first tab to pick one.':'No booked demos yet.')+'</div></div>');
+  return seg+'<div class="card">'+(done.map(c=>{const l=byId('leads',c.lead_id);return '<div class="li" style="cursor:default"><div class="t">'+fmtDate(c.class_date)+'</div><div class="grow"><b>'+esc(c.title)+'</b><span class="sm muted">'+esc((l&&l.parent_name)||'')+'</span></div><span class="b g">Done</span></div>'}).join('')||'<div class="empty">No completed demos yet.</div>')+'</div>';
+};
+function demoCard(c){
+  const l=byId('leads',c.lead_id)||{},ready=!!(c.class_date&&c.class_time),tch=c.teacher_name;
+  return '<div class="card"><div class="hd"><h3>'+esc(String(l.child_name||'Child').split(' ')[0])+(l.child_age?' · age '+esc(l.child_age):'')+'</h3>'+(c.parent_confirmed?'<span class="b g">✓ Parent confirmed</span>':ready?'<span class="b o">Awaiting confirmation</span>':'<span class="b r">Time not set</span>')+'</div>'
+   +'<div class="sm">'+esc(c.course_name||l.interested_course||'')+(tch?' · 👩‍🏫 '+esc(tch):' · <b>no teacher yet</b>')+'</div>'
+   +'<div class="sm muted" style="margin:6px 0">📅 '+(c.class_date?fmtDate(c.class_date):'date TBC')+' · 🕒 '+esc(c.class_time||'time TBC')+'</div>'
+   +(l.parent_name||l.phone?'<div class="sm" style="margin-bottom:8px">👤 '+esc(l.parent_name||'Parent')+(l.phone?' · <a href="tel:'+esc(l.phone)+'" onclick="event.stopPropagation()">'+esc(l.phone)+'</a>':'')+'</div>':'<div class="sm muted" style="margin-bottom:8px">Parent details are visible to the assigned teacher / lead owner.</div>')
+   +'<div class="row" style="gap:6px">'+(l.phone?'<a class="btn sm" href="tel:'+esc(l.phone)+'" style="text-decoration:none">📞 Call</a>':'')+(l.id?'<button class="btn sm" onclick="openDemoPlanner(\''+l.id+'\')">🕒 Set time &amp; share</button>':'')
+   +(c.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(safeUrl(c.meet_link))+'" style="text-decoration:none">▶ Meet</a>':'')
+   +(l.id&&ready?'<button class="btn sm" onclick="toggleConfirm(\''+c.id+'\','+(!c.parent_confirmed)+')">'+(c.parent_confirmed?'Undo confirm':'✓ Parent confirmed')+'</button>':'')
+   +(l.id?'<button class="btn sm pri" onclick="completeDemoForm(\''+c.id+'\')">🎯 Demo conducted</button>':'')
+   +(S.role==='teacher'?'<button class="btn sm" onclick="releaseDemo(\''+c.id+'\')">↩ Release</button>':'')+'</div></div>';
+}
+async function pickDemo(cid){
+  const {error}=await sb.rpc('claim_demo',{p_class:cid});
+  if(error){toast(error.message,5000);queueRefresh(true);return}
+  await loadAll(true);queueRefresh(true);S.ui.ddTab='mine';toast('Demo picked ✓ — call the parent to confirm the time');render();
+}
+async function releaseDemo(cid){if(!confirm('Give this demo back to the pool? Another teacher can pick it.'))return;const {error}=await sb.rpc('release_demo',{p_class:cid});if(error){toast(error.message,5000);return}await loadAll(true);queueRefresh(true);toast('Released');render()}
+async function toggleConfirm(cid,ok){const {error}=await sb.rpc('confirm_demo',{p_class:cid,p_ok:ok});if(error){toast(error.message,5000);return}await loadAll(true);toast(ok?'Marked as confirmed ✓':'Confirmation removed');render()}
+function completeDemoForm(cid){
+  const c=byId('classes',cid);if(!c)return;const l=byId('leads',c.lead_id)||{};
+  openDrawer('<div class="dh"><div><div class="sm muted">Demo conducted</div><h2>'+esc(String(l.child_name||'Child').split(' ')[0])+' · '+esc(c.course_name||'')+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<label class="sm"><b>How did the child do?</b></label><select id="cdRate"><option value="5">⭐⭐⭐⭐⭐ Excellent</option><option value="4" selected>⭐⭐⭐⭐ Good</option><option value="3">⭐⭐⭐ Average</option><option value="2">⭐⭐ Needs support</option><option value="1">⭐ Did not engage</option></select>'
+   +'<label class="sm" style="display:block;margin-top:8px"><b>Child\'s level</b></label><select id="cdLevel"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>'
+   +'<label class="sm" style="display:block;margin-top:8px"><b>Parent\'s response</b></label><select id="cdInt"><option>Very interested</option><option>Thinking about it</option><option>Wants fee details</option><option>Not interested</option><option>Did not attend</option></select>'
+   +'<label class="sm" style="display:block;margin-top:8px"><b>Course you recommend</b></label><select id="cdCourse"><option value="">—</option>'+D('courses').map(x=>'<option'+(x.name===(c.course_name||l.interested_course)?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select>'
+   +'<label class="sm" style="display:block;margin-top:8px"><b>Notes for the counselor</b> (strengths, concerns, what the parent asked)</label><textarea id="cdNotes" rows="4"></textarea>'
+   +'<label class="sm" style="display:block;margin-top:8px"><b>Next follow-up date</b></label><input type="date" id="cdNext" value="'+addDays(todayStr(),2)+'">'
+   +'<div class="act"><button class="btn pri" onclick="saveDemoDone(\''+cid+'\')">Save &amp; mark demo conducted</button><button class="btn" onclick="closeDrawer()">Cancel</button></div>'
+   +'<div class="sm muted" style="margin-top:6px">The lead moves to "Demo completed" and the lead owner gets a task to share the fee and follow up.</div>');
+}
+async function saveDemoDone(cid){
+  const {error}=await sb.rpc('complete_demo',{p_class:cid,p_rating:parseInt($('cdRate').value,10),p_level:$('cdLevel').value,p_interest:$('cdInt').value,p_course:$('cdCourse').value||null,p_notes:$('cdNotes').value||null,p_next:$('cdNext').value||null});
+  if(error){toast('Could not save: '+error.message,5000);return}
+  await loadAll(true);queueRefresh(true);toast('Demo recorded ✓');S.ui.ddTab='done';closeDrawer();
+}
 const isDemoSt=st=>st==='demo_scheduled'||st==='demo_rescheduled';
 const to12h=v=>{const m=String(v||'').match(/^(\d{1,2}):(\d{2})$/);if(!m)return v||'';let h=+m[1];const ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+m[2]+' '+ap};
 const to24h=v=>{const m=String(v||'').trim().match(/^(\d{1,2})(?::(\d{2}))?\s*([ap]m)?$/i);if(!m)return '';let h=+m[1];const ap=(m[3]||'').toLowerCase();if(ap==='pm'&&h<12)h+=12;if(ap==='am'&&h===12)h=0;return String(h).padStart(2,'0')+':'+(m[2]||'00')};
@@ -869,7 +950,7 @@ function classMats(cid){return D('class_materials').filter(x=>x.class_id===cid).
 async function matUrl(m){if(m.file_path){const {data,error}=await sb.storage.from('materials').createSignedUrl(m.file_path,3600);if(error){toast('Could not open file: '+error.message,4000);return ''}return data.signedUrl}return safeUrl(m.url)}
 async function openMat(id){const m=D('materials').find(x=>x.id===id);if(!m)return;const u=await matUrl(m);if(u)window.open(u,'_blank','noopener')}
 async function openDemoPlanner(id,tries){
-  tries=tries||0;await loadAll(true);
+  tries=tries||0;S.curPlanner=id;await loadAll(true);
   const l=byId('leads',id);if(!l)return;
   let c=demoClassOf(id);
   if(!c&&tries<4){openDrawer('<div class="empty">Setting up the demo class…</div>');setTimeout(()=>openDemoPlanner(id,tries+1),700);return}
@@ -885,7 +966,7 @@ async function openDemoPlanner(id,tries){
    +'<div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label class="sm"><b>Preferred date</b></label><input type="date" id="dpDate" value="'+esc(dt)+'" min="'+todayStr()+'"></div><div><label class="sm"><b>Time (IST)</b></label><input type="time" id="dpTime" value="'+esc(tm)+'"></div>'
    +'<div><label class="sm"><b>Teacher</b></label><select id="dpTeacher">'+['<option value="">— choose teacher —</option>'].concat(D('teachers').filter(t=>t.status!=='inactive').map(t=>'<option value="'+esc(t.id)+'"'+((dr.dpTeacher||c.teacher_id)===t.id?' selected':'')+'>'+esc(t.full_name)+'</option>')).join('')+'</select></div>'
    +'<div><label class="sm"><b>Length (minutes)</b></label><input type="number" id="dpDur" value="'+esc(dr.dpDur||c.duration_min||30)+'"></div></div>'
-   +'<div class="row" style="margin:12px 0;gap:8px">'+meet+'</div>'
+   +'<div class="row" style="margin:12px 0;gap:8px">'+meet+'</div>'+shareBar(id,c.id)
    +'<div class="card"><b>📎 Teaching material for the teacher</b><div class="sm muted" style="margin:4px 0 8px">Add what the teacher needs to run this demo — worksheet, slides, short video or a link. Families do not see these.</div>'
    +(mats.length?mats.map(m=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(m.title)+'</b><span class="sm muted">'+esc(m.file_name||m.url||'')+'</span></div><button class="btn sm" onclick="openMat(\''+m.id+'\')">Open</button><button class="btn sm" onclick="detachMat(\''+c.id+'\',\''+m.id+'\',\''+id+'\')">Remove</button></div>').join(''):'<div class="sm muted" style="margin-bottom:8px">Nothing attached yet.</div>')
    +(libs.length?'<div class="row" style="margin:8px 0"><select id="dpLib" class="grow"><option value="">Pick from your library…</option>'+libs.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.title+(m.course_name?' · '+m.course_name:''))+'</option>').join('')+'</select><button class="btn sm" onclick="attachLib(\''+c.id+'\',\''+id+'\')">Attach</button></div>':'')
@@ -1148,6 +1229,31 @@ function gateMode(){
   $('gHint').textContent=t?'First time? Use the same email your Next Move India admin added for you, choose a password, then tap Create tutor account.':'First time? Tap Create parent account with your email and choose a password.';
 }
 window.addEventListener('hashchange',gateMode);gateMode();
+
+/* ================= Data protection (everyone except the admin) ================= */
+/* Real protection is on the server (each person can only read what their role allows).
+   These measures add friction against casual copying, printing and screenshots. */
+let guardOn=false,idleT=null;
+function guardInit(){
+  const on=S.role!=='admin';document.body.classList.toggle('guard',on);
+  if(!on||guardOn){if(!on){clearTimeout(idleT)}return}
+  guardOn=true;
+  const wm=document.createElement('div');wm.id='wm';const w=document.createElement('div');
+  const tag=((S.user&&S.user.email)||'')+' · '+todayStr();w.innerHTML=Array(220).fill('<span>'+esc(tag)+'</span>').join('');wm.appendChild(w);document.body.appendChild(wm);
+  const veil=document.createElement('div');veil.id='privacyVeil';veil.innerHTML='<div>🔒 Next Move India<br><span style="font-weight:400;opacity:.8">Content is hidden while this window is not active</span></div>';document.body.appendChild(veil);
+  const editable=t=>t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable);
+  const stop=e=>{if(S.role==='admin'||editable(e.target))return;e.preventDefault()};
+  ['copy','cut','contextmenu','dragstart','selectstart'].forEach(ev=>document.addEventListener(ev,stop,true));
+  document.addEventListener('keydown',e=>{
+    if(S.role==='admin')return;const k=(e.key||'').toLowerCase(),m=e.ctrlKey||e.metaKey;
+    if(e.key==='F12'||e.key==='PrintScreen'||(m&&['p','s','u'].includes(k))||(m&&e.shiftKey&&['i','j','c','s'].includes(k))||(m&&['c','x','a'].includes(k)&&!editable(e.target))){e.preventDefault();if(e.key==='PrintScreen'){try{navigator.clipboard.writeText('')}catch(x){}}}
+  },true);
+  document.addEventListener('keyup',e=>{if(S.role!=='admin'&&e.key==='PrintScreen'){try{navigator.clipboard.writeText('Screenshots are not permitted — Next Move India')}catch(x){}}});
+  const hide=()=>document.body.classList.toggle('hidden-win',S.role!=='admin'&&(document.hidden||!document.hasFocus()));
+  document.addEventListener('visibilitychange',hide);window.addEventListener('blur',hide);window.addEventListener('focus',hide);
+  const bump=()=>{clearTimeout(idleT);if(S.role==='admin'||!S.user)return;idleT=setTimeout(()=>{if(S.user){toast('Signed out after 20 minutes of inactivity',6000);signOut()}},20*60*1000)};
+  ['click','keydown','mousemove','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,bump,{passive:true}));bump();
+}
 let booting=false;
 async function boot(){
   if(booting)return;booting=true;
@@ -1162,7 +1268,7 @@ async function boot(){
     $('meName').textContent=S.profile.full_name||session.user.email;$('meRole').textContent=S.role;$('meAv').textContent=initials(S.profile.full_name||session.user.email);
     const h=(location.hash||'').replace('#','');
     S.view=myNav().some(x=>x[0]===h)?h:'dashboard';
-    renderNav();$('page').innerHTML='<div class="empty">Loading your workspace…</div>';
+    guardInit();renderNav();$('page').innerHTML='<div class="empty">Loading your workspace…</div>';
     await loadAll();
   }catch(e){console.error(e);$('page').innerHTML='<div class="card"><b>Something went wrong while loading.</b><p class="muted">'+esc(e.message||e)+'</p><button class="btn pri" onclick="location.reload()">Reload</button></div>'}
   finally{booting=false}
