@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact NextMove India | Enquiries & Free Demo</title>
+  <meta name="description" content="Contact NextMove India about online spoken English, public speaking, phonics and online learning programmes for children.">
+  <link rel="canonical" href="https://nextmoveindia.org/contact.html">
+  <link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .contact-page{max-width:1050px;margin:0 auto;padding:3rem 1.25rem 5rem}
+    .contact-intro{max-width:760px;margin:0 auto 2rem;text-align:center}
+    .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem;margin:2rem 0}
+    .contact-card{background:#fff;border:1px solid #e8edf3;border-radius:18px;padding:1.5rem;box-shadow:0 8px 28px rgba(16,36,62,.06)}
+    .contact-card h2{font-size:1.2rem;color:#10243e;margin:.2rem 0 .55rem}
+    .contact-card p{color:#536174;line-height:1.7}
+    .contact-card a{color:#d95320;font-weight:800;overflow-wrap:anywhere}
+    .contact-note{background:#fff7ef;border-left:4px solid #ff6b35;padding:1.2rem 1.4rem;border-radius:10px;line-height:1.7;color:#39465a}
+    @media(max-width:600px){.contact-page{padding-top:2rem}}
+  </style>
+</head>
+<body>
+<header class="navbar">
+  <div class="container nav-inner">
+    <a class="logo" href="/" aria-label="NextMove India home"><span class="logo-text">NextMove<span class="logo-accent">India</span></span></a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="/">Home</a><a href="/about.html">About Us</a><a href="/programs.html">Programs</a><a href="/blog/">Blog</a>
+      <a href="/#demo-form" class="btn-nav">Free Demo</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenu">&#9776;</button>
+  </div>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true">
+    <a href="/">Home</a><a href="/about.html">About Us</a><a href="/programs.html">Programs</a><a href="/blog/">Blog</a><a href="/#demo-form">Book Free Demo</a>
+  </nav>
+</header>
+<main>
+  <section class="page-hero"><div class="container">
+    <div class="section-tag light">We're here to help</div>
+    <h1>Contact <span class="highlight">NextMove India</span></h1>
+    <p>Have a question about a programme, learning format or demo session? Contact our team using the details below.</p>
+  </div></section>
+  <section class="contact-page">
+    <div class="contact-intro">
+      <p class="section-tag">Talk to our team</p>
+      <h2 class="section-title">Choose the easiest way to reach us</h2>
+      <p>Parents and guardians can contact us for programme information, demo enquiries, class coordination and general support.</p>
+    </div>
+    <div class="contact-grid">
+      <article class="contact-card"><h2>Email</h2><p>For programme questions and written enquiries:</p><a href="mailto:info@nextmoveindia.org">info@nextmoveindia.org</a></article>
+      <article class="contact-card"><h2>Phone</h2><p>Call NextMove India:</p><a href="tel:+919682420506">+91 96824 20506</a></article>
+      <article class="contact-card"><h2>WhatsApp</h2><p>Message us to ask about courses or request a demo:</p><a href="https://wa.me/919682420506?text=Hello%20NextMove%20India%2C%20I%20have%20a%20programme%20enquiry." target="_blank" rel="noopener noreferrer">Chat with NextMove India</a></article>
+    </div>
+    <div class="contact-note"><strong>Demo requests:</strong> A request is an enquiry, not a confirmed booking. Our team will contact the parent or guardian to discuss programme suitability and available timings. Please do not send sensitive personal or payment information through public messages.</div>
+    <div style="text-align:center;margin-top:2rem">
+      <a class="btn-primary" href="/#demo-form">Request a Free Demo</a>
+      <p style="margin-top:1rem"><a href="/programs.html">Explore programmes</a> · <a href="/online-school.html">Online learning information</a> · <a href="/blog/">Parent learning resources</a></p>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container"><p>© 2026 NextMove India. All rights reserved. · <a href="/">Home</a> · <a href="/privacy-policy.html">Privacy Policy</a> · <a href="/terms.html">Terms of Use</a> · <a href="/disclaimer.html">Disclaimer</a></p></div></footer>
+<script>
+const menuButton=document.getElementById('hamburger'),mobileMenu=document.getElementById('mobileMenu');
+if(menuButton&&mobileMenu){menuButton.addEventListener('click',()=>{const open=mobileMenu.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open));mobileMenu.setAttribute('aria-hidden',String(!open));});}
+</script>
+</body></html>
