@@ -202,8 +202,10 @@ tr:last-child td{border-bottom:0}
   <div class="tag">NEXT MOVE INDIA LMS</div><h2 id="gTitle">Welcome back 👋</h2><p class="muted" style="margin:0 0 18px">Sign in to your secure school workspace.</p>
   <input id="gEmail" type="email" placeholder="Email address" autocomplete="username">
   <input id="gPass" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-  <button class="btn pri" style="width:100%;justify-content:center" onclick="doLogin()">Sign in</button>
-  <button class="btn" id="gSignup" style="width:100%;justify-content:center;margin-top:8px" onclick="doSignup()">Create parent account</button><div class="sm muted" id="gHint" style="margin-top:8px"></div>
+  <button class="btn pri" id="gLogin" style="width:100%;justify-content:center" onclick="doLogin()">Sign in</button>
+  <button class="btn" id="gSignup" style="width:100%;justify-content:center;margin-top:8px" onclick="doSignup()">Create parent account</button>
+  <div class="row" style="margin-top:8px;gap:8px"><button class="btn sm" id="gResend" onclick="doResendConfirmation()">Resend confirmation email</button><button class="btn sm" id="gForgot" onclick="doResetPassword()">Forgot password?</button></div>
+  <div class="sm muted" id="gHint" style="margin-top:8px"></div>
   <div class="seat" id="gMsg"></div>
   <div class="sm muted">Your password is handled by Supabase Authentication.</div>
 </div></div>
@@ -430,9 +432,10 @@ function collect(ent){
 function editor(ent,id,preset,extraTop,extraBottom){
   const e=ENT[ent],r=id?(byId(ent,id)||{}):(preset||{});const ro=!canEdit(ent);
   const missing=e.fields.filter(f=>f.req&&!r[f.k]&&id);
+  const teacherMeetHelp=ent==='classes'&&S.role==='teacher'?'<div class="card" style="margin:10px 0;background:#fff8f2;border-color:#ffd9b8"><b>🎥 Create a Meet link in your own Google account</b><p class="sm muted" style="margin:6px 0 10px">Open Google Meet while signed in with the Google account you want to host from. Create a meeting, copy its link, then paste it into the Google Meet link field below and save this class.</p><button class="btn pri" type="button" onclick="window.open(\'https://meet.new\',\'_blank\',\'noopener\')">＋ Create my Google Meet</button></div>':'';
   openDrawer('<div class="dh"><div><div class="sm muted">'+esc(e.label)+'</div><h2>'+esc(id?e.title(r):'New '+e.label.toLowerCase())+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
    +'<div class="row" style="margin-bottom:12px"><span class="sync" title="Edit here or in the Google Sheet tab &quot;'+esc(e.tab)+'&quot; — both stay in step.">⇄ Synced with Google Sheet</span>'+(ro?'<span class="b y">View only</span>':'')+'</div>'
-   +(extraTop||'')
+   +(extraTop||'')+teacherMeetHelp
    +'<div class="fg">'+e.fields.map(f=>fieldHTML(f,r,ro)).join('')+'</div>'
    +(extraBottom||'')
    +(ro?'':'<div class="act"><button class="btn pri" onclick="submitEditor(\''+ent+'\','+(id?'\''+id+'\'':'null')+')">💾 Save</button>'+(id&&canDelete(ent)?'<button class="btn red" onclick="removeFromEditor(\''+ent+'\',\''+id+'\')">Delete</button>':'')+'<button class="btn" onclick="closeDrawer()">Cancel</button></div>'));
@@ -484,7 +487,7 @@ function refreshRows(ent){const el=$('tw_'+ent);if(el)el.innerHTML=tableHTML(ent
 function sortBy(ent,k){const u=S.ui[ent];if(u.sort===k)u.dir=-u.dir;else{u.sort=k;u.dir=1}refreshRows(ent)}
 function exportEnt(ent){const e=ENT[ent];download('nmi-'+ent+'-'+todayStr()+'.csv',toCSV(filterRows(ent),e.cols.map(c=>({label:c.l,k:c.k}))))}
 function addRecord(ent){
-  if(ent==='classes')return editor('classes',null,{class_date:todayStr()});
+  if(ent==='classes')return editor('classes',null,{class_date:todayStr(),...(S.role==='teacher'&&myTeacherId()?{teacher_id:myTeacherId()}: {})});
   if(ent==='tasks')return editor('tasks',null,{assignee_id:S.user.id});
   if(ent==='leads')return editor('leads',null,{assigned_to:S.user.id});
   editor(ent,null,{});
@@ -1204,7 +1207,7 @@ VIEWS.materials=()=>{
 /* ================= Team & access ================= */
 VIEWS.team=()=>{
   const P=D('profiles');
-  return '<div class="card" style="margin-bottom:14px"><b>How to add a counselor or teacher</b><ol class="sm muted" style="margin:8px 0 0;padding-left:18px"><li>Ask them to open this page and tap <b>Create account</b> with their email.</li><li>They appear below as <b>Student</b>. Change their role here — they get the right screens the next time they sign in.</li><li>For a teacher, also add them under <b>Teachers</b> and set their email to match.</li></ol></div>'
+  return '<div class="card" style="margin-bottom:14px"><b>How to activate a teacher account</b><ol class="sm muted" style="margin:8px 0 0;padding-left:18px"><li>Add the teacher under <b>Teachers</b> with their correct email address.</li><li>Send them the tutor link from the Teachers page.</li><li>They create an account using that exact email and confirm it from the email received.</li><li>After confirmation, the matching teacher record links the login to the teacher profile automatically.</li></ol><p class="sm muted" style="margin:8px 0 0">If the confirmation email does not arrive, check Supabase email delivery / custom SMTP and use Resend confirmation on the login screen.</p></div>'
   +'<div class="tw"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Language</th><th>Active</th></tr></thead><tbody>'+P.map(p=>'<tr style="cursor:default"><td><b>'+esc(p.full_name||'—')+'</b></td><td>'+esc(p.email||'')+'</td><td><select style="width:auto" onchange="setProfile(\''+p.id+'\',{role:this.value})">'+['admin','counselor','teacher','parent','student'].map(r=>'<option'+(p.role===r?' selected':'')+'>'+r+'</option>').join('')+'</select></td><td>'+(p.language==='hi'?'हिन्दी':'English')+'</td><td><select style="width:auto" onchange="setProfile(\''+p.id+'\',{active:this.value===\'true\'})"><option value="true"'+(p.active?' selected':'')+'>Active</option><option value="false"'+(p.active?'':' selected')+'>Blocked</option></select></td></tr>').join('')+'</tbody></table></div>';
 };
 async function setProfile(id,patch){
@@ -1237,21 +1240,50 @@ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLower
 </script>
 <script>
 /* ================= Sign in / boot ================= */
-async function doLogin(){const m=$('gMsg');m.textContent='Signing in…';const {error}=await sb.auth.signInWithPassword({email:$('gEmail').value.trim(),password:$('gPass').value});m.textContent=error?error.message:''}
+const AUTH_REDIRECT=location.origin+location.pathname;
+async function doLogin(){
+  const m=$('gMsg');m.style.color='';m.textContent='Signing in…';
+  const {error}=await sb.auth.signInWithPassword({email:$('gEmail').value.trim(),password:$('gPass').value});
+  m.textContent=error?(error.message.toLowerCase().includes('email not confirmed')?'Your email is not confirmed yet. Select “Resend confirmation email” below, then check your inbox and spam folder.':error.message):'';
+}
 async function doSignup(){
   const email=$('gEmail').value.trim(),password=$('gPass').value,m=$('gMsg');
   if(!email||password.length<6){m.textContent='Enter your email and a password of at least 6 characters.';return}
-  m.textContent='Creating account…';
-  const {data,error}=await sb.auth.signUp({email,password});
+  m.style.color='';m.textContent='Creating account…';
+  const {data,error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:AUTH_REDIRECT}});
   if(error){m.textContent=error.message;return}
-  m.style.color='#12a36b';m.textContent=data.session?'Account created — you are signed in.':'Account created. Check your email to confirm, then sign in.';
+  m.style.color='#12a36b';m.textContent=data.session?'Account created — you are signed in.':'Account created. Check your email (including spam) to confirm, then sign in. For tutors, use the exact email added by the admin.';
 }
-async function signOut(){await sb.auth.signOut();S.user=null;S.loaded=false;S.d={};$('gate').style.display='flex'}
+async function doResendConfirmation(){
+  const email=$('gEmail').value.trim(),m=$('gMsg');
+  if(!email){m.textContent='Enter your registered email address first.';return}
+  m.style.color='';m.textContent='Sending a new confirmation email…';
+  const {error}=await sb.auth.resend({type:'signup',email,options:{emailRedirectTo:AUTH_REDIRECT}});
+  if(error){m.textContent=error.message;return}
+  m.style.color='#12a36b';m.textContent='If this account is awaiting confirmation, a new email has been sent. Check inbox and spam.';
+}
+async function doResetPassword(){
+  const email=$('gEmail').value.trim(),m=$('gMsg');
+  if(!email){m.textContent='Enter your registered email address first.';return}
+  m.style.color='';m.textContent='Sending password reset email…';
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:AUTH_REDIRECT});
+  if(error){m.textContent=error.message;return}
+  m.style.color='#12a36b';m.textContent='If an account exists for this address, a password reset email has been sent. Check inbox and spam.';
+}
+async function doUpdatePassword(){
+  const password=$('gPass').value,m=$('gMsg');
+  if(password.length<8){m.textContent='Choose a password with at least 8 characters.';return}
+  const {error}=await sb.auth.updateUser({password});
+  if(error){m.textContent=error.message;return}
+  m.style.color='#12a36b';m.textContent='Password updated. Opening your LMS…';
+  S.recovery=false;setTimeout(()=>boot(),250);
+}
+async function signOut(){await sb.auth.signOut();S.user=null;S.loaded=false;S.d={};$('gate').style.display='flex';gateMode()}
 function gateMode(){
   const t=(location.hash||'').replace('#','')==='teacher';
   $('gTitle').textContent=t?'Welcome, tutor 👋':'Welcome back 👋';
   $('gSignup').textContent=t?'Create tutor account':'Create parent account';
-  $('gHint').textContent=t?'First time? Use the same email your Next Move India admin added for you, choose a password, then tap Create tutor account.':'First time? Tap Create parent account with your email and choose a password.';
+  $('gHint').textContent=t?'First time? Use the exact email your Next Move India admin added under Teachers. Create your account, confirm the email, then sign in.':'First time? Tap Create parent account with your email and choose a password.';
 }
 window.addEventListener('hashchange',gateMode);gateMode();
 
@@ -1298,7 +1330,14 @@ async function boot(){
   }catch(e){console.error(e);$('page').innerHTML='<div class="card"><b>Something went wrong while loading.</b><p class="muted">'+esc(e.message||e)+'</p><button class="btn pri" onclick="location.reload()">Reload</button></div>'}
   finally{booting=false}
 }
-sb.auth.onAuthStateChange((ev,session)=>{if(ev==='SIGNED_OUT'){S.user=null;$('gate').style.display='flex'}else if(session&&(!S.user||ev==='SIGNED_IN'&&S.user.id!==session.user.id))setTimeout(boot,0)});
+sb.auth.onAuthStateChange((ev,session)=>{
+  if(ev==='PASSWORD_RECOVERY'){
+    $('gate').style.display='flex';$('gTitle').textContent='Set a new password';$('gPass').value='';$('gPass').placeholder='New password';$('gLogin').textContent='Update password';$('gLogin').onclick=doUpdatePassword;
+    $('gSignup').style.display='none';$('gResend').style.display='none';$('gForgot').style.display='none';$('gMsg').textContent='Choose a new password (at least 8 characters).';return;
+  }
+  if(ev==='SIGNED_OUT'){S.user=null;$('gate').style.display='flex';gateMode()}
+  else if(session&&(!S.user||ev==='SIGNED_IN'&&S.user.id!==session.user.id))setTimeout(boot,0);
+});
 /* keep data fresh: changes made in the Google Sheet appear here within a minute */
 setInterval(async()=>{
   if(!S.user||document.hidden||$('ov').classList.contains('on')||$('pal').classList.contains('on'))return;
