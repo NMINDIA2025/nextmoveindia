@@ -1249,7 +1249,7 @@ async function doLogin(){
 }
 async function doSignup(){
   const email=$('gEmail').value.trim(),password=$('gPass').value,m=$('gMsg');
-  if(!email||password.length<6){m.textContent='Enter your email and a password of at least 6 characters.';return}
+  if(!email||password.length<8){m.textContent='Enter your email and a password of at least 8 characters.';return}
   m.style.color='';m.textContent='Creating account…';
   const {data,error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:AUTH_REDIRECT}});
   if(error){m.textContent=error.message;return}
@@ -1283,7 +1283,7 @@ async function signOut(){await sb.auth.signOut();S.user=null;S.loaded=false;S.d=
 function gateMode(){
   const t=(location.hash||'').replace('#','')==='teacher';
   $('gTitle').textContent=t?'Welcome, tutor 👋':'Welcome back 👋';
-  $('gPass').placeholder='Password';$('gLogin').textContent='Sign in';$('gLogin').onclick=doLogin;
+  $('gPass').placeholder='Password';$('gPass').onkeydown=(e)=>{if(e.key==='Enter')doLogin()};$('gLogin').textContent='Sign in';$('gLogin').onclick=doLogin;
   $('gSignup').style.display='';$('gResend').style.display='';$('gForgot').style.display='';
   $('gSignup').textContent=t?'Create tutor account':'Create parent account';
   $('gHint').textContent=t?'First time? Use the exact email your Next Move India admin added under Teachers. Create your account, confirm the email, then sign in.':'First time? Tap Create parent account with your email and choose a password.';
@@ -1335,7 +1335,7 @@ async function boot(){
 }
 sb.auth.onAuthStateChange((ev,session)=>{
   if(ev==='PASSWORD_RECOVERY'){
-    $('gate').style.display='flex';$('gTitle').textContent='Set a new password';$('gPass').value='';$('gPass').placeholder='New password';$('gLogin').textContent='Update password';$('gLogin').onclick=doUpdatePassword;
+    $('gate').style.display='flex';$('gTitle').textContent='Set a new password';$('gPass').value='';$('gPass').placeholder='New password';$('gPass').onkeydown=(e)=>{if(e.key==='Enter')doUpdatePassword()};$('gLogin').textContent='Update password';$('gLogin').onclick=doUpdatePassword;
     $('gSignup').style.display='none';$('gResend').style.display='none';$('gForgot').style.display='none';$('gMsg').textContent='Choose a new password (at least 8 characters).';return;
   }
   if(ev==='SIGNED_OUT'){S.user=null;$('gate').style.display='flex';gateMode()}
