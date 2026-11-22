@@ -18,7 +18,8 @@ begin
     raise exception 'Profile identity cannot be changed.';
   end if;
 
-  if auth.uid() = old.id and not coalesce(public.is_admin(), false) then
+  if current_setting('nmi.auth_email_sync', true) is distinct from '1'
+     and auth.uid() = old.id and not coalesce(public.is_admin(), false) then
     if new.email is distinct from old.email then
       raise exception 'Email is managed by Supabase Auth. Use the account email-change flow.';
     end if;
@@ -47,10 +48,12 @@ set search_path = ''
 as $$
 begin
   if new.email is distinct from old.email then
+    perform set_config('nmi.auth_email_sync', '1', true);
     update public.profiles
        set email = new.email
      where id = new.id
        and email is distinct from new.email;
+    perform set_config('nmi.auth_email_sync', '', true);
   end if;
   return new;
 end;
