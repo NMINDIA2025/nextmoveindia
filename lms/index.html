@@ -487,6 +487,7 @@ function refreshRows(ent){const el=$('tw_'+ent);if(el)el.innerHTML=tableHTML(ent
 function sortBy(ent,k){const u=S.ui[ent];if(u.sort===k)u.dir=-u.dir;else{u.sort=k;u.dir=1}refreshRows(ent)}
 function exportEnt(ent){const e=ENT[ent];download('nmi-'+ent+'-'+todayStr()+'.csv',toCSV(filterRows(ent),e.cols.map(c=>({label:c.l,k:c.k}))))}
 function addRecord(ent){
+  if(ent==='classes'&&S.role==='teacher'&&!myTeacherId()){toast('Your teacher login is not linked to a teacher profile yet. Ask the admin to check your registered email under Teachers.',5000);return}
   if(ent==='classes')return editor('classes',null,{class_date:todayStr(),...(S.role==='teacher'&&myTeacherId()?{teacher_id:myTeacherId()}: {})});
   if(ent==='tasks')return editor('tasks',null,{assignee_id:S.user.id});
   if(ent==='leads')return editor('leads',null,{assigned_to:S.user.id});
@@ -1282,6 +1283,8 @@ async function signOut(){await sb.auth.signOut();S.user=null;S.loaded=false;S.d=
 function gateMode(){
   const t=(location.hash||'').replace('#','')==='teacher';
   $('gTitle').textContent=t?'Welcome, tutor 👋':'Welcome back 👋';
+  $('gPass').placeholder='Password';$('gLogin').textContent='Sign in';$('gLogin').onclick=doLogin;
+  $('gSignup').style.display='';$('gResend').style.display='';$('gForgot').style.display='';
   $('gSignup').textContent=t?'Create tutor account':'Create parent account';
   $('gHint').textContent=t?'First time? Use the exact email your Next Move India admin added under Teachers. Create your account, confirm the email, then sign in.':'First time? Tap Create parent account with your email and choose a password.';
 }
