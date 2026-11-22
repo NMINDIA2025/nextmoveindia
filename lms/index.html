@@ -1252,16 +1252,39 @@ async function doSignup(){
   if(!email||password.length<8){m.textContent='Enter your email and a password of at least 8 characters.';return}
   m.style.color='';m.textContent='Creating account…';
   const {data,error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:AUTH_REDIRECT}});
-  if(error){m.textContent=error.message;return}
-  m.style.color='#12a36b';m.textContent=data.session?'Account created — you are signed in.':'Account created. Check your email (including spam) to confirm, then sign in. For tutors, use the exact email added by the admin.';
+  if(error){
+    const e=String(error.message||'');
+    m.textContent=/email address not authorized/i.test(e)
+      ?'Supabase has blocked the confirmation email because this address is not allowed by its default mail service. The project owner must configure custom SMTP, then resend confirmation.'
+      :/rate limit|too many requests/i.test(e)
+      ?'Supabase email limit reached. Wait before retrying, or configure custom SMTP for teacher accounts.'
+      :e;
+    return;
+  }
+  if(data.user && Array.isArray(data.user.identities) && data.user.identities.length===0){
+    m.textContent='This email may already have an account. Try signing in, or use Resend confirmation email if it is still unverified.';
+    return;
+  }
+  m.style.color='#12a36b';
+  m.textContent=data.session
+    ?'Account created and signed in. If this is a tutor account, the admin must already have added the same email under Teachers.'
+    :'Account record created, but sign-in is waiting for email confirmation. Supabase sends that email automatically. If it does not arrive, use Resend confirmation email; if that also fails, the project owner must configure custom SMTP.';
 }
 async function doResendConfirmation(){
   const email=$('gEmail').value.trim(),m=$('gMsg');
-  if(!email){m.textContent='Enter your registered email address first.';return}
-  m.style.color='';m.textContent='Sending a new confirmation email…';
+  if(!email){m.textContent='Enter the teacher email address first.';return}
+  m.style.color='';m.textContent='Requesting a new confirmation email…';
   const {error}=await sb.auth.resend({type:'signup',email,options:{emailRedirectTo:AUTH_REDIRECT}});
-  if(error){m.textContent=error.message;return}
-  m.style.color='#12a36b';m.textContent='If this account is awaiting confirmation, a new email has been sent. Check inbox and spam.';
+  if(error){
+    const e=String(error.message||'');
+    m.textContent=/email address not authorized/i.test(e)
+      ?'Supabase default email service does not allow this teacher address. Configure custom SMTP in Supabase Auth, then try again.'
+      :/rate limit|too many requests/i.test(e)
+      ?'Supabase email limit reached. Wait before retrying or configure custom SMTP.'
+      :e;
+    return;
+  }
+  m.style.color='#12a36b';m.textContent='Confirmation request accepted. Check inbox, spam and any quarantine folder. If no email arrives, check Supabase Auth logs and SMTP delivery logs.';
 }
 async function doResetPassword(){
   const email=$('gEmail').value.trim(),m=$('gMsg');
