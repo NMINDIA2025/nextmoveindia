@@ -1256,7 +1256,7 @@ const materialsOld=()=>{
 const P13=()=>{const m=D('materials');return m.length?('purpose' in m[0]):!(S.err&&S.err.course_days)};
 const SECTIONS=[['learn','📖','Learn'],['activity','🎯','Class activity'],['practice','🏠','Home practice']];
 const DAYCOL=['#ff7a1a','#ff3d8b','#4d7cff','#12a36b','#8b5cf6','#f5a300'];
-function p13Banner(){return isAdmin()&&!P13()?'<div class="card" style="background:#fff0dc;margin-bottom:14px"><b>One setup step left</b><p class="sm" style="margin:6px 0 0">Run <b>phase13_learning_path.sql</b> in Supabase (SQL Editor) to switch on day-wise learning and video uploads. Until then you see the simple view below.</p></div>':''}
+function p13Banner(){return isAdmin()&&!P13()?'<div class="card" style="background:#fff0dc;margin-bottom:14px"><b>One setup step left</b><p class="sm" style="margin:6px 0 0">Run <b>phase14_learning_path.sql</b> in Supabase (SQL Editor) to switch on day-wise learning and video uploads. Until then you see the simple view below.</p></div>':''}
 function courseList(){const s=new Set();D('courses').forEach(c=>c.name&&s.add(c.name));['materials','assignments','students','course_days'].forEach(t=>D(t).forEach(r=>r.course_name&&s.add(r.course_name)));return [...s].sort()}
 const cn=i=>courseList()[i]||'';
 function pickCourse(courses){let cur=S.ui.libCourse;if(courses.includes(cur))return cur;let best='',bn=-1;courses.forEach(c=>{const n=D('materials').filter(m=>m.course_name===c).length+D('assignments').filter(a=>a.course_name===c).length+D('students').filter(k=>k.course_name===c).length/10;if(n>bn){bn=n;best=c}});S.ui.libCourse=best;return best}

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Phase 13: Learning path (demo kit vs day-wise course material),
+-- Phase 14: Learning path (demo kit vs day-wise course material),
 --           day-wise challenges and video submissions
 -- Safe to run more than once. Run in the Supabase SQL Editor.
 -- =====================================================================
