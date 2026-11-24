@@ -1273,7 +1273,7 @@ function libStaff(){
   const adm=isAdmin(),tab=S.ui.libTab||'course',courses=courseList();
   const cur=pickCourse(courses);
   const nC=D('materials').filter(m=>m.purpose==='course').length,nD=D('materials').filter(m=>m.purpose==='demo').length;
-  const hero='<div class="hero"><div><h2>📚 Learning Library</h2><p>Keep the demo kit in one place, and give every enrolled child their course material day by day.</p></div><div class="row"><span class="b y">'+nD+' demo items</span><span class="b g">'+nC+' course items</span></div></div>';
+  const hero='<div class="hero"><div><h2>📚 Learning Library</h2><p>Keep the demo kit in one place, and give every enrolled child their course material day by day.</p></div><div class="row"><span class="b y">'+nD+' demo item'+(nD===1?'':'s')+'</span><span class="b g">'+nC+' course item'+(nC===1?'':'s')+'</span></div></div>';
   const seg='<div class="row" style="margin-bottom:14px"><div class="seg">'+[['course','📅 Day-wise course'],['demo','🎁 Demo kit']].concat(adm?[['list','☰ List']]:[]).map(([k,l])=>'<button class="'+(tab===k?'on':'')+'" onclick="S.ui.libTab=\''+k+'\';render()">'+l+'</button>').join('')+'</div></div>';
   if(tab==='list'&&adm)return hero+seg+listView('materials',{noAdd:true,toolbar:''});
   return hero+seg+(tab==='demo'?libDemo(adm):libCourse(adm,courses,cur));
