@@ -174,6 +174,52 @@ tr:last-child td{border-bottom:0}
 .mbar{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--plum);z-index:40;padding:6px;gap:2px;overflow:auto}
 .mbar button{flex:1;min-width:64px;border:0;background:transparent;color:#cdbbe0;padding:7px 4px;border-radius:10px;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
 .mbar button .ic{font-size:16px}.mbar button.on{background:#ffffff1f;color:#fff}.cal{grid-template-columns:1fr}.kcol{flex-basis:220px}}
+
+/* learning path */
+.lh{margin:18px 0 8px}
+.lp-hero{background:linear-gradient(135deg,var(--plum),var(--plum2) 55%,#7a1d6b);color:#fff;border-radius:20px;padding:22px 24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:16px;position:relative;overflow:hidden}
+.lp-hero:after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#ffc72c55,#ffc72c00 70%)}
+.lp-hero h2{margin:2px 0 4px;font-size:24px;letter-spacing:-.02em}
+.lp-hero .k{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#ffd98a}
+.lp-hero .pbar{height:10px;border-radius:99px;background:#ffffff26;overflow:hidden;margin-top:10px;width:min(360px,70vw)}
+.lp-hero .pbar i,.pbar2 i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--yellow),var(--orange),var(--pink))}
+.pbar2{height:8px;border-radius:99px;background:#efeaf6;overflow:hidden;margin-top:10px}
+.lp-stats{display:flex;gap:10px;margin-left:auto}
+.lp-stat{background:#ffffff1c;border:1px solid #ffffff30;border-radius:14px;padding:10px 14px;text-align:center;min-width:78px}
+.lp-stat b{display:block;font-size:20px}.lp-stat span{font-size:11px;opacity:.85}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:6px}
+.chip2{border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 14px;font-weight:700;white-space:nowrap;color:var(--muted)}
+.chip2.on{background:var(--plum);color:#fff;border-color:var(--plum)}
+.day{background:#fff;border:1px solid var(--line);border-left:6px solid var(--dc,#ff7a1a);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.day-h{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.day-n{background:var(--dc,#ff7a1a);color:#fff;border-radius:12px;padding:5px 11px;font-weight:900;white-space:nowrap;display:inline-block}
+.secs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sec{background:#faf7fc;border-radius:12px;padding:10px}
+.sec-h{font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.sec-add{border:1px dashed var(--orange);background:#fff;border-radius:8px;color:var(--orange);font-weight:900;width:24px;height:24px;line-height:1}
+.sec-e{padding:6px 2px}
+.mi{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin:5px 0;cursor:pointer;font-size:13px}
+.mi:hover{border-color:var(--orange)}
+.mi-t{flex:1;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mi-ed{border:0;background:transparent;color:var(--muted)}
+.chrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.chrow .mi{margin:0}
+.mission{background:linear-gradient(135deg,#fff8e8,#ffeef5);border:2px solid var(--orange);border-radius:20px;padding:20px;margin-bottom:16px}
+.lockd{opacity:.7}
+.stars{color:#f5a300;letter-spacing:2px}
+.star{border:0;background:transparent;font-size:36px;color:#ddd;padding:0 2px;line-height:1}.star.on{color:#f5a300}
+.drop{display:block;border:2px dashed var(--orange);border-radius:16px;padding:22px;text-align:center;background:#fff8f2;cursor:pointer;font-weight:800}
+.drop input{display:none}
+.vidbox video,.vidbox audio{width:100%;border-radius:14px;background:#000;max-height:60vh}
+.bdg{display:inline-flex;flex-direction:column;align-items:center;gap:2px;width:84px;padding:8px 4px;border-radius:14px;background:#fff;border:1px solid var(--line);font-size:11px;font-weight:700;text-align:center}
+.bdg i{font-style:normal;font-size:26px}.bdg.off{opacity:.35;filter:grayscale(1)}
+.chal2{display:flex;gap:12px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:16px;background:#fff;margin:8px 0;cursor:pointer;border-left:6px solid var(--dc,#ff3d8b)}
+.chal2:hover{box-shadow:var(--shadow)}
+.kc{display:inline-block;border:1px solid var(--line);background:#faf7fc;border-radius:99px;padding:4px 11px;font-size:12px;font-weight:700;color:var(--muted)}
+button.kc{cursor:pointer}.kc.sb{background:#e6edff;color:#2f55c0;border-color:#cfdcff}.kc.rv{background:#e0f6ec;color:#0b7a4f;border-color:#bfe9d6}
+details.dd{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:7px 0;background:#fff}
+details.dd summary{cursor:pointer;font-weight:800;display:flex;gap:8px;align-items:center}
+@media(max-width:760px){.secs{grid-template-columns:1fr}.lp-stats{margin-left:0;width:100%}.lp-stat{flex:1;min-width:0}.lp-hero h2{font-size:20px}}
 </style>
 </head>
 <body>
@@ -292,7 +338,7 @@ const ENT={
    {k:'course_name',l:'Course',t:'course'},{k:'teacher_id',l:'Teacher',t:'teacher'},
    {k:'parent_email',l:"Parent's email (this is their login)",w:1,ph:'parent@gmail.com'},
    {k:'batch_timings',l:'Batch timings',ph:'Sat & Sun 5 PM'},{k:'status',l:'Status',t:'sel',o:['active','on_hold','completed','discontinued'].map(x=>[x,titleCase(x)]),def:'active'},
-   {k:'sessions_completed',l:'Sessions completed',t:'num'},{k:'total_sessions',l:'Total sessions',t:'num'},
+   {k:'sessions_completed',l:'Sessions completed',t:'num'},{k:'total_sessions',l:'Total sessions',t:'num'},{k:'current_day',l:'Learning day unlocked (blank = automatic)',t:'num',p13:1},
    {k:'joined_at',l:'Joined on',t:'date'},{k:'progress_notes',l:'Progress notes',t:'area',w:1}],
   cols:[{k:'student_code',l:'ID'},{k:'full_name',l:'Student'},{k:'course_name',l:'Course'},{k:'parent_email',l:'Parent email',f:r=>r.parent_email?esc(r.parent_email)+(r.parent_id?' <span class="b g">linked</span>':' <span class="b o">waiting</span>'):'<span class="b y">add email</span>'},{k:'batch_timings',l:'Batch'},{k:'progress_percent',l:'Progress',f:r=>'<div class="row" style="gap:8px;flex-wrap:nowrap"><div class="prog" style="width:70px"><i style="width:'+(r.progress_percent||0)+'%"></i></div><span class="sm">'+(r.sessions_completed||0)+'/'+(r.total_sessions||'?')+'</span></div>'},{k:'status',l:'Status',f:r=>bd(r.status)}],
   filter:{k:'status',o:['active','on_hold','completed','discontinued'].map(x=>[x,titleCase(x)])}},
@@ -309,10 +355,10 @@ const ENT={
   filter:{k:'kind',o:[['batch','Batch'],['demo','Demo'],['one_to_one','One-to-one'],['workshop','Workshop']]}},
  materials:{label:'Material',plural:'Materials',tab:'LMS Materials',order:'sort_order',asc:true,
   title:r=>r.title||'Material',
-  fields:[{k:'title',l:'Title',req:1,w:1},{k:'course_name',l:'Course',t:'course'},{k:'kind',l:'Type',t:'sel',o:KINDS_M.map(x=>[x,titleCase(x)]),def:'link'},
+  fields:[{k:'title',l:'Title',req:1,w:1},{k:'course_name',l:'Course',t:'course'},{k:'purpose',l:'Used for',t:'sel',o:[['course','Course (day-wise)'],['demo','Demo kit']],def:'course',p13:1},{k:'day_no',l:'Day number',t:'num',p13:1},{k:'section',l:'Part of the day',t:'sel',o:[['learn','Learn'],['activity','Class activity'],['practice','Home practice']],def:'learn',p13:1},{k:'kind',l:'Type',t:'sel',o:KINDS_M.map(x=>[x,titleCase(x)]),def:'link'},
    {k:'url',l:'Link (Google Drive / YouTube)',w:1},{k:'age_group',l:'Age group',ph:'6-9'},{k:'language',l:'Language',t:'sel',o:[['English','English'],['Hindi','Hindi'],['Both','Both']],def:'English'},
    {k:'published',l:'Visible to families',t:'bool',def:true},{k:'sort_order',l:'Order',t:'num',def:0},{k:'description',l:'Description',t:'area',w:1}],
-  cols:[{k:'title',l:'Title'},{k:'course_name',l:'Course'},{k:'kind',l:'Type',f:r=>bd(r.kind,'bl')},{k:'age_group',l:'Ages'},{k:'language',l:'Language'},{k:'published',l:'Visible',f:r=>r.published?'<span class="b g">Yes</span>':'<span class="b">Hidden</span>'}],
+  cols:[{k:'title',l:'Title'},{k:'course_name',l:'Course'},{k:'purpose',l:'For',f:r=>r.purpose==='demo'?'<span class="b y">Demo kit</span>':'<span class="b g">Course</span>'},{k:'day_no',l:'Day',f:r=>r.day_no?'Day '+r.day_no:'—'},{k:'kind',l:'Type',f:r=>bd(r.kind,'bl')},{k:'age_group',l:'Ages'},{k:'language',l:'Language'},{k:'published',l:'Visible',f:r=>r.published?'<span class="b g">Yes</span>':'<span class="b">Hidden</span>'}],
   filter:{k:'kind',o:KINDS_M.map(x=>[x,titleCase(x)])}},
  tasks:{label:'Task',plural:'Tasks',tab:'LMS Tasks',order:'due_date',asc:true,
   title:r=>r.title||'Task',
@@ -322,10 +368,10 @@ const ENT={
   filter:{k:'status',o:[['todo','To do'],['doing','In progress'],['done','Done']]}},
  assignments:{label:'Assignment',plural:'Assignments',tab:'LMS Assignments',order:'due_date',asc:false,
   title:r=>r.title||'Assignment',
-  fields:[{k:'title',l:'Title',req:1,w:1},{k:'course_name',l:'Course (blank = all courses)',t:'course'},{k:'due_date',l:'Due date',t:'date'},
-   {k:'answer_type',l:'Answer by',t:'sel',o:[['both','Typed answer or link'],['link','Link (video / file)'],['text','Typed answer']],def:'both'},{k:'published',l:'Visible to families',t:'bool',def:true},
+  fields:[{k:'title',l:'Title',req:1,w:1},{k:'course_name',l:'Course (blank = all courses)',t:'course'},{k:'day_no',l:'Day number',t:'num',p13:1},{k:'due_date',l:'Due date',t:'date'},
+   {k:'answer_type',l:'Answer by',t:'sel',o:[['video','Video upload (recommended)'],['both','Typed answer or link'],['link','Link (video / file)'],['text','Typed answer']],def:'video'},{k:'published',l:'Visible to families',t:'bool',def:true},
    {k:'instructions',l:'Instructions',t:'area',w:1}],
-  cols:[{k:'title',l:'Assignment'},{k:'course_name',l:'Course',f:r=>esc(r.course_name||'All courses')},{k:'due_date',l:'Due',f:r=>fmtDate(r.due_date)},{k:'answer_type',l:'Answer by',f:r=>bd(r.answer_type,'bl')},{k:'id',l:'Submitted',f:r=>D('submissions').filter(x=>x.assignment_id===r.id).length+' / '+D('submissions').filter(x=>x.assignment_id===r.id&&x.status==='submitted').length+' to review'},{k:'published',l:'Visible',f:r=>r.published?'<span class="b g">Yes</span>':'<span class="b">Hidden</span>'}]},
+  cols:[{k:'title',l:'Assignment'},{k:'course_name',l:'Course',f:r=>esc(r.course_name||'All courses')},{k:'day_no',l:'Day',f:r=>r.day_no?'Day '+r.day_no:'—'},{k:'due_date',l:'Due',f:r=>fmtDate(r.due_date)},{k:'answer_type',l:'Answer by',f:r=>bd(r.answer_type,'bl')},{k:'id',l:'Submitted',f:r=>D('submissions').filter(x=>x.assignment_id===r.id).length+' / '+D('submissions').filter(x=>x.assignment_id===r.id&&x.status==='submitted').length+' to review'},{k:'published',l:'Visible',f:r=>r.published?'<span class="b g">Yes</span>':'<span class="b">Hidden</span>'}]},
  payments:{label:'Payment',plural:'Payments',tab:'LMS Payments',order:'due_date',asc:false,
   title:r=>(r.student_name||'Payment')+' • '+money(r.amount),
   fields:[{k:'student_id',l:'Student',t:'student',req:1,w:1},{k:'course_name',l:'Course',t:'course'},{k:'package',l:'Package',ph:'12 sessions'},
@@ -337,11 +383,11 @@ const effPay=r=>r.status==='pending'&&r.due_date&&r.due_date<todayStr()?'overdue
 
 /* ================= Data layer ================= */
 const TABLES_BY_ROLE={
- admin:['leads','students','teachers','classes','schedules','schedule_students','class_materials','materials','tasks','payments','attendance','assignments','submissions','profiles','courses','demos'],
- counselor:['leads','teachers','classes','class_materials','materials','tasks','courses'],
- teacher:['classes','schedules','schedule_students','class_materials','leads','students','materials','tasks','attendance','assignments','submissions','teachers','courses'],
- parent:['students','classes','schedules','schedule_students','materials','payments','attendance','assignments','submissions','courses'],
- student:['students','classes','schedules','schedule_students','materials','attendance','assignments','submissions','courses']};
+ admin:['leads','students','teachers','classes','schedules','schedule_students','class_materials','materials','tasks','payments','attendance','assignments','submissions','profiles','courses','demos','course_days'],
+ counselor:['leads','teachers','classes','class_materials','materials','tasks','courses','course_days'],
+ teacher:['classes','schedules','schedule_students','class_materials','leads','students','materials','tasks','attendance','assignments','submissions','teachers','courses','course_days'],
+ parent:['students','classes','schedules','schedule_students','materials','payments','attendance','assignments','submissions','courses','course_days'],
+ student:['students','classes','schedules','schedule_students','materials','attendance','assignments','submissions','courses','course_days']};
 const LIMIT=2000;
 async function loadTable(t){
   let q=sb.from(t).select('*').limit(LIMIT);
@@ -416,9 +462,10 @@ function fieldHTML(f,r,ro){
   else inner='<input data-k="'+f.k+'" value="'+esc(v)+'" placeholder="'+esc(f.ph||'')+'"'+dis+'>';
   return '<label class="'+(f.w?'full':'')+'"><span>'+esc(f.l)+(f.req?' *':'')+'</span>'+inner+'</label>';
 }
+function fieldsOf(ent){return ENT[ent].fields.filter(f=>!f.p13||P13())}
 function collect(ent){
   const e=ENT[ent],p={};
-  for(const f of e.fields){
+  for(const f of fieldsOf(ent)){
     const el=document.querySelector('#drawer [data-k="'+f.k+'"]');if(!el||el.disabled)continue;
     let v=el.value;
     if(f.t==='num')v=v===''?null:Number(v);
@@ -431,18 +478,18 @@ function collect(ent){
 }
 function editor(ent,id,preset,extraTop,extraBottom){
   const e=ENT[ent],r=id?(byId(ent,id)||{}):(preset||{});const ro=!canEdit(ent);
-  const missing=e.fields.filter(f=>f.req&&!r[f.k]&&id);
+  const missing=fieldsOf(ent).filter(f=>f.req&&!r[f.k]&&id);
   const teacherMeetHelp=ent==='classes'&&S.role==='teacher'?'<div class="card" style="margin:10px 0;background:#fff8f2;border-color:#ffd9b8"><b>🎥 Create a Meet link in your own Google account</b><p class="sm muted" style="margin:6px 0 10px">Open Google Meet while signed in with the Google account you want to host from. Create a meeting, copy its link, then paste it into the Google Meet link field below and save this class.</p><button class="btn pri" type="button" onclick="window.open(\'https://meet.new\',\'_blank\',\'noopener\')">＋ Create my Google Meet</button></div>':'';
   openDrawer('<div class="dh"><div><div class="sm muted">'+esc(e.label)+'</div><h2>'+esc(id?e.title(r):'New '+e.label.toLowerCase())+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
    +'<div class="row" style="margin-bottom:12px"><span class="sync" title="Edit here or in the Google Sheet tab &quot;'+esc(e.tab)+'&quot; — both stay in step.">⇄ Synced with Google Sheet</span>'+(ro?'<span class="b y">View only</span>':'')+'</div>'
    +(extraTop||'')+teacherMeetHelp
-   +'<div class="fg">'+e.fields.map(f=>fieldHTML(f,r,ro)).join('')+'</div>'
+   +'<div class="fg">'+fieldsOf(ent).map(f=>fieldHTML(f,r,ro)).join('')+'</div>'
    +(extraBottom||'')
    +(ro?'':'<div class="act"><button class="btn pri" onclick="submitEditor(\''+ent+'\','+(id?'\''+id+'\'':'null')+')">💾 Save</button>'+(id&&canDelete(ent)?'<button class="btn red" onclick="removeFromEditor(\''+ent+'\',\''+id+'\')">Delete</button>':'')+'<button class="btn" onclick="closeDrawer()">Cancel</button></div>'));
 }
 async function submitEditor(ent,id){
   const e=ENT[ent],p=collect(ent);
-  for(const f of e.fields)if(f.req&&!p[f.k]){toast('Please fill in: '+f.l);return}
+  for(const f of fieldsOf(ent))if(f.req&&!p[f.k]){toast('Please fill in: '+f.l);return}
   if(ent==='leads'&&!p.parent_name&&!p.phone&&!p.child_name){toast('Add at least a name or phone number');return}
   if(ent==='leads'){const bad=(p.status==='not_interested'||p.status==='not_reachable');if(!bad&&'lost_reason' in p)p.lost_reason=null;
     if(!id&&!isAdmin())p.assigned_to=S.user.id;if(!id)p.source='manual'}
@@ -503,12 +550,12 @@ function openRecord(ent,id){
 <script>
 /* ================= Navigation ================= */
 const NAV={
- admin:[['Today'],['dashboard','⌂','Today'],['leads','🎯','Leads'],['demodesk','🎥','Demo Desk'],['Teaching'],['students','🎓','Students'],['teachers','👩‍🏫','Teachers'],['classes','📅','Classes'],['schedules','🗓','Timetables'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['materials','📚','Notes & Videos'],['Money & tasks'],['payments','₹','Payments'],['tasks','☑','Tasks'],['Settings',1],['team','🔑','Logins & Access'],['sync','⇄','Google Sheet']],
- counselor:[['Today'],['dashboard','⌂','Today'],['leads','🎯','My Leads'],['demodesk','🎥','Demo Desk'],['classes','📅','Classes'],['tasks','☑','Tasks'],['materials','📚','Notes & Videos']],
- teacher:[['Today'],['dashboard','⌂','Today'],['demodesk','🎥','Demo Desk'],['leads','🎯','My Leads'],['classes','📅','My Classes'],['schedules','🗓','My Courses'],['attendance','✅','Attendance'],['assignments','📝','Assignments'],['students','🎓','Students'],['materials','📚','Notes & Videos'],['tasks','☑','Tasks']],
- parent:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes & Recordings'],['assignments','📝','Assignments'],['materials','📚','Notes & Videos'],['payments','₹','Payments']],
- student:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes & Recordings'],['assignments','📝','Assignments'],['materials','📚','Notes & Videos']]};
-const SUBS={demodesk:'Pick a demo, call the parent, confirm the time, run it, record the result',schedules:'Lock days and times for a whole course — classes, Calendar and Meet are created for you',dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',assignments:'Set work, collect answers, give feedback',attendance:'Mark who attended — progress updates automatically',materials:'Your teaching library',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
+ admin:[['Today'],['dashboard','⌂','Today'],['leads','🎯','Leads'],['demodesk','🎥','Demo Desk'],['Teaching'],['students','🎓','Students'],['teachers','👩‍🏫','Teachers'],['classes','📅','Classes'],['schedules','🗓','Timetables'],['attendance','✅','Attendance'],['assignments','🎬','Challenges'],['materials','📚','Library'],['Money & tasks'],['payments','₹','Payments'],['tasks','☑','Tasks'],['Settings',1],['team','🔑','Logins & Access'],['sync','⇄','Google Sheet']],
+ counselor:[['Today'],['dashboard','⌂','Today'],['leads','🎯','My Leads'],['demodesk','🎥','Demo Desk'],['classes','📅','Classes'],['tasks','☑','Tasks'],['materials','📚','Library']],
+ teacher:[['Today'],['dashboard','⌂','Today'],['demodesk','🎥','Demo Desk'],['leads','🎯','My Leads'],['classes','📅','My Classes'],['schedules','🗓','My Courses'],['attendance','✅','Attendance'],['assignments','🎬','Challenges'],['students','🎓','Students'],['materials','📚','Library'],['tasks','☑','Tasks']],
+ parent:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes & Recordings'],['assignments','🎬','Challenges'],['materials','🗺','Learning Path'],['payments','₹','Payments']],
+ student:[['Learning'],['dashboard','⌂','Home'],['classes','📅','Classes & Recordings'],['assignments','🎬','Challenges'],['materials','🗺','Learning Path']]};
+const SUBS={demodesk:'Pick a demo, call the parent, confirm the time, run it, record the result',schedules:'Lock days and times for a whole course — classes, Calendar and Meet are created for you',dashboard:'Everything that needs you today',leads:'From enquiry to enrolment',students:'Every learner, their progress and payments',classes:'Timetable, demos and workshops',assignments:'Day-wise video challenges, stars and feedback',attendance:'Mark who attended — progress updates automatically',materials:'Demo kit and day-by-day course material',tasks:'Keep the team on track',payments:'Fees and dues',teachers:'Your teaching team',team:'Who can sign in, and what they can do',sync:'How the Google Sheet and the LMS stay in step'};
 function myNav(){return NAV[S.role]||NAV.student}
 function navHeaderActive(items,idx){return false}
 function renderNav(){
@@ -651,10 +698,10 @@ function dashboardFamily(){
 function mySubmission(aid,sid){return D('submissions').find(x=>x.assignment_id===aid&&x.student_id===sid)||null}
 function pendingWork(){
   const out=[];for(const a of D('assignments').filter(x=>x.published!==false))for(const k of D('students')){
-    if(a.course_name&&a.course_name!==k.course_name)continue;if(!mySubmission(a.id,k.id))out.push({a,k})}
+    if(a.course_name&&a.course_name!==k.course_name)continue;if(a.day_no&&isFamily()&&a.day_no>kidDay(k))continue;if(!mySubmission(a.id,k.id))out.push({a,k})}
   return out.sort((x,y)=>String(x.a.due_date||'9').localeCompare(String(y.a.due_date||'9')));
 }
-VIEWS.assignments=()=>{
+const assignmentsOld=()=>{
   if(isFamily()){
     const rows=[];for(const a of D('assignments').filter(x=>x.published!==false))for(const k of D('students')){if(a.course_name&&a.course_name!==k.course_name)continue;rows.push({a,k,s:mySubmission(a.id,k.id)})}
     rows.sort((x,y)=>(x.s?1:0)-(y.s?1:0)||String(x.a.due_date||'9').localeCompare(String(y.a.due_date||'9')));
@@ -663,7 +710,7 @@ VIEWS.assignments=()=>{
   const rev=D('submissions').filter(x=>x.status==='submitted').sort((a,b)=>String(b.submitted_at).localeCompare(String(a.submitted_at)));
   return '<div class="card" style="margin-bottom:14px"><div class="hd"><h3>To review <span class="b o">'+rev.length+'</span></h3></div>'+(rev.slice(0,12).map(x=>'<div class="li" onclick="openSubmission(\''+x.id+'\')"><div class="grow"><b>'+esc(x.student_name||'Student')+'</b><span class="sm muted">'+esc(x.assignment_title||'')+' · '+fmtDT(x.submitted_at)+'</span></div><span class="b bl">Review</span></div>').join('')||'<div class="empty">No submissions waiting 🎉</div>')+'</div>'+listView('assignments');
 };
-function openSubmission(id){
+function openSubmissionOld(id){
   const x=D('submissions').find(r=>r.id===id);if(!x)return;
   const a=byId('assignments',x.assignment_id)||{};
   openDrawer('<div class="dh"><div><div class="sm muted">Submission</div><h2>'+esc(x.student_name||'Student')+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
@@ -679,7 +726,7 @@ async function saveReview(id){
   if(error){toast('Could not save: '+error.message,5000);return}
   await loadAll(true);toast('Feedback saved ✓');closeDrawer();
 }
-function openSubmitForm(aid,sid){
+function openSubmitFormOld(aid,sid){
   const a=byId('assignments',aid),k=byId('students',sid),sub=mySubmission(aid,sid);if(!a||!k)return;
   const t=a.answer_type;
   openDrawer('<div class="dh"><div><div class="sm muted">Assignment · '+esc(k.full_name)+'</div><h2>'+esc(a.title)+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
@@ -1194,7 +1241,7 @@ VIEWS.tasks=()=>{
    +'<div class="sm muted"><span class="sync">⇄ Two-way</span> Tasks are also in the “LMS Tasks” tab of your Google Sheet.</div>';
 };
 const KIND_ICON={video:'🎬',pdf:'📄',worksheet:'📝',slides:'📽',quiz:'❓',game:'🎮',link:'🔗'};
-VIEWS.materials=()=>{
+const materialsOld=()=>{
   const m=S.ui.matMode||'lib';
   const tb=isAdmin()?'<div class="seg"><button class="'+(m==='lib'?'on':'')+'" onclick="S.ui.matMode=\'lib\';render()">Library</button><button class="'+(m==='list'?'on':'')+'" onclick="S.ui.matMode=\'list\';render()">'+T('List')+'</button></div>':'';
   if(m==='list'&&isAdmin())return listView('materials',{toolbar:tb});
@@ -1204,6 +1251,253 @@ VIEWS.materials=()=>{
    +(Object.keys(groups).sort().map(g=>'<h3 style="margin:18px 0 8px">'+esc(g)+' <span class="b">'+groups[g].length+'</span></h3><div class="grid cols3">'+groups[g].map(x=>'<div class="card"><div class="row" style="flex-wrap:nowrap"><div style="font-size:26px">'+(KIND_ICON[x.kind]||'🔗')+'</div><div class="grow"><b>'+esc(x.title)+'</b><div class="sm muted">'+esc([titleCase(x.kind),x.age_group&&('Ages '+x.age_group),x.language].filter(Boolean).join(' · '))+'</div></div>'+(x.published?'':'<span class="b">Hidden</span>')+'</div>'+(x.description?'<p class="sm" style="margin:10px 0 0">'+esc(x.description)+'</p>':'')+'<div class="row" style="margin-top:12px">'+(x.url?'<a class="btn sm pri" target="_blank" rel="noopener" href="'+esc(safeUrl(x.url))+'" style="text-decoration:none">Open</a>':'<span class="sm muted">No link yet</span>')+(isAdmin()?'<button class="btn sm" onclick="editor(\'materials\',\''+x.id+'\')">Edit</button>':'')+'</div></div>').join('')+'</div>').join('')||'<div class="card empty">No materials yet. '+(isAdmin()?'Click “Add material” and paste a Google Drive link, or add rows in the “LMS Materials” tab of your sheet.':'')+'</div>')
    +'<div class="sm muted" style="margin-top:12px"><span class="sync">⇄ Two-way</span> Materials are also in the “LMS Materials” tab of your Google Sheet.</div>';
 };
+
+/* ================= Learning path (phase 13): Library, day-wise material, video challenges ================= */
+const P13=()=>{const m=D('materials');return m.length?('purpose' in m[0]):!(S.err&&S.err.course_days)};
+const SECTIONS=[['learn','📖','Learn'],['activity','🎯','Class activity'],['practice','🏠','Home practice']];
+const DAYCOL=['#ff7a1a','#ff3d8b','#4d7cff','#12a36b','#8b5cf6','#f5a300'];
+function p13Banner(){return isAdmin()&&!P13()?'<div class="card" style="background:#fff0dc;margin-bottom:14px"><b>One setup step left</b><p class="sm" style="margin:6px 0 0">Run <b>phase14_learning_path.sql</b> in Supabase (SQL Editor) to switch on day-wise learning and video uploads. Until then you see the simple view below.</p></div>':''}
+function courseList(){const s=new Set();D('courses').forEach(c=>c.name&&s.add(c.name));['materials','assignments','students','course_days'].forEach(t=>D(t).forEach(r=>r.course_name&&s.add(r.course_name)));return [...s].sort()}
+const cn=i=>courseList()[i]||'';
+function pickCourse(courses){let cur=S.ui.libCourse;if(courses.includes(cur))return cur;let best='',bn=-1;courses.forEach(c=>{const n=D('materials').filter(m=>m.course_name===c).length+D('assignments').filter(a=>a.course_name===c).length+D('students').filter(k=>k.course_name===c).length/10;if(n>bn){bn=n;best=c}});S.ui.libCourse=best;return best}
+function kidDay(k){const c=Number(k&&k.current_day);if(c>0)return c;return Math.max(0,Number(k&&k.sessions_completed)||0)+1}
+function dayRow(course,d){return D('course_days').find(x=>x.course_name===course&&Number(x.day_no)===d)||null}
+function matsFor(course,d,sec){return D('materials').filter(m=>m.purpose==='course'&&m.course_name===course&&Number(m.day_no)===d&&(!sec||m.section===sec)).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0))}
+function asgFor(course,d){return D('assignments').filter(a=>a.course_name===course&&Number(a.day_no)===d)}
+function maxDay(course){let m=0;D('materials').forEach(x=>{if(x.purpose==='course'&&x.course_name===course&&x.day_no)m=Math.max(m,Number(x.day_no))});D('assignments').forEach(x=>{if(x.course_name===course&&x.day_no)m=Math.max(m,Number(x.day_no))});D('course_days').forEach(x=>{if(x.course_name===course)m=Math.max(m,Number(x.day_no))});return m}
+function matItem(m,adm){return '<div class="mi" onclick="openMat(\''+m.id+'\')"><span>'+(KIND_ICON[m.kind]||'🔗')+'</span><span class="mi-t">'+esc(m.title)+'</span>'+(m.published?'':'<span class="b">Hidden</span>')+(adm?'<button class="mi-ed" title="Edit" onclick="event.stopPropagation();openMatForm(\''+m.id+'\')">✎</button>':'')+'</div>'}
+function matCard(m,adm){return '<div class="card"><div class="row" style="flex-wrap:nowrap"><div style="font-size:26px">'+(KIND_ICON[m.kind]||'🔗')+'</div><div class="grow"><b>'+esc(m.title)+'</b><div class="sm muted">'+esc([titleCase(m.kind),m.age_group&&('Ages '+m.age_group),m.language].filter(Boolean).join(' · '))+'</div></div>'+(m.published?'':'<span class="b">Hidden</span>')+'</div>'+(m.description?'<p class="sm" style="margin:10px 0 0">'+esc(m.description)+'</p>':'')+'<div class="row" style="margin-top:12px"><button class="btn sm pri" onclick="openMat(\''+m.id+'\')">Open</button>'+(adm?'<button class="btn sm" onclick="openMatForm(\''+m.id+'\')">✎ Edit</button>':'')+'</div></div>'}
+
+/* ---------- Staff: Learning Library ---------- */
+function libStaff(){
+  const adm=isAdmin(),tab=S.ui.libTab||'course',courses=courseList();
+  const cur=pickCourse(courses);
+  const nC=D('materials').filter(m=>m.purpose==='course').length,nD=D('materials').filter(m=>m.purpose==='demo').length;
+  const hero='<div class="hero"><div><h2>📚 Learning Library</h2><p>Keep the demo kit in one place, and give every enrolled child their course material day by day.</p></div><div class="row"><span class="b y">'+nD+' demo item'+(nD===1?'':'s')+'</span><span class="b g">'+nC+' course item'+(nC===1?'':'s')+'</span></div></div>';
+  const seg='<div class="row" style="margin-bottom:14px"><div class="seg">'+[['course','📅 Day-wise course'],['demo','🎁 Demo kit']].concat(adm?[['list','☰ List']]:[]).map(([k,l])=>'<button class="'+(tab===k?'on':'')+'" onclick="S.ui.libTab=\''+k+'\';render()">'+l+'</button>').join('')+'</div></div>';
+  if(tab==='list'&&adm)return hero+seg+listView('materials',{noAdd:true,toolbar:''});
+  return hero+seg+(tab==='demo'?libDemo(adm):libCourse(adm,courses,cur));
+}
+function libDemo(adm){
+  const items=D('materials').filter(m=>m.purpose==='demo'),g={};
+  items.forEach(m=>{const k=m.course_name||'Any course';(g[k]=g[k]||[]).push(m)});
+  return '<div class="row" style="margin-bottom:12px"><div class="grow sm muted">Everything you use in a <b>demo class</b> — kept apart from the paid course material and never shown to families.</div>'+(adm?'<button class="btn pri" onclick="openMatForm(null,{purpose:\'demo\'})">＋ Add demo material</button>':'')+'</div>'
+   +(Object.keys(g).sort().map(k=>'<h3 class="lh">'+esc(k)+' <span class="b">'+g[k].length+'</span></h3><div class="grid cols3">'+g[k].map(m=>matCard(m,adm)).join('')+'</div>').join('')||'<div class="card empty">No demo material yet.'+(adm?'<br><button class="btn pri" style="margin-top:10px" onclick="openMatForm(null,{purpose:\'demo\'})">＋ Add the first one</button>':'')+'</div>');
+}
+function setLibCourse(i){S.ui.libCourse=cn(i);S.ui.libDays=0;render()}
+function courseChips(courses,cur){return '<div class="chips">'+courses.map((c,i)=>'<button class="chip2'+(c===cur?' on':'')+'" onclick="setLibCourse('+i+')">'+esc(c)+'</button>').join('')+'</div>'}
+function libCourse(adm,courses,cur){
+  if(!courses.length)return '<div class="card empty">Add a course under Settings first.</div>';
+  const ci=courses.indexOf(cur),N=Math.max(maxDay(cur),S.ui.libDays||8),kids=D('students').filter(s=>s.course_name===cur);
+  let h=courseChips(courses,cur)+'<div class="sm muted" style="margin:0 0 12px">'+kids.length+' enrolled child'+(kids.length===1?'':'ren')+' follow this plan. Each child sees a day only after they reach it.</div>';
+  for(let d=1;d<=N;d++){
+    const info=dayRow(cur,d),col=DAYCOL[(d-1)%DAYCOL.length],as=asgFor(cur,d);
+    h+='<div class="day" style="--dc:'+col+'"><div class="day-h"><div class="day-n">Day '+d+'</div><div class="grow"><b>'+esc((info&&info.emoji?info.emoji+' ':'')+((info&&info.title)||'Day '+d))+'</b>'+(info&&info.goal?'<div class="sm muted">'+esc(info.goal)+'</div>':(adm?'<div class="sm muted">Add a title and goal for this day →</div>':''))+'</div>'+(adm?'<button class="btn sm" onclick="openDayForm('+ci+','+d+')">✎ Day details</button>':'')+'</div>'
+     +'<div class="secs">'+SECTIONS.map(([k,ic,l])=>{const ms=matsFor(cur,d,k);return '<div class="sec"><div class="sec-h"><span>'+ic+' '+l+'</span>'+(adm?'<button class="sec-add" title="Add material" onclick="openMatFor('+ci+','+d+',\''+k+'\')">＋</button>':'')+'</div>'+(ms.map(m=>matItem(m,adm)).join('')||'<div class="sm muted sec-e">Nothing yet</div>')+'</div>'}).join('')+'</div>'
+     +'<div class="chrow"><span class="sm" style="font-weight:800">🎬 Video challenge</span>'+(as.map(a=>{const n=D('submissions').filter(x=>x.assignment_id===a.id).length;return '<span class="mi chal" onclick="editChallenge(\''+a.id+'\')"><b>'+esc(a.title)+'</b><span class="b bl">'+n+'/'+kids.length+' sent</span></span>'}).join('')||'<span class="sm muted">None yet</span>')+(canEdit('assignments')?'<button class="btn sm" onclick="addChallenge('+ci+','+d+')">＋ Challenge</button>':'')+'</div></div>';
+  }
+  h+='<div class="row" style="margin:6px 0 16px"><button class="btn" onclick="S.ui.libDays='+(N+4)+';render()">＋ Show 4 more days</button></div>';
+  const loose=D('materials').filter(m=>m.purpose==='course'&&!m.day_no&&(m.course_name===cur||!m.course_name));
+  if(loose.length)h+='<div class="card" style="border-style:dashed"><div class="hd"><h3>📎 Not on a day yet <span class="b o">'+loose.length+'</span></h3></div><div class="sm muted" style="margin-bottom:8px">Families can see these any time. Pick a day to place them in the plan.</div>'+loose.map(m=>'<div class="li" style="cursor:default"><div class="grow"><b>'+esc(m.title)+'</b><span class="sm muted">'+esc(m.course_name||'All courses')+'</span></div>'+(adm?'<select style="width:auto" onchange="setMatDay(\''+m.id+'\',this.value,'+ci+')"><option value="">Pick day…</option>'+Array.from({length:N},(_,i)=>'<option value="'+(i+1)+'">Day '+(i+1)+'</option>').join('')+'</select>':'')+'</div>').join('')+'</div>';
+  return h;
+}
+function openMatFor(ci,d,sec){openMatForm(null,{purpose:'course',course_name:cn(ci),day_no:d,section:sec})}
+async function setMatDay(id,v,ci){if(!v)return;const m=byId('materials',id);const ok=await saveRecord('materials',id,{day_no:Number(v),course_name:m&&m.course_name||cn(ci)});if(ok){toast('Placed on Day '+v+' ✓');render()}}
+function addChallenge(ci,d){editor('assignments',null,{course_name:cn(ci),day_no:d,answer_type:'video',published:true})}
+function editChallenge(id){editor('assignments',id)}
+function openDayForm(ci,d){
+  const course=cn(ci),i=dayRow(course,d)||{};
+  openDrawer('<div class="dh"><div><div class="sm muted">'+esc(course)+'</div><h2>Day '+d+' details</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="fg"><label><span>Emoji</span><input id="dyEmo" value="'+esc(i.emoji||'')+'" placeholder="🎤" maxlength="4"></label><label class="full"><span>Day title</span><input id="dyTitle" value="'+esc(i.title||'')+'" placeholder="e.g. Say hello with confidence"></label><label class="full"><span>Goal of the day</span><textarea id="dyGoal" rows="3" placeholder="What will the child be able to do by the end of this day?">'+esc(i.goal||'')+'</textarea></label></div>'
+   +'<div class="act"><button class="btn pri" onclick="saveDay('+ci+','+d+')">💾 Save</button><button class="btn" onclick="closeDrawer()">Cancel</button></div>');
+}
+async function saveDay(ci,d){
+  const row={course_name:cn(ci),day_no:d,emoji:$('dyEmo').value.trim()||null,title:$('dyTitle').value.trim()||null,goal:$('dyGoal').value.trim()||null};
+  const {error}=await sb.from('course_days').upsert(row,{onConflict:'course_name,day_no'});
+  if(error){toast('Could not save: '+error.message,5000);return}
+  await loadAll(true);toast('Saved ✓');closeDrawer();
+}
+/* custom material form with file upload */
+function openMatForm(id,preset){
+  const m=id?byId('materials',id):null;
+  const r=m||Object.assign({purpose:'course',section:'learn',kind:'video',published:true,language:'English'},preset||{});
+  const O=(arr,v)=>arr.map(([a,b])=>'<option value="'+esc(a)+'"'+(String(v)===String(a)?' selected':'')+'>'+esc(b)+'</option>').join('');
+  const cs=[['','All courses']].concat(courseList().map(c=>[c,c]));
+  openDrawer('<div class="dh"><div><div class="sm muted">Material</div><h2>'+(m?esc(m.title):'Add material')+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="fg"><label class="full"><span>Title *</span><input id="mfTitle" value="'+esc(r.title||'')+'" placeholder="e.g. Greeting practice video"></label>'
+   +'<label><span>Used for</span><select id="mfPurpose" onchange="mfToggle()">'+O([['course','Course — day-wise for enrolled children'],['demo','Demo kit — staff only']],r.purpose)+'</select></label>'
+   +'<label><span>Course</span><select id="mfCourse">'+O(cs,r.course_name||'')+'</select></label>'
+   +'<label class="mfc"><span>Day number</span><input id="mfDay" type="number" min="1" max="365" value="'+esc(r.day_no||'')+'" placeholder="1"></label>'
+   +'<label class="mfc"><span>Part of the day</span><select id="mfSection">'+O(SECTIONS.map(s=>[s[0],s[1]+' '+s[2]]),r.section)+'</select></label>'
+   +'<label><span>Type</span><select id="mfKind">'+O(KINDS_M.map(x=>[x,titleCase(x)]),r.kind)+'</select></label>'
+   +'<label><span>Visible to families</span><select id="mfPub">'+O([['true','Yes'],['false','No — hidden']],r.published===false?'false':'true')+'</select></label>'
+   +'<label class="full"><span>Link (Google Drive / YouTube)</span><input id="mfUrl" value="'+esc(r.url||'')+'" placeholder="https://"></label>'
+   +'<label class="full"><span>…or upload a file (PDF, video, slides — up to 50 MB)'+(r.file_name?' · current: '+esc(r.file_name):'')+'</span><input id="mfFile" type="file"></label>'
+   +'<label><span>Age group</span><input id="mfAge" value="'+esc(r.age_group||'')+'" placeholder="6-9"></label>'
+   +'<label><span>Language</span><select id="mfLang">'+O([['English','English'],['Hindi','Hindi'],['Both','Both']],r.language||'English')+'</select></label>'
+   +'<label class="full"><span>What is it for?</span><textarea id="mfDesc" rows="2">'+esc(r.description||'')+'</textarea></label></div>'
+   +'<div class="act"><button class="btn pri" id="mfGo" onclick="saveMatForm('+(id?'\''+id+'\'':'null')+')">💾 Save</button>'+(id?'<button class="btn red" onclick="delMat(\''+id+'\')">Delete</button>':'')+'<button class="btn" onclick="closeDrawer()">Cancel</button></div>');
+  mfToggle();
+}
+function mfToggle(){const demo=$('mfPurpose')&&$('mfPurpose').value==='demo';document.querySelectorAll('#drawer .mfc').forEach(el=>el.style.display=demo?'none':'')}
+async function delMat(id){if(await deleteRecord('materials',id)){toast('Deleted');closeDrawer()}}
+async function saveMatForm(id){
+  const g=x=>$(x),old=id?byId('materials',id):null;
+  const title=g('mfTitle').value.trim();if(!title){toast('Please add a title');return}
+  const purpose=g('mfPurpose').value,link=g('mfUrl').value.trim();
+  const p={title,purpose,course_name:g('mfCourse').value||null,kind:g('mfKind').value,url:link?safeUrl(link):null,description:g('mfDesc').value.trim()||null,published:g('mfPub').value==='true',age_group:g('mfAge').value.trim()||null,language:g('mfLang').value,
+    day_no:purpose==='course'&&g('mfDay').value?Number(g('mfDay').value):null,section:g('mfSection').value};
+  const f=g('mfFile').files[0];
+  if(f&&f.size>52428800){toast('That file is over 50 MB — please share a Drive link instead.',5000);return}
+  const btn=g('mfGo');btn.disabled=true;btn.textContent='Saving…';
+  if(f){const path='lib/'+Date.now()+'-'+f.name.replace(/[^\w.\-]+/g,'_').slice(-70);
+    const {error}=await sb.storage.from('materials').upload(path,f,{contentType:f.type||undefined});
+    if(error){btn.disabled=false;btn.textContent='💾 Save';toast('Upload failed: '+error.message,6000);return}
+    p.file_path=path;p.file_name=f.name}
+  if(!p.url&&!p.file_path&&!(old&&old.file_path)){btn.disabled=false;btn.textContent='💾 Save';toast('Add a link or upload a file');return}
+  const ok=await saveRecord('materials',id,p);btn.disabled=false;btn.textContent='💾 Save';
+  if(ok){toast('Saved ✓');closeDrawer()}
+}
+
+/* ---------- Families: Learning Path ---------- */
+function curKid(){const ks=D('students');const k=ks.find(x=>x.id===S.ui.kid)||ks[0]||null;if(k)S.ui.kid=k.id;return k}
+function kidPicker(k){const ks=D('students');return ks.length>1?'<div class="chips">'+ks.map(x=>'<button class="chip2'+(x.id===k.id?' on':'')+'" onclick="S.ui.kid=\''+x.id+'\';render()">'+esc(String(x.full_name).split(' ')[0])+'</button>').join('')+'</div>':''}
+function kidStats(k){const subs=D('submissions').filter(x=>x.student_id===k.id);return{videos:subs.length,stars:subs.reduce((s,x)=>s+(Number(x.stars)||0),0),reviewed:subs.filter(x=>x.status==='reviewed').length}}
+function badgesFor(n){return [[1,'🌱','First video'],[3,'⭐','Rising star'],[5,'🎤','Speaker'],[10,'🏆','Champion'],[20,'👑','Legend']].map(([t,e,l])=>({t,e,l,on:n>=t}))}
+function noKid(){return '<div class="card"><b>Almost there</b><p class="muted" style="margin:6px 0 0">Your account is not linked to a child yet. Message Next Move India and we will link it — this page then fills in automatically.</p></div>'}
+function famHero(k,day,N,st,sub){
+  const pct=N?Math.min(100,Math.round((Math.min(day,N)-1)/N*100)):0;
+  return '<div class="lp-hero"><div style="position:relative;z-index:1"><div class="k">'+esc(k.full_name)+'</div><h2>'+esc(k.course_name||'Your course')+'</h2><div style="opacity:.9">'+sub+'</div><div class="pbar"><i style="width:'+pct+'%"></i></div></div><div class="lp-stats" style="position:relative;z-index:1"><div class="lp-stat"><b>'+day+'</b><span>Day now</span></div><div class="lp-stat"><b>⭐ '+st.stars+'</b><span>Stars</span></div><div class="lp-stat"><b>🎬 '+st.videos+'</b><span>Videos</span></div></div></div>';
+}
+function dayBlock(course,d,locked){
+  const info=dayRow(course,d);
+  const secs=SECTIONS.map(([k,ic,l])=>{const ms=matsFor(course,d,k);return ms.length?'<div class="sec"><div class="sec-h"><span>'+ic+' '+l+'</span></div>'+ms.map(m=>matItem(m,false)).join('')+'</div>':''}).join('');
+  return {title:(info&&info.emoji?info.emoji+' ':'')+((info&&info.title)||'Day '+d),goal:info&&info.goal||'',secs};
+}
+function libFamily(){
+  const k=curKid();if(!k)return noKid();
+  const course=k.course_name,day=kidDay(k),N=Math.max(maxDay(course),day),st=kidStats(k);
+  let h=kidPicker(k)+famHero(k,day,N,st,'Day '+day+(maxDay(course)?' of '+maxDay(course):''));
+  const t=dayBlock(course,day),as=asgFor(course,day).filter(a=>a.published!==false);
+  h+='<div class="mission"><div class="row" style="margin-bottom:8px"><span class="b o">TODAY · DAY '+day+'</span></div><h2 style="margin:0 0 4px">'+esc(t.title)+'</h2>'+(t.goal?'<p class="muted" style="margin:0 0 12px">🎯 '+esc(t.goal)+'</p>':'')
+   +(t.secs?'<div class="secs">'+t.secs+'</div>':'<div class="empty" style="padding:16px">Your teacher is getting today’s lesson ready. Check back soon! 🌟</div>')
+   +as.map(a=>{const s=mySubmission(a.id,k.id);return '<div class="chal2" style="margin-top:14px;--dc:var(--pink)" onclick="openSubmitForm(\''+a.id+'\',\''+k.id+'\')"><div style="font-size:30px">🎬</div><div class="grow"><b>'+esc(a.title)+'</b><div class="sm muted">Video challenge</div></div>'+chalStatus(s)+'</div>'}).join('')+'</div>';
+  const before=[];for(let d=day-1;d>=1;d--){const b=dayBlock(course,d);if(b.secs||dayRow(course,d)||asgFor(course,d).length)before.push([d,b])}
+  if(before.length)h+='<div class="card" style="margin-bottom:14px"><div class="hd"><h3>✅ Earlier days</h3></div>'+before.map(([d,b])=>'<details class="dd"><summary><span class="day-n" style="--dc:'+DAYCOL[(d-1)%6]+'">Day '+d+'</span> '+esc(b.title)+'</summary>'+(b.secs?'<div class="secs" style="margin-top:10px">'+b.secs+'</div>':'<div class="sm muted" style="margin-top:8px">No material on this day.</div>')+'</details>').join('')+'</div>';
+  const after=[];for(let d=day+1;d<=N;d++){const b=dayBlock(course,d);if(b.secs||dayRow(course,d)||asgFor(course,d).length)after.push([d,b])}
+  if(after.length)h+='<div class="card" style="margin-bottom:14px"><div class="hd"><h3>🔒 Coming up</h3></div>'+after.map(([d,b])=>'<div class="li lockd" style="cursor:default"><span class="day-n" style="--dc:#b9b2c7">Day '+d+'</span><div class="grow"><b>'+esc(b.title)+'</b><span class="sm muted">Opens after Day '+(d-1)+' class</span></div><span>🔒</span></div>').join('')+'</div>';
+  const loose=D('materials').filter(m=>m.purpose==='course'&&!m.day_no&&(m.course_name===course||!m.course_name));
+  if(loose.length)h+='<div class="card"><div class="hd"><h3>📎 Extra resources</h3></div>'+loose.map(m=>matItem(m,false)).join('')+'</div>';
+  return h;
+}
+function chalStatus(s){return s?(s.status==='reviewed'?'<span class="b g">Reviewed'+(s.stars?' · <span class="stars">'+'★'.repeat(s.stars)+'</span>':'')+'</span>':'<span class="b bl">Sent ✓</span>'):'<span class="b o">Record now</span>'}
+
+/* ---------- Families: Challenges ---------- */
+function chalFamily(){
+  const k=curKid();if(!k)return noKid();
+  const day=kidDay(k),st=kidStats(k);
+  const all=D('assignments').filter(a=>a.published!==false&&(!a.course_name||a.course_name===k.course_name)).sort((a,b)=>(a.day_no||999)-(b.day_no||999)||String(a.due_date||'9').localeCompare(String(b.due_date||'9')));
+  const open=[],done=[],locked=[];
+  all.forEach(a=>{const s=mySubmission(a.id,k.id);if(s)done.push([a,s]);else if(a.day_no&&a.day_no>day)locked.push(a);else open.push(a)});
+  const card=(a,s)=>'<div class="chal2" style="--dc:'+DAYCOL[((a.day_no||1)-1)%6]+'" onclick="openSubmitForm(\''+a.id+'\',\''+k.id+'\')"><div style="font-size:30px">'+(s?(s.status==='reviewed'?'🌟':'🎬'):'🎤')+'</div><div class="grow"><b>'+esc(a.title)+'</b><div class="sm muted">'+(a.day_no?'Day '+a.day_no+' · ':'')+(a.due_date?'due '+fmtDate(a.due_date):'Video challenge')+'</div></div>'+chalStatus(s)+'</div>';
+  const bd2=badgesFor(st.videos);
+  return kidPicker(k)+famHero(k,day,Math.max(maxDay(k.course_name),day),st,'Record a short video for each day’s challenge')
+   +'<div class="card" style="margin-bottom:14px"><div class="hd"><h3>🏅 My badges</h3></div><div class="row">'+bd2.map(b=>'<div class="bdg'+(b.on?'':' off')+'"><i>'+b.e+'</i>'+esc(b.l)+'<span class="muted">'+b.t+' video'+(b.t>1?'s':'')+'</span></div>').join('')+'</div></div>'
+   +'<div class="card" style="margin-bottom:14px"><div class="hd"><h3>🎬 My challenges <span class="b o">'+open.length+' to do</span></h3></div>'+(open.map(a=>card(a,null)).join('')||'<div class="empty">All caught up! 🎉 New challenges unlock after each class.</div>')+'</div>'
+   +(done.length?'<div class="card" style="margin-bottom:14px"><div class="hd"><h3>✅ Sent</h3></div>'+done.map(([a,s])=>card(a,s)).join('')+'</div>':'')
+   +(locked.length?'<div class="card"><div class="hd"><h3>🔒 Coming up</h3></div>'+locked.map(a=>'<div class="li lockd" style="cursor:default"><span class="day-n" style="--dc:#b9b2c7">Day '+a.day_no+'</span><div class="grow"><b>'+esc(a.title)+'</b><span class="sm muted">Opens after Day '+(a.day_no-1)+' class</span></div><span>🔒</span></div>').join('')+'</div>':'');
+}
+function videoTag(u,name){
+  if(/\.(mp3|m4a|wav|aac|ogg)$/i.test(name||''))return '<audio controls controlsList="nodownload" src="'+esc(u)+'" oncontextmenu="return false"></audio>';
+  return '<video controls playsinline preload="metadata" controlsList="nodownload" disablePictureInPicture src="'+esc(u)+'" oncontextmenu="return false"></video>';
+}
+async function signedSub(path){const {data,error}=await sb.storage.from('submissions').createSignedUrl(path,3600);if(error){toast('Could not open video: '+error.message,4000);return ''}return data.signedUrl}
+async function openSubmitForm(aid,sid){
+  if(!P13())return openSubmitFormOld(aid,sid);
+  const a=byId('assignments',aid),k=byId('students',sid),sub=mySubmission(aid,sid);if(!a||!k)return;
+  const t=a.answer_type||'video';
+  openDrawer('<div class="dh"><div><div class="sm muted">'+(a.day_no?'Day '+a.day_no+' · ':'')+esc(k.full_name)+'</div><h2>'+esc(a.title)+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="row" style="margin-bottom:10px">'+(a.due_date?'<span class="b o">Due '+fmtDate(a.due_date)+'</span>':'')+chalStatus(sub)+'</div>'
+   +(a.instructions?'<div class="card" style="background:#fff8f2;margin-bottom:12px"><b>Your challenge</b><p style="margin:6px 0 0;white-space:pre-wrap">'+esc(a.instructions)+'</p></div>':'')
+   +(sub&&(sub.feedback||sub.stars)?'<div class="card" style="background:#e0f6ec;margin-bottom:12px"><b>Teacher feedback '+(sub.stars?'<span class="stars">'+'★'.repeat(sub.stars)+'</span>':'')+'</b><p style="margin:6px 0 0;white-space:pre-wrap">'+esc(sub.feedback||'')+'</p></div>':'')
+   +'<div id="sfPrev" class="vidbox" style="margin-bottom:12px"></div>'
+   +(t!=='text'?'<label class="drop"><input type="file" id="sfFile" accept="video/*,audio/*" onchange="sfPick(this)">🎥 '+(sub&&sub.video_path?'Replace my video':'Record or choose my video')+'<div class="sm muted" style="font-weight:600;margin-top:4px">Up to 50 MB — about 1–2 minutes is perfect</div></label><div id="sfNew" class="vidbox" style="margin-top:10px"></div>':'')
+   +'<div class="fg" style="margin-top:12px">'+(t!=='link'&&t!=='video'?'<label class="full"><span>Your answer</span><textarea id="sfText" rows="4">'+esc(sub?sub.answer_text||'':'')+'</textarea></label>':'')
+   +(t==='video'?'<label class="full"><span>A note for your teacher (optional)</span><textarea id="sfText" rows="2" placeholder="Anything you want to tell your teacher">'+esc(sub?sub.answer_text||'':'')+'</textarea></label>':'')
+   +(t==='link'||t==='both'?'<label class="full"><span>Or paste a link (Google Drive / YouTube — “anyone with the link can view”)</span><input id="sfLink" value="'+esc(sub?sub.answer_link||'':'')+'" placeholder="https://"></label>':'')+'</div>'
+   +'<div class="act"><button class="btn pink" id="sfGo" onclick="submitChallenge(\''+aid+'\',\''+sid+'\')">'+(sub?'Send again':'Send to my teacher')+'</button><button class="btn" onclick="closeDrawer()">Cancel</button></div>');
+  if(sub&&sub.video_path){const u=await signedSub(sub.video_path);const el=$('sfPrev');if(u&&el)el.innerHTML='<div class="sm muted" style="margin-bottom:6px">My video</div>'+videoTag(u,sub.video_name)}
+}
+function sfPick(inp){
+  const f=inp.files[0],box=$('sfNew');if(!box)return;
+  if(S.ui.sfUrl){try{URL.revokeObjectURL(S.ui.sfUrl)}catch(e){}S.ui.sfUrl=null}
+  if(!f){box.innerHTML='';return}
+  if(f.size>52428800){box.innerHTML='<div class="card" style="background:#fde4e8"><b>That file is '+(f.size/1048576).toFixed(0)+' MB.</b><div class="sm">The limit is 50 MB. Please record a shorter clip, or paste a Drive link below.</div></div>';inp.value='';return}
+  S.ui.sfUrl=URL.createObjectURL(f);
+  box.innerHTML='<div class="sm muted" style="margin-bottom:6px">Ready to send: '+esc(f.name)+' ('+(f.size/1048576).toFixed(1)+' MB)</div>'+videoTag(S.ui.sfUrl,f.name);
+}
+async function submitChallenge(aid,sid){
+  const prev=mySubmission(aid,sid),f=$('sfFile')&&$('sfFile').files[0],txt=$('sfText')?$('sfText').value.trim():'',lnk=$('sfLink')?$('sfLink').value.trim():'';
+  if(!f&&!txt&&!lnk&&!(prev&&prev.video_path)){toast('Please add your video first');return}
+  if(f&&f.size>52428800){toast('That file is over 50 MB. Please record a shorter clip.',6000);return}
+  const btn=$('sfGo');btn.disabled=true;btn.textContent=f?'Uploading… please wait':'Sending…';
+  const row={assignment_id:aid,student_id:sid,answer_text:txt||null,answer_link:lnk||null};
+  let up=null;
+  if(f){const path=sid+'/'+aid+'/'+Date.now()+'-'+f.name.replace(/[^\w.\-]+/g,'_').slice(-60);
+    const {error:ue}=await sb.storage.from('submissions').upload(path,f,{contentType:f.type||'video/mp4',upsert:false});
+    if(ue){btn.disabled=false;btn.textContent='Try again';toast('Upload did not work: '+ue.message,7000);return}
+    up=path;row.video_path=path;row.video_name=f.name;row.video_size=f.size}
+  const {error}=await sb.from('submissions').upsert(row,{onConflict:'assignment_id,student_id'});
+  if(error){if(up)sb.storage.from('submissions').remove([up]);btn.disabled=false;btn.textContent='Try again';toast('Could not send: '+error.message,6000);return}
+  if(up&&prev&&prev.video_path&&prev.video_path!==up)sb.storage.from('submissions').remove([prev.video_path]);
+  await loadAll(true);toast('Sent! Well done 🌟',3500);closeDrawer();
+}
+
+/* ---------- Staff: Challenges + review ---------- */
+function chalStaff(){
+  const adm=isAdmin(),tab=S.ui.chTab||'review';
+  const rev=D('submissions').filter(x=>x.status==='submitted').sort((a,b)=>String(b.submitted_at).localeCompare(String(a.submitted_at)));
+  const hero='<div class="hero"><div><h2>🎬 Video Challenges</h2><p>Every enrolled child records a short video for each day. Watch, give stars and feedback.</p></div><div class="row"><span class="b o">'+rev.length+' to review</span><span class="b g">'+D('submissions').filter(x=>x.status==='reviewed').length+' reviewed</span></div></div>';
+  const seg='<div class="row" style="margin-bottom:14px"><div class="seg">'+[['review','👀 To review'],['days','📅 By day'],['list','☰ List']].map(([k,l])=>'<button class="'+(tab===k?'on':'')+'" onclick="S.ui.chTab=\''+k+'\';render()">'+l+'</button>').join('')+'</div>'+(canEdit('assignments')?'<button class="btn pri" onclick="editor(\'assignments\',null,{answer_type:\'video\',published:true})">＋ New challenge</button>':'')+'</div>';
+  if(tab==='list')return hero+seg+listView('assignments',{noAdd:true,toolbar:''});
+  if(tab==='days')return hero+seg+chalDays();
+  return hero+seg+(rev.length?'<div class="grid cols3">'+rev.map(x=>{const a=byId('assignments',x.assignment_id)||{};return '<div class="card" style="cursor:pointer" onclick="openSubmission(\''+x.id+'\')"><div class="row" style="flex-wrap:nowrap"><div style="font-size:30px">'+(x.video_path?'🎬':'📝')+'</div><div class="grow"><b>'+esc(x.student_name||'Student')+'</b><div class="sm muted">'+esc(x.assignment_title||'')+'</div></div></div><div class="row" style="margin-top:10px">'+(a.day_no?'<span class="b o">Day '+a.day_no+'</span>':'')+'<span class="sm muted">'+fmtDT(x.submitted_at)+'</span><span class="b bl" style="margin-left:auto">Review</span></div></div>'}).join('')+'</div>':'<div class="card empty">Nothing waiting 🎉 New videos appear here as children send them.</div>');
+}
+function chalDays(){
+  const courses=courseList(),cur=pickCourse(courses);
+  const kids=D('students').filter(s=>s.course_name===cur),list=D('assignments').filter(a=>a.course_name===cur).sort((a,b)=>(a.day_no||999)-(b.day_no||999));
+  return courseChips(courses,cur)+(list.map(a=>{
+    const subs=D('submissions').filter(x=>x.assignment_id===a.id),pct=kids.length?Math.round(subs.length/kids.length*100):0;
+    return '<div class="card" style="margin-bottom:12px"><div class="row" style="flex-wrap:nowrap"><span class="day-n" style="--dc:'+DAYCOL[((a.day_no||1)-1)%6]+'">'+(a.day_no?'Day '+a.day_no:'Any day')+'</span><div class="grow"><b>'+esc(a.title)+'</b><div class="sm muted">'+subs.length+' of '+kids.length+' sent</div></div>'+(canEdit('assignments')?'<button class="btn sm" onclick="editChallenge(\''+a.id+'\')">✎</button>':'')+'</div><div class="pbar2"><i style="width:'+pct+'%"></i></div><div class="row" style="margin-top:10px">'
+     +(kids.map(k=>{const s=subs.find(x=>x.student_id===k.id);return s?'<button class="kc '+(s.status==='reviewed'?'rv':'sb')+'" onclick="openSubmission(\''+s.id+'\')">'+(s.status==='reviewed'?'★ ':'🎬 ')+esc(String(k.full_name).split(' ')[0])+'</button>':'<span class="kc">'+esc(String(k.full_name).split(' ')[0])+'</span>'}).join('')||'<span class="sm muted">No children enrolled in this course yet.</span>')+'</div></div>'}).join('')||'<div class="card empty">No challenges for this course yet. Add one on a day in the Library.</div>');
+}
+async function openSubmission(id){
+  if(!P13())return openSubmissionOld(id);
+  const x=D('submissions').find(r=>r.id===id);if(!x)return;
+  const a=byId('assignments',x.assignment_id)||{};S.ui.rvStars=Number(x.stars)||0;
+  const chips=['🌟 Great voice!','👀 Look at the camera','🐢 Speak a little slower','🙌 Lovely smile and energy','💪 Try once more with more confidence'];
+  openDrawer('<div class="dh"><div><div class="sm muted">'+(a.day_no?'Day '+a.day_no+' · ':'')+'Video challenge</div><h2>'+esc(x.student_name||'Student')+'</h2></div><button class="btn sm" onclick="closeDrawer()">✕</button></div>'
+   +'<div class="card" style="background:#fff8f2;margin-bottom:12px"><b>'+esc(a.title||x.assignment_title||'')+'</b><p class="sm muted" style="margin:6px 0 0;white-space:pre-wrap">'+esc(a.instructions||'')+'</p></div>'
+   +'<div id="rvVid" class="vidbox" style="margin-bottom:12px">'+(x.video_path?'<div class="sm muted">Loading video…</div>':'')+'</div>'
+   +(x.answer_text?'<b class="sm">Note from the child</b><p style="white-space:pre-wrap;margin:4px 0 12px">'+esc(x.answer_text)+'</p>':'')
+   +(x.answer_link?'<a class="btn pink" target="_blank" rel="noopener" href="'+esc(safeUrl(x.answer_link))+'" style="text-decoration:none;margin-bottom:12px">▶ Open shared link</a>':'')
+   +'<div style="margin:6px 0 4px;font-weight:800">Stars</div><div id="rvStars">'+[1,2,3,4,5].map(i=>'<button class="star'+(i<=S.ui.rvStars?' on':'')+'" onclick="rvStar('+i+')">★</button>').join('')+'</div>'
+   +'<div class="fg"><label class="full"><span>Feedback for the child</span><textarea id="sbFeed" rows="4" placeholder="What went well? One thing to try next time.">'+esc(x.feedback||'')+'</textarea></label></div>'
+   +'<div class="row" style="margin-bottom:12px">'+chips.map(c=>'<button class="chip2" onclick="rvChip(this)">'+esc(c)+'</button>').join('')+'</div>'
+   +'<div class="act"><button class="btn pri" onclick="saveReview2(\''+id+'\')">💾 Save feedback</button><button class="btn" onclick="closeDrawer()">Cancel</button></div>');
+  if(x.video_path){const u=await signedSub(x.video_path);const el=$('rvVid');if(el)el.innerHTML=u?videoTag(u,x.video_name):'<div class="sm muted">Video could not be opened.</div>'}
+}
+function rvStar(i){S.ui.rvStars=i;document.querySelectorAll('#rvStars .star').forEach((b,j)=>b.classList.toggle('on',j<i))}
+function rvChip(b){const t=$('sbFeed');t.value=(t.value?t.value.replace(/\s+$/,'')+' ':'')+b.textContent}
+async function saveReview2(id){
+  const stars=S.ui.rvStars||null,fb=$('sbFeed').value.trim()||null;
+  if(!stars&&!fb){toast('Give stars or write a little feedback first');return}
+  const {error}=await sb.from('submissions').update({stars,feedback:fb,grade:stars?stars+'/5':null}).eq('id',id);
+  if(error){toast('Could not save: '+error.message,5000);return}
+  await loadAll(true);toast('Feedback sent ✓');closeDrawer();
+}
+VIEWS.materials=()=>!P13()?p13Banner()+materialsOld():(isFamily()?libFamily():libStaff());
+VIEWS.assignments=()=>!P13()?p13Banner()+assignmentsOld():(isFamily()?chalFamily():chalStaff());
 
 /* ================= Team & access ================= */
 VIEWS.team=()=>{
