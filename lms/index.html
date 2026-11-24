@@ -1033,7 +1033,7 @@ async function openDemoPlanner(id,tries){
   if(!c){toast('Demo class was not created — check the lead status and try again',5000);return openLead(id)}
   const dr={};['dpDate','dpTime','dpTeacher','dpNotes','dpDur'].forEach(k=>{const e=$(k);if(e&&e.value!=='')dr[k]=e.value});
   const mats=classMats(c.id);
-  const libs=D('materials').filter(m=>!mats.some(x=>x.id===m.id)&&(!l.interested_course||!m.course_name||m.course_name===l.interested_course));
+  const libs=D('materials').filter(m=>!mats.some(x=>x.id===m.id)&&(m.purpose==='demo'||!('purpose' in m))&&(!l.interested_course||!m.course_name||m.course_name===l.interested_course));
   const dt=dr.dpDate||demoIso(c.class_date)||demoIso(l.demo_date),tm=dr.dpTime||to24h(c.class_time||l.demo_time);
   const ready=!!(dt&&tm&&c.teacher_id);
   const meet=c.meet_link?'<a class="btn sm pink" target="_blank" rel="noopener" href="'+esc(joinUrl(c.meet_link))+'" style="text-decoration:none">▶ Open Meet link</a><button class="btn sm" onclick="navigator.clipboard.writeText(\''+esc(safeUrl(c.meet_link))+'\').then(()=>toast(\'Meet link copied ✓\'))">📋 Copy</button><span class="b g">Meet link ready</span>':(dt&&tm?'<span class="b o">⏳ Creating Meet link and Calendar event — usually under a minute</span><button class="btn sm" onclick="openDemoPlanner(\''+id+'\')">↻ Check again</button>':'<span class="b">Meet link is created as soon as you save date + time</span>');
