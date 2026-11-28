@@ -26,3 +26,11 @@ In the LMS, **Course Schedules → New course schedule** locks days + time + tea
 course. The script then adds ONE repeating Google Calendar event with ONE Meet link (teacher and parents are
 invited once), and keeps it in step when you move or cancel a single session, change the time for the remaining
 sessions, add sessions, or stop the course. Run **Create Meet links + Calendar events now** to force it.
+
+## Parent reminders (phase 15)
+1. Run `supabase/phase15_reminders_status.sql` in the Supabase SQL Editor.
+2. Paste the latest `Code.gs` into the Sheet's Apps Script and save.
+3. Run **Next Move LMS → 3. Turn on automatic sync** and allow the new "send email" permission.
+4. Every 10 minutes the sheet emails parents about 1 day and again about 1 hour before each demo and class. Settings and a send log are in the LMS under **Reminders**.
+5. Test any time: **Next Move LMS → Send parent reminder emails now**.
+Parents with no email on file are shown in the LMS so staff can use the WhatsApp button.

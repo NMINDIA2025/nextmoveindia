@@ -105,6 +105,7 @@ function onOpen() {
     .addItem('2. Sync now', 'syncAll')
     .addItem('3. Turn on automatic sync', 'turnOnAutoSync')
     .addItem('Create Meet links + Calendar events now', 'createMeetLinksNow')
+    .addItem('Send parent reminder emails now', 'sendRemindersNow')
     .addItem('Turn off automatic sync', 'turnOffAutoSync')
     .addToUi();
 }
@@ -136,13 +137,14 @@ function turnOnAutoSync() {
   ScriptApp.newTrigger('onLmsEdit').forSpreadsheet(ss).onEdit().create();
   ScriptApp.newTrigger('syncAll').timeBased().everyMinutes(5).create();
   ScriptApp.newTrigger('calendarTick').timeBased().everyMinutes(1).create();   // Meet links appear within ~1 minute
-  toast_('Automatic sync is on: edits go to the LMS within seconds, the sheet refreshes every 5 minutes, and Meet links / Calendar events are made every minute.');
+  ScriptApp.newTrigger('reminderTick').timeBased().everyMinutes(10).create();  // parent reminder emails
+  toast_('Automatic sync is on: edits go to the LMS within seconds, the sheet refreshes every 5 minutes, Meet links / Calendar events are made every minute, and parents get reminder emails before every demo and class.');
 }
 
 function turnOffAutoSync() {
   ScriptApp.getProjectTriggers().forEach(function (t) {
     var fn = t.getHandlerFunction();
-    if (fn === 'onLmsEdit' || fn === 'syncAll' || fn === 'calendarTick') ScriptApp.deleteTrigger(t);
+    if (fn === 'onLmsEdit' || fn === 'syncAll' || fn === 'calendarTick' || fn === 'reminderTick') ScriptApp.deleteTrigger(t);
   });
 }
 
@@ -358,6 +360,84 @@ function calendarTick() {
   try { syncCalendar_(); }
   catch (err) { PropertiesService.getScriptProperties().setProperty('CAL_LAST_ERROR', String(err.message || err)); }
   finally { lock.releaseLock(); }
+}
+
+
+/* ------------------------------------------------ parent reminder emails */
+
+/** Runs every 10 minutes: emails parents about demos / classes starting soon. */
+function reminderTick() {
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(3000)) return;
+  try { sendReminders_(); }
+  catch (err) { PropertiesService.getScriptProperties().setProperty('REM_LAST_ERROR', String(err.message || err)); }
+  finally { lock.releaseLock(); }
+}
+
+function sendRemindersNow() {
+  var n = sendReminders_();
+  toast_(n ? n + ' reminder email(s) sent.' : 'No reminders are due right now.');
+}
+
+function sendReminders_() {
+  var rows = rpc_('sheet_claim_reminders', {}) || [];
+  var sent = 0;
+  rows.forEach(function (r) {
+    try {
+      var m = reminderEmail_(r);
+      MailApp.sendEmail({ to: r.to_email, subject: m.subject, htmlBody: m.html, body: m.text, name: 'Next Move India' });
+      rpc_('sheet_finish_reminder', { p_id: r.id, p_ok: true, p_error: null });
+      sent++;
+    } catch (e) {
+      try { rpc_('sheet_finish_reminder', { p_id: r.id, p_ok: false, p_error: String(e.message || e) }); } catch (e2) { /* next run will show it */ }
+    }
+  });
+  return sent;
+}
+
+function esc_(v) {
+  return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function when12_(c) {
+  var d = String(c.class_date || '').slice(0, 10);
+  var day = /^\d{4}-\d{2}-\d{2}$/.test(d) ? Utilities.formatDate(new Date(d + 'T12:00:00+05:30'), TZ, 'EEEE, d MMMM') : 'soon';
+  var tm = parseClassTime_(c.class_time), time = c.class_time || '';
+  if (tm) { var h = tm.h % 12 || 12; time = h + ':' + ('0' + tm.m).slice(-2) + ' ' + (tm.h >= 12 ? 'PM' : 'AM'); }
+  return { day: day, time: time };
+}
+
+function reminderEmail_(r) {
+  var w = when12_(r), isDemo = r.cat === 'demo', soon = r.kind === 'hour_before';
+  var child = r.children || 'your child';
+  var what = isDemo ? child + '\'s free demo class' : (r.title || (r.course ? r.course + ' class' : 'Class'));
+  var subject = (soon ? 'Starting soon: ' : 'Reminder: ') + what + ' – ' + w.day + ', ' + w.time + ' IST';
+  var hello = 'Hello' + (r.parent ? ' ' + r.parent : '') + ',';
+  var lead = soon ? 'This is a quick reminder that ' + (isDemo ? 'the free demo class' : 'the class') + ' for <b>' + esc_(child) + '</b> starts in about an hour.'
+                  : 'This is a friendly reminder about ' + (isDemo ? 'the free demo class' : 'the upcoming class') + ' for <b>' + esc_(child) + '</b>.';
+  var rows = [['📅 Date', w.day], ['🕒 Time', w.time + ' IST' + (r.duration_min ? ' (' + r.duration_min + ' min)' : '')]];
+  if (r.course) rows.push(['📚 Course', r.course]);
+  if (r.teacher) rows.push(['👩‍🏫 Teacher', r.teacher]);
+  var table = rows.map(function (x) {
+    return '<tr><td style="padding:6px 14px 6px 0;color:#6b5a78">' + x[0] + '</td><td style="padding:6px 0;font-weight:700">' + esc_(x[1]) + '</td></tr>';
+  }).join('');
+  var btn = r.meet_link
+    ? '<p style="margin:22px 0"><a href="' + esc_(r.meet_link) + '" style="background:#d9328f;color:#fff;text-decoration:none;padding:13px 24px;border-radius:10px;font-weight:700;display:inline-block">▶ Join Google Meet</a></p><p style="font-size:13px;color:#6b5a78">Or open: ' + esc_(r.meet_link) + '</p>'
+    : '<p style="margin:18px 0;padding:12px;background:#fff6e5;border-radius:8px">The joining link will be shared with you shortly.</p>';
+  var html = '<div style="font-family:Arial,Helvetica,sans-serif;max-width:540px;margin:auto;color:#2b1d3a">'
+    + '<div style="background:#3b1352;color:#fff;padding:18px 22px;border-radius:14px 14px 0 0"><div style="font-size:12px;letter-spacing:.08em;color:#ffd98a">NEXT MOVE INDIA</div><div style="font-size:20px;font-weight:700;margin-top:4px">' + (soon ? 'Starting soon ⏰' : 'Class reminder 🌟') + '</div></div>'
+    + '<div style="border:1px solid #eadff2;border-top:0;padding:22px;border-radius:0 0 14px 14px">'
+    + '<p style="margin:0 0 12px">' + esc_(hello) + '</p><p style="margin:0 0 14px">' + lead + '</p>'
+    + '<table style="border-collapse:collapse;font-size:15px">' + table + '</table>' + btn
+    + '<p style="margin:16px 0 6px;font-weight:700">To make it a great session</p>'
+    + '<ul style="margin:0;padding-left:18px;line-height:1.7"><li>Join 5 minutes early on a phone or laptop with camera and mic</li><li>A quiet corner, a notebook and a pen ready</li><li>A parent nearby for the first few minutes</li></ul>'
+    + '<p style="margin:16px 0 0;font-size:13px;color:#6b5a78">कृपया 5 मिनट पहले कैमरा और माइक चालू करके जुड़ें।</p>'
+    + '<p style="margin:16px 0 0;font-size:13px;color:#6b5a78">Need to reschedule? Just reply to this email or WhatsApp us.<br>— Team Next Move India</p>'
+    + '</div></div>';
+  var text = hello + '\n\n' + what + '\n' + w.day + ', ' + w.time + ' IST' + (r.course ? '\n' + r.course : '') + (r.teacher ? '\nTeacher: ' + r.teacher : '')
+    + '\n' + (r.meet_link ? 'Join: ' + r.meet_link : 'The joining link will be shared shortly.')
+    + '\n\nPlease join 5 minutes early with camera and mic.\n— Team Next Move India';
+  return { subject: subject, html: html, text: text };
 }
 
 /** A "pending" calendar holds Meet links for classes whose date/time is not confirmed yet. */
